@@ -1,0 +1,52 @@
+{
+  "name": "fpl-plus",
+  "version": "0.1.0",
+  "description": "A browser extension for the Fantasy Premier League.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amosbastian/fpl-plus.git"
+  },
+  "keywords": [
+    "browser",
+    "extension",
+    "fantasy",
+    "premier",
+    "league"
+  ],
+  "author": "Amos Bastian",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/amosbastian/fpl-plus/issues"
+  },
+  "homepage": "https://github.com/amosbastian/fpl-plus#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.1.5",
+    "@babel/core": "^7.1.5",
+    "@babel/preset-env": "^7.1.5",
+    "babel-loader": "^8.0.4",
+    "clean-webpack-plugin": "^0.1.19",
+    "copy-webpack-plugin": "^4.6.0",
+    "css-loader": "^1.0.1",
+    "eslint": "^5.8.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "file-loader": "^2.0.0",
+    "html-loader": "^0.5.5",
+    "html-webpack-plugin": "^3.2.0",
+    "node-sass": "^4.10.0",
+    "prettier": "1.15.1",
+    "sass-loader": "^7.1.0",
+    "style-loader": "^0.23.1",
+    "webpack": "^4.25.1",
+    "webpack-cli": "^3.1.2",
+    "webpack-dev-server": "^3.1.10"
+  },
+  "dependencies": {
+    "@babel/polyfill": "^7.0.0"
+  }
+}

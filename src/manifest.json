@@ -1,0 +1,19 @@
+{
+  "author": "Amos Bastian",
+  "name": "FPL Plus",
+  "version": "0.1.0",
+  "manifest_version": 2,
+  "description": "A browser extension for the Fantasy Premier League",
+  "homepage_url": "https://github.com/amosbastian/fpl-plus",
+  "browser_action": {
+    "default_title": "FPL Plus",
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://fantasy.premierleague.com/*"],
+      "js": ["contentScript.bundle.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
