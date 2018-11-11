@@ -48,7 +48,8 @@ async function getTeams() {
 function getFixturesDiv(fixtures) {
   let fixtureElements = '';
   fixtures.forEach((fixture) => {
-    const fixtureElement = `<div class="fixture-square fdr--${fixture.difficulty}"></div>`;
+    const fixtureTitle = `${fixture.opponent_short_name} (${fixture.is_home ? 'H' : 'A'})`;
+    const fixtureElement = `<div class="fixture-square fdr--${fixture.difficulty}" title="${fixtureTitle}"></div>`;
     fixtureElements += fixtureElement;
   });
   return `
