@@ -7,13 +7,26 @@
   "homepage_url": "https://github.com/amosbastian/fpl-plus",
   "browser_action": {
     "default_title": "FPL Plus",
-    "default_popup": "popup.html"
-  },
-  "content_scripts": [
-    {
-      "matches": ["*://fantasy.premierleague.com/*"],
-      "js": ["contentScript.bundle.js"],
-      "run_at": "document_idle"
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "images/16.png",
+      "32": "images/32.png",
+      "48": "images/48.png",
+      "128": "images/128.png"
     }
-  ]
+  },
+    "content_scripts": [
+      {
+        "matches": ["*://fantasy.premierleague.com/a/team/my"],
+        "exclude_matches": ["https://fantasy.premierleague.com/a/home"],
+        "js": ["myTeam.bundle.js"],
+        "run_at": "document_idle"
+      }
+    ],
+  "icons": {
+    "16": "images/16.png",
+    "32": "images/32.png",
+    "48": "images/48.png",
+    "128": "images/128.png"
+  }
 }

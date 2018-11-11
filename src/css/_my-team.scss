@@ -1,0 +1,46 @@
+.player-fixtures {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-gap: .5rem;
+
+  justify-content: center;
+  align-items: center;
+
+  position: absolute;
+  left: 1rem;
+  right: 1rem;
+
+  padding: .5rem .75rem .5rem .75rem;
+  border-radius: 0 0 .5rem .5rem;
+
+  font-size: 1.3rem;
+  background-color: rgba(0,111,55,0.9);
+  cursor: default;
+}
+
+.fixture-square {
+  height: 1.3rem;
+  border-radius: .25rem;
+  cursor: pointer;
+  &:hover {
+    opacity: 0.9;
+  }
+}
+
+.fdr {
+  &--1 {
+    background-color: $fdr-1;
+  }
+  &--2 {
+    background-color: $fdr-2;
+  }
+  &--3 {
+    background-color: $fdr-3;
+  }
+  &--4 {
+    background-color: $fdr-4;
+  }
+  &--5 {
+    background-color: $fdr-5;
+  }
+}

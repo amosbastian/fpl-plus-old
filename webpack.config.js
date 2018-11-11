@@ -1,3 +1,4 @@
+const ChromeExtensionReloader = require('webpack-chrome-extension-reloader');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -6,7 +7,7 @@ const path = require('path');
 module.exports = {
   entry: {
     background: path.resolve(__dirname, 'src/js/background.js'),
-    contentScript: path.resolve(__dirname, 'src/js/contentScript.js'),
+    myTeam: path.resolve(__dirname, 'src/js/myTeam.js'),
     options: path.resolve(__dirname, 'src/js/options.js'),
     popup: path.resolve(__dirname, 'src/js/popup.js'),
   },
@@ -22,7 +23,15 @@ module.exports = {
           {
             loader: 'babel-loader',
             options: {
-              presets: ['@babel/preset-env'],
+              presets: [
+                [
+                  '@babel/preset-env', {
+                    targets: {
+                      node: 'current',
+                    },
+                  },
+                ],
+              ],
             },
           },
         ],
@@ -53,8 +62,12 @@ module.exports = {
     ],
   },
   plugins: [
+    new ChromeExtensionReloader(),
     new CleanWebpackPlugin(['build']),
-    new CopyWebpackPlugin([{ from: 'src/manifest.json', flatten: true }]),
+    new CopyWebpackPlugin([
+      { from: 'src/manifest.json', flatten: true },
+      { from: 'src/images', to: 'images' },
+    ]),
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, 'src/html/popup.html'),
       filename: 'popup.html',
