@@ -162,7 +162,9 @@ function updateMyTeamStyle() {
 
 const observer = new MutationObserver((mutations) => {
   mutations.forEach((mutation) => {
-    if (mutation.addedNodes && mutation.addedNodes.length > 0 && mutation.target.id === 'ismr-main') {
+    if (mutation.addedNodes && mutation.addedNodes.length > 0
+        && mutation.target.id === 'ismr-main'
+        && document.URL === 'https://fantasy.premierleague.com/a/team/my') {
       updateMyTeamStyle();
       addPlayerFixtures();
       addPlayerExpectedPoints();
