@@ -1,0 +1,37 @@
+.player-fixtures {
+  padding: .5rem .75rem .5rem .75rem;
+  position: absolute;
+  left: 1rem;
+  right: 1rem;
+  font-size: 1.3rem;
+  background-color: rgba(0,111,55,0.9);
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  grid-template-columns: repeat(5, 1fr);
+  grid-gap: .5rem;
+  border-radius: 0 0 .5rem .5rem;
+}
+
+.fixture-square {
+  height: 1.3rem;
+  border-radius: .25rem;
+}
+
+.fdr {
+  &--1 {
+    background-color: $fdr-1;
+  }
+  &--2 {
+    background-color: $fdr-2;
+  }
+  &--3 {
+    background-color: $fdr-3;
+  }
+  &--4 {
+    background-color: $fdr-4;
+  }
+  &--5 {
+    background-color: $fdr-5;
+  }
+}
