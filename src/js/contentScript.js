@@ -60,10 +60,10 @@ function getFixturesDiv(fixtures) {
 }
 
 /**
- * Adds a div containing the player's upcoming 5 fixtures under each player element
- * in the team section.
+ * Returns an Array containing an Array of a team's players and an HTMLCollection containing each
+ * player's respective span.
  */
-async function addPlayerFixtures() {
+async function initPlayers() {
   const playerSpans = document.getElementsByClassName('ism-element__menu');
   const playerNames = Array.from(playerSpans).map(collection => collection.querySelector('div > .ism-element__name').textContent);
 
@@ -80,13 +80,23 @@ async function addPlayerFixtures() {
   const teamPlayers = playerObjects.map(playerObject => allPlayers
     .find(player => player.web_name === playerObject.name && player.team === playerObject.team));
 
+  return [teamPlayers, playerSpans];
+}
+
+/**
+ * Adds a div containing the player's upcoming 5 fixtures under each player element
+ * in the team section.
+ */
+async function addPlayerFixtures() {
+  const [players, playerSpans] = await initPlayers();
+
   /* Assign player's fixtures to property and use them to create the div. */
-  await Promise.all(teamPlayers.map(async (player) => {
+  await Promise.all(players.map(async (player) => {
     const response = await getPlayer(player.id);
     player.fixtures = response.fixtures.slice(0, 5);
   }));
 
-  teamPlayers.forEach((player) => {
+  players.forEach((player) => {
     Array.from(playerSpans).forEach((span) => {
       const playerDiv = span.querySelector('div');
       const playerName = playerDiv.querySelector('.ism-element__name').textContent;
@@ -94,6 +104,25 @@ async function addPlayerFixtures() {
       if (playerName === player.web_name) {
         const fixturesDiv = getFixturesDiv(player.fixtures);
         playerDiv.insertAdjacentHTML('beforeend', fixturesDiv);
+      }
+    });
+  });
+}
+
+/**
+ * Adds each player's expection points next to their next fixture.
+ */
+async function addPlayerExpectedPoints() {
+  const [players, playerSpans] = await initPlayers();
+
+  players.forEach((player) => {
+    Array.from(playerSpans).forEach((span) => {
+      const playerDiv = span.querySelector('div');
+      const playerName = playerDiv.querySelector('.ism-element__name').textContent;
+      const nextFixture = playerDiv.querySelector('.ism-element__data');
+
+      if (playerName === player.web_name) {
+        nextFixture.textContent += ` - ${player.ep_this}`;
       }
     });
   });
@@ -136,6 +165,7 @@ const observer = new MutationObserver((mutations) => {
     if (mutation.addedNodes && mutation.addedNodes.length > 0 && mutation.target.id === 'ismr-main') {
       updateMyTeamStyle();
       addPlayerFixtures();
+      addPlayerExpectedPoints();
     }
   });
 });
