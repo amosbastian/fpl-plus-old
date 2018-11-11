@@ -7,7 +7,7 @@ const path = require('path');
 module.exports = {
   entry: {
     background: path.resolve(__dirname, 'src/js/background.js'),
-    contentScript: path.resolve(__dirname, 'src/js/contentScript.js'),
+    myTeam: path.resolve(__dirname, 'src/js/myTeam.js'),
     options: path.resolve(__dirname, 'src/js/options.js'),
     popup: path.resolve(__dirname, 'src/js/popup.js'),
   },

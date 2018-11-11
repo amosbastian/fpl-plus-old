@@ -15,13 +15,14 @@
       "128": "images/get_started128.png"
     }
   },
-  "content_scripts": [
-    {
-      "matches": ["*://fantasy.premierleague.com/a/team/my"],
-      "js": ["contentScript.bundle.js"],
-      "run_at": "document_idle"
-    }
-  ],
+    "content_scripts": [
+      {
+        "matches": ["*://fantasy.premierleague.com/a/team/my"],
+        "exclude_matches": ["https://fantasy.premierleague.com/a/home"],
+        "js": ["myTeam.bundle.js"],
+        "run_at": "document_idle"
+      }
+    ],
   "icons": {
     "16": "images/get_started16.png",
     "32": "images/get_started32.png",
