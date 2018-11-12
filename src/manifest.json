@@ -21,6 +21,12 @@
         "exclude_matches": ["https://fantasy.premierleague.com/a/home"],
         "js": ["myTeam.bundle.js"],
         "run_at": "document_idle"
+      },
+      {
+        "matches": ["https://fantasy.premierleague.com/a/leagues/standings/*/classic",
+          "https://fantasy.premierleague.com/a/leagues/standings/*/classic*"],
+        "js": ["classicLeague.bundle.js"],
+        "run_at": "document_idle"
       }
     ],
   "icons": {

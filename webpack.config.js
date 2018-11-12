@@ -8,6 +8,7 @@ module.exports = {
   entry: {
     background: path.resolve(__dirname, 'src/js/background.js'),
     myTeam: path.resolve(__dirname, 'src/js/myTeam.js'),
+    classicLeague: path.resolve(__dirname, 'src/js/classicLeague.js'),
     options: path.resolve(__dirname, 'src/js/options.js'),
     popup: path.resolve(__dirname, 'src/js/popup.js'),
   },
