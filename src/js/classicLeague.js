@@ -1,3 +1,5 @@
+import '../css/main.scss';
+
 const leagueRegex = /^https:\/\/fantasy.premierleague.com\/a\/leagues\/standings\/(\d+)\/classic(\S+)?$/;
 
 /**
@@ -86,6 +88,19 @@ async function getClassicLeague() {
   throw new Error(response.status);
 }
 
+function toggleTeam() {
+  const teamRow = this.parentElement.parentElement.nextElementSibling;
+
+  if (this.textContent === 'Show team') {
+    this.textContent = 'Hide team';
+  } else {
+    this.textContent = 'Show team';
+  }
+
+  this.classList.toggle('button-toggle-team--active');
+  teamRow.classList.toggle('manager-team--hidden');
+}
+
 /**
  * Updates the league table with additional information.
  */
@@ -103,7 +118,26 @@ async function updateLeagueTable() {
     return manager;
   }));
 
-  console.log(managers);
+  const leagueTable = document.getElementsByClassName('ism-table--standings')[0];
+  // const tableHead = leagueTable.tHead;
+  const tableBody = leagueTable.tBodies[0];
+  const bodyRows = tableBody.getElementsByTagName('tr');
+  Array.from(bodyRows).forEach((row) => {
+    const toggleTeamCell = row.insertCell(-1);
+    const toggleTeamButton = document.createElement('div');
+
+    toggleTeamCell.appendChild(toggleTeamButton);
+    toggleTeamButton.className = 'button-toggle-team';
+    toggleTeamButton.innerHTML = 'Show team';
+    toggleTeamButton.addEventListener('click', toggleTeam);
+
+    const newRow = tableBody.insertRow(row.rowIndex);
+    newRow.className = 'manager-team manager-team--hidden';
+    newRow.innerHTML = `
+      <td colspan="${row.getElementsByTagName('td').length}">
+      </td>
+    `;
+  });
 }
 
 const observer = new MutationObserver((mutations) => {

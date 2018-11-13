@@ -132,6 +132,7 @@ async function addPlayerExpectedPoints() {
  * Unrounds the bottom border of the player's next fixture.
  */
 function updateFixtureStyle() {
+  console.log('updateFixtureStyle');
   const nextFixtures = Array.from(document.getElementsByClassName('ism-element__data'));
   nextFixtures.forEach((fixture) => {
     fixture.style.borderBottomLeftRadius = 0;
@@ -162,8 +163,9 @@ function updateMyTeamStyle() {
 
 const observer = new MutationObserver((mutations) => {
   mutations.forEach((mutation) => {
+    if (mutation.target.id !== 'ismr-main') { console.log(mutation.target); }
     if (mutation.addedNodes && mutation.addedNodes.length > 0
-        && mutation.target.id === 'ismr-main'
+        && (mutation.target.id === 'ismr-main' || mutation.target.id === 'ismr-summary-bench')
         && document.URL === 'https://fantasy.premierleague.com/a/team/my') {
       updateMyTeamStyle();
       addPlayerFixtures();

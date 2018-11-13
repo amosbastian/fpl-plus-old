@@ -1,0 +1,25 @@
+.manager-team {
+  height: 12rem;
+
+  &--hidden {
+    display: none;
+  }
+}
+
+.button-toggle-team {
+  border-radius: 2px 0 0 2px;
+  background: #E8E8E8;
+  color: #333;
+  font-size: 1.3rem;
+  padding: 1rem 2.7rem;
+  transition: all .2s;
+  width: 13rem;
+  float: right;
+  cursor: pointer;
+
+  &:hover,
+  &--active {
+    background: #E90052;
+    color: #fff !important;
+  }
+}
