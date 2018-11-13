@@ -116,8 +116,6 @@ async function createTeamDiv(picks) {
     return playerIds;
   }, []);
 
-  console.log(starterIds);
-
   const benchIds = picks.reduce((playerIds, player) => {
     if (player.position > 11) {
       playerIds.push(player.element);
@@ -127,7 +125,6 @@ async function createTeamDiv(picks) {
 
   const allPlayers = await getPlayers();
   const startingPlayers = allPlayers.filter(player => starterIds.includes(player.id));
-  console.log(startingPlayers);
   const benchPlayers = allPlayers.filter(player => benchIds.includes(player.id));
 
   const teamDiv = document.createElement('div');
@@ -182,6 +179,8 @@ async function toggleTeam() {
     return;
   }
   this.textContent = 'Hide team';
+
+  if (teamRow.innerHTML.includes('h5')) return;
 
   const currentGameweek = await getCurrentGameweek();
   const managerId = getIdFromRow(parentRow);
