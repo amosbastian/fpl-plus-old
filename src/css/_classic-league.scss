@@ -1,8 +1,22 @@
-.manager-team {
-  height: 12rem;
-
+.manager-team-row {
   &--hidden {
     display: none;
+  }
+}
+
+.manager-team {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  &--left {
+    display: grid;
+    grid-template-rows: repeat(12, 2.25rem);
+    padding: 2rem;
+  }
+
+  &--right {
+    display: grid;
+    grid-template-rows: repeat(5, 2.25rem);
+    padding: 2rem;
   }
 }
 
