@@ -101,6 +101,10 @@ async function getPlayers() {
   throw new Error(response.status);
 }
 
+/**
+ * Returns the manager's ID.
+ * @param {Node} row
+ */
 function getIdFromRow(row) {
   const rowData = row.getElementsByTagName('td');
   const managerURL = rowData[1].getElementsByTagName('a')[0].href;
@@ -229,13 +233,19 @@ function addToggleTeamButton(leagueTable) {
   });
 }
 
-function insertTableHeader(tableHead, content) {
+/**
+ * Inserts a <th> in the table's head with the given content and title.
+ * @param {Node} tableHead
+ * @param {string} content
+ * @param {string} title
+ */
+function insertTableHeader(tableHead, content, title) {
   const th = document.createElement('th');
   const spanHeader = document.createElement('span');
 
   spanHeader.className = 'ismjs-tooltip ismjs-tooltip--grouped ism-tooltip tooltipstered';
-  spanHeader.textContent = (content === 'captain') ? 'C' : 'VC';
-  spanHeader.title = `${content.replace('-', ' ')[0].toUpperCase() + content.replace('-', ' ').substr(1)}`;
+  spanHeader.textContent = content;
+  spanHeader.title = title;
 
   th.appendChild(spanHeader);
   tableHead.appendChild(th);
@@ -267,10 +277,10 @@ function getViceCaptain(picks, players) {
  * @param {Array<Object>} managers
  * @param {Array<Object>} players
  */
-async function addCaptains(leagueTable, managers, players) {
+function addCaptains(leagueTable, managers, players) {
   const tableHead = leagueTable.tHead.getElementsByTagName('tr')[0];
-  insertTableHeader(tableHead, 'captain');
-  insertTableHeader(tableHead, 'vice-captain');
+  insertTableHeader(tableHead, 'C', 'Captain');
+  insertTableHeader(tableHead, 'VC', 'Vice captain');
   const tableBody = leagueTable.tBodies[0];
   const bodyRows = tableBody.getElementsByTagName('tr');
 
@@ -285,6 +295,76 @@ async function addCaptains(leagueTable, managers, players) {
 
     captainCell.textContent = `${captain.web_name}`;
     viceCaptainCell.textContent = `${viceCaptain.web_name}`;
+  });
+}
+
+/**
+ * Converts FPL chip name to more readable chip name.
+ * @param {string} chipName
+ */
+function toChipString(chipName) {
+  if (chipName === '3xc') {
+    return 'TC';
+  } if (chipName === 'freehit') {
+    return 'FH';
+  } if (chipName === 'bboost') {
+    return 'BB';
+  }
+  return 'WC';
+}
+
+/**
+ * Returns the chip that the manager has activated in the current gameweek.
+ * @param {Array<Object>} chips
+ * @param {number} currentGameweek
+ */
+function getActiveChip(chips, currentGameweek) {
+  if (chips.length === 0) return 'None';
+
+  const activeChip = chips.find(chip => chip.event === currentGameweek);
+  if (typeof activeChip === 'undefined') return 'None';
+
+  return toChipString(activeChip.name);
+}
+
+/**
+ * Returns the manager's used chips (excluding the currently active chip).
+ * @param {Array<Object>} chips
+ * @param {number} currentGameweek
+ */
+function getUsedChips(chips, currentGameweek) {
+  if (chips.length === 0) return 'None';
+
+  return chips.reduce((usedChips, chip) => {
+    if (chip.event !== currentGameweek) {
+      usedChips.push(`${toChipString(chip.name)} (GW ${chip.event})`);
+    }
+    return usedChips;
+  }, []).join(', ');
+}
+
+/**
+ * Adds the manager's active chip and used chips to the league table.
+ * @param {Node} leagueTable
+ * @param {Array<Object>} managers
+ * @param {number} currentGameweek
+ */
+function addChips(leagueTable, managers, currentGameweek) {
+  const tableHead = leagueTable.tHead.getElementsByTagName('tr')[0];
+  insertTableHeader(tableHead, 'Active chip', 'Active chip');
+  insertTableHeader(tableHead, 'Used chips', 'Used chips');
+
+  const tableBody = leagueTable.tBodies[0];
+  const bodyRows = tableBody.getElementsByTagName('tr');
+
+  Array.from(bodyRows).forEach((row) => {
+    const activeChipCell = row.insertCell(6);
+    const usedChipsCell = row.insertCell(7);
+    const managerId = parseInt(getIdFromRow(row), 10);
+    const currentManager = managers.find(manager => manager.entry.id === managerId);
+
+    activeChipCell.textContent = getActiveChip(currentManager.history.chips, currentGameweek);
+    usedChipsCell.textContent = getUsedChips(currentManager.history.chips, currentGameweek);
   });
 }
 
@@ -309,6 +389,7 @@ async function updateLeagueTable() {
   const leagueTable = document.getElementsByClassName('ism-table--standings')[0];
   addToggleTeamButton(leagueTable);
   addCaptains(leagueTable, managers, players);
+  addChips(leagueTable, managers, currentGameweek);
   addTeamRow(leagueTable, managers, players);
 }
 
