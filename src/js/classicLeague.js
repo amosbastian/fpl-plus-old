@@ -161,10 +161,8 @@ function createPlayersDiv(allPlayers, picks, playerType) {
  * "Show team" button is clicked.
  * @param {Array<Object>} picks
  */
-async function createTeamDiv(picks) {
-  const allPlayers = await getPlayers();
+function createTeamDiv(picks, allPlayers) {
   const teamDiv = document.createElement('div');
-
   teamDiv.className = 'manager-team';
   teamDiv.appendChild(createPlayersDiv(allPlayers, picks, 'starter'));
   teamDiv.appendChild(createPlayersDiv(allPlayers, picks, 'ben'));
@@ -183,37 +181,43 @@ async function toggleTeam() {
 
   if (this.textContent === 'Hide team') {
     this.textContent = 'Show team';
-    return;
+  } else {
+    this.textContent = 'Hide team';
   }
-  this.textContent = 'Hide team';
-
-  // Button was clicked before, no need to reload team.
-  if (teamRow.innerHTML.includes('h5')) return;
-
-  const currentGameweek = await getCurrentGameweek();
-  const managerId = getIdFromRow(parentRow);
-  const managerPicks = await getUserPicks(managerId, currentGameweek);
-  teamRow.getElementsByTagName('td')[0].appendChild(await createTeamDiv(managerPicks.picks));
 }
 
 /**
- * Updates the league table with additional information.
+ * Adds a row containing each manager's current team to the league table.
+ * @param {Node} leagueTable
+ * @param {Array<Object>} managers
+ * @param {Array<Object>} players
  */
-async function updateLeagueTable() {
-  const classicLeague = await getClassicLeague();
-  const managerIds = classicLeague.standings.results.map(manager => manager.entry);
-
-  const managers = await Promise.all(managerIds.map(async (managerId) => {
-    const manager = await getUser(managerId);
-    // const managerHistory = await getUserHistory(managerId);
-    // manager.history = managerHistory;
-    return manager;
-  }));
-
-  const leagueTable = document.getElementsByClassName('ism-table--standings')[0];
-  // const tableHead = leagueTable.tHead;
+function addTeamRow(leagueTable, managers, players) {
   const tableBody = leagueTable.tBodies[0];
   const bodyRows = tableBody.getElementsByTagName('tr');
+
+  Array.from(bodyRows).forEach((row) => {
+    const newRow = tableBody.insertRow(row.rowIndex);
+    const newRowData = document.createElement('td');
+    const managerId = parseInt(getIdFromRow(row), 10);
+    const currentManager = managers.find(manager => manager.entry.id === managerId);
+    const teamDiv = createTeamDiv(currentManager.picks.picks, players);
+
+    newRowData.colSpan = `${row.getElementsByTagName('td').length}`;
+    newRow.className = 'manager-team-row manager-team-row--hidden';
+    newRowData.appendChild(teamDiv);
+    newRow.appendChild(newRowData);
+  });
+}
+
+/**
+ * Adds a button that toggles each manager's team to the league table.
+ * @param {Node} leagueTable
+ */
+function addToggleTeamButton(leagueTable) {
+  const tableBody = leagueTable.tBodies[0];
+  const bodyRows = tableBody.getElementsByTagName('tr');
+
   Array.from(bodyRows).forEach((row) => {
     const toggleTeamCell = row.insertCell(-1);
     const toggleTeamButton = document.createElement('div');
@@ -222,14 +226,30 @@ async function updateLeagueTable() {
     toggleTeamButton.className = 'button-toggle-team';
     toggleTeamButton.innerHTML = 'Show team';
     toggleTeamButton.addEventListener('click', toggleTeam);
-
-    const newRow = tableBody.insertRow(row.rowIndex);
-    newRow.className = 'manager-team-row manager-team-row--hidden';
-    newRow.innerHTML = `
-      <td colspan="${row.getElementsByTagName('td').length}">
-      </td>
-    `;
   });
+}
+
+/**
+ * Updates the league table with additional information.
+ */
+async function updateLeagueTable() {
+  const players = await getPlayers();
+  const currentGameweek = await getCurrentGameweek();
+  const classicLeague = await getClassicLeague();
+  const managerIds = classicLeague.standings.results.map(manager => manager.entry);
+
+  const managers = await Promise.all(managerIds.map(async (managerId) => {
+    const manager = await getUser(managerId);
+    const managerHistory = await getUserHistory(managerId);
+    manager.history = managerHistory;
+    const managerPicks = await getUserPicks(managerId, currentGameweek);
+    manager.picks = managerPicks;
+    return manager;
+  }));
+
+  const leagueTable = document.getElementsByClassName('ism-table--standings')[0];
+  addToggleTeamButton(leagueTable);
+  addTeamRow(leagueTable, managers, players);
 }
 
 const observer = new MutationObserver((mutations) => {
