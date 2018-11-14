@@ -108,65 +108,72 @@ function getIdFromRow(row) {
   return managerId;
 }
 
+/**
+ * Returns a div containing the starting players or bench players depending on the given
+ * `playerType`.
+ * @param {Array<Object>} allPlayers
+ * @param {Array<Object>} picks
+ * @param {string} playerType
+ */
+function createPlayersDiv(allPlayers, picks, playerType) {
+  const starterOrBench = (position) => {
+    if (playerType === 'starter') {
+      return position <= 11;
+    }
+    return position > 11;
+  };
+  const playerIds = picks.reduce((ids, player) => {
+    if (starterOrBench(player.position)) {
+      ids.push(player.element);
+    }
+    return ids;
+  }, []);
+  const players = allPlayers.filter(player => playerIds.includes(player.id));
+  const playersDiv = document.createElement('div');
+  const playersHeader = document.createElement('h5');
+  const textAlignment = (playerType === 'starter') ? 'right' : 'left';
+
+  if (playerType === 'starter') {
+    playersHeader.textContent = 'Starters';
+  } else {
+    playersHeader.textContent = 'Bench';
+  }
+
+  playersDiv.className = `manager-team--${textAlignment}`;
+  playersHeader.style.textAlign = textAlignment;
+  playersDiv.appendChild(playersHeader);
+
+  // Sort players by position so it's GK -> DEF -> MID -> FWD.
+  players
+    .sort((a, b) => (playerIds.indexOf(a.id) > playerIds.indexOf(b.id) ? 1 : -1))
+    .forEach((player) => {
+      const playerText = document.createElement('p');
+      playerText.style.textAlign = textAlignment;
+      playerText.textContent = player.web_name;
+      playersDiv.appendChild(playerText);
+    });
+
+  return playersDiv;
+}
+
+/**
+ * Returns the div containing both the starting players and the bench players shown when the
+ * "Show team" button is clicked.
+ * @param {Array<Object>} picks
+ */
 async function createTeamDiv(picks) {
-  const starterIds = picks.reduce((playerIds, player) => {
-    if (player.position <= 11) {
-      playerIds.push(player.element);
-    }
-    return playerIds;
-  }, []);
-
-  const benchIds = picks.reduce((playerIds, player) => {
-    if (player.position > 11) {
-      playerIds.push(player.element);
-    }
-    return playerIds;
-  }, []);
-
   const allPlayers = await getPlayers();
-  const startingPlayers = allPlayers.filter(player => starterIds.includes(player.id));
-  const benchPlayers = allPlayers.filter(player => benchIds.includes(player.id));
-
   const teamDiv = document.createElement('div');
+
   teamDiv.className = 'manager-team';
-
-  const startersDiv = document.createElement('div');
-  startersDiv.className = 'manager-team--left';
-  const startersHeader = document.createElement('h5');
-  startersHeader.textContent = 'Starters';
-  startersHeader.style.textAlign = 'right';
-  startersDiv.appendChild(startersHeader);
-
-  const benchDiv = document.createElement('div');
-  benchDiv.className = 'manager-team--right';
-  const benchHeader = document.createElement('h5');
-  benchHeader.textContent = 'Bench';
-  benchHeader.style.textAlign = 'left';
-  benchDiv.appendChild(benchHeader);
-
-  startingPlayers
-    .sort((a, b) => (starterIds.indexOf(a.id) > starterIds.indexOf(b.id) ? 1 : -1))
-    .forEach((player) => {
-      const playerText = document.createElement('p');
-      playerText.style.textAlign = 'right';
-      playerText.textContent = player.web_name;
-      startersDiv.appendChild(playerText);
-    });
-
-  benchPlayers
-    .sort((a, b) => (benchIds.indexOf(a.id) > benchIds.indexOf(b.id) ? 1 : -1))
-    .forEach((player) => {
-      const playerText = document.createElement('p');
-      playerText.style.textAlign = 'left';
-      playerText.textContent = player.web_name;
-      benchDiv.appendChild(playerText);
-    });
-
-  teamDiv.appendChild(startersDiv);
-  teamDiv.appendChild(benchDiv);
+  teamDiv.appendChild(createPlayersDiv(allPlayers, picks, 'starter'));
+  teamDiv.appendChild(createPlayersDiv(allPlayers, picks, 'ben'));
   return teamDiv;
 }
 
+/**
+ * Toggles the showing and hiding of each manager's team.
+ */
 async function toggleTeam() {
   const parentRow = this.parentElement.parentElement;
   const teamRow = parentRow.nextElementSibling;
@@ -180,6 +187,7 @@ async function toggleTeam() {
   }
   this.textContent = 'Hide team';
 
+  // Button was clicked before, no need to reload team.
   if (teamRow.innerHTML.includes('h5')) return;
 
   const currentGameweek = await getCurrentGameweek();
@@ -192,7 +200,6 @@ async function toggleTeam() {
  * Updates the league table with additional information.
  */
 async function updateLeagueTable() {
-  const currentGameweek = await getCurrentGameweek();
   const classicLeague = await getClassicLeague();
   const managerIds = classicLeague.standings.results.map(manager => manager.entry);
 
