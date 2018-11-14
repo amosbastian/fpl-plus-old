@@ -147,13 +147,24 @@ function createPlayersDiv(allPlayers, picks, playerType) {
   playersHeader.style.textAlign = textAlignment;
   playersDiv.appendChild(playersHeader);
 
+  const captainId = picks.find(player => player.is_captain).element;
+  const viceCaptainId = picks.find(player => player.is_vice_captain).element;
+
   // Sort players by position so it's GK -> DEF -> MID -> FWD.
   players
     .sort((a, b) => (playerIds.indexOf(a.id) > playerIds.indexOf(b.id) ? 1 : -1))
     .forEach((player) => {
       const playerText = document.createElement('p');
       playerText.style.textAlign = textAlignment;
-      playerText.textContent = player.web_name;
+
+      if (player.id === captainId) {
+        playerText.textContent = `(C) ${player.web_name}`;
+      } else if (player.id === viceCaptainId) {
+        playerText.textContent = `(VC) ${player.web_name}`;
+      } else {
+        playerText.textContent = player.web_name;
+      }
+
       playersDiv.appendChild(playerText);
     });
 
@@ -393,7 +404,8 @@ async function updateLeagueTable() {
   addTeamRow(leagueTable, managers, players);
 }
 
-const observer = new MutationObserver((mutations) => {
+const classicLeagueObserver = new MutationObserver((mutations) => {
+  console.log('classicLeague.js');
   mutations.forEach((mutation) => {
     if (mutation.addedNodes && mutation.addedNodes.length > 0
           && mutation.target.id === 'ismr-main'
@@ -402,7 +414,7 @@ const observer = new MutationObserver((mutations) => {
     }
   });
 });
-observer.observe(document.getElementById('ismr-main'), {
+classicLeagueObserver.observe(document.getElementById('ismr-main'), {
   childList: true,
   subtree: true,
 });
