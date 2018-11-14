@@ -229,6 +229,65 @@ function addToggleTeamButton(leagueTable) {
   });
 }
 
+function insertTableHeader(tableHead, content) {
+  const th = document.createElement('th');
+  const spanHeader = document.createElement('span');
+
+  spanHeader.className = 'ismjs-tooltip ismjs-tooltip--grouped ism-tooltip tooltipstered';
+  spanHeader.textContent = (content === 'captain') ? 'C' : 'VC';
+  spanHeader.title = `${content.replace('-', ' ')[0].toUpperCase() + content.replace('-', ' ').substr(1)}`;
+
+  th.appendChild(spanHeader);
+  tableHead.appendChild(th);
+}
+
+/**
+ * Returns the manager's captain.
+ * @param {Array<Object>} picks
+ * @param {Array<Object>} players
+ */
+function getCaptain(picks, players) {
+  const captain = picks.find(player => player.is_captain);
+  return players.find(player => player.id === captain.element);
+}
+
+/**
+ * Returns the manager's vice captain.
+ * @param {Array<Object>} picks
+ * @param {Array<Object>} players
+ */
+function getViceCaptain(picks, players) {
+  const captain = picks.find(player => player.is_vice_captain);
+  return players.find(player => player.id === captain.element);
+}
+
+/**
+ * Adds the manager's captain and vice captain to the league table.
+ * @param {Node} leagueTable
+ * @param {Array<Object>} managers
+ * @param {Array<Object>} players
+ */
+async function addCaptains(leagueTable, managers, players) {
+  const tableHead = leagueTable.tHead.getElementsByTagName('tr')[0];
+  insertTableHeader(tableHead, 'captain');
+  insertTableHeader(tableHead, 'vice-captain');
+  const tableBody = leagueTable.tBodies[0];
+  const bodyRows = tableBody.getElementsByTagName('tr');
+
+  Array.from(bodyRows).forEach((row) => {
+    const captainCell = row.insertCell(4);
+    const viceCaptainCell = row.insertCell(5);
+    const managerId = parseInt(getIdFromRow(row), 10);
+    const currentManager = managers.find(manager => manager.entry.id === managerId);
+
+    const captain = getCaptain(currentManager.picks.picks, players);
+    const viceCaptain = getViceCaptain(currentManager.picks.picks, players);
+
+    captainCell.textContent = `${captain.web_name}`;
+    viceCaptainCell.textContent = `${viceCaptain.web_name}`;
+  });
+}
+
 /**
  * Updates the league table with additional information.
  */
@@ -249,6 +308,7 @@ async function updateLeagueTable() {
 
   const leagueTable = document.getElementsByClassName('ism-table--standings')[0];
   addToggleTeamButton(leagueTable);
+  addCaptains(leagueTable, managers, players);
   addTeamRow(leagueTable, managers, players);
 }
 
