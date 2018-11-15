@@ -1,107 +1,147 @@
 import '../css/main.scss';
+import {
+  getCurrentGameweek, getUser, getUserPicks, getUserHistory, getClassicLeague, getPlayers, getPlayer,
+  leagueRegex, getTeams,
+} from './fpl';
 
-const retry = require('async-retry');
-
-const leagueRegex = /^https:\/\/fantasy.premierleague.com\/a\/leagues\/standings\/(\d+)\/classic(\S+)?$/;
+// "My Team"
 
 /**
- * Returns the league's API endpoint depending on the current page the user is on.
- * @returns {string}
+ * Returns a div containing a player's upcoming fixtures with their respective difficulty.
+ * @param {Array} fixtures
  */
-function getLeagueEndpoint() {
-  const regexMatch = leagueRegex.exec(document.URL);
-  const leagueId = regexMatch[1];
-  const queryParameters = (typeof regexMatch[2] !== 'undefined') ? regexMatch[2] : '?phase=1&le-page=1&ls-page=1';
-  return `https://fantasy.premierleague.com/drf/leagues-classic-standings/${leagueId}${queryParameters}`;
+function getFixturesDiv(fixtures) {
+  let fixtureElements = '';
+  fixtures.forEach((fixture) => {
+    const fixtureTitle = `${fixture.opponent_short_name} (${fixture.is_home ? 'H' : 'A'})`;
+    const fixtureElement = `<div class="fixture-square fdr--${fixture.difficulty}" title="${fixtureTitle}"></div>`;
+    fixtureElements += fixtureElement;
+  });
+  return `
+  <div class="player-fixtures">
+    ${fixtureElements}
+  </div>
+  `;
 }
 
 /**
- * Returns the current gameweek.
- * @returns {number}
+ * Returns an Array containing an Array of a team's players and an HTMLCollection containing each
+ * player's respective span.
  */
-const getCurrentGameweek = async () => retry(async () => {
-  const response = await fetch('https://fantasy.premierleague.com/drf/bootstrap-dynamic');
-  if (response.status === 200) {
-    const json = await response.json();
-    return json.entry.current_event;
-  }
+async function initPlayers() {
+  const playerSpans = document.getElementsByClassName('ism-element__menu');
+  const playerNames = Array.from(playerSpans).map(collection => collection.querySelector('div > .ism-element__name').textContent);
 
-  throw new Error(response.status);
-});
+  const allTeams = await getTeams();
+
+  /* Roundabout way of getting each player's team's ID. */
+  const teamNames = Array.from(playerSpans).map(collection => collection.querySelector('picture > img').getAttribute('alt'));
+  const teamNameToId = new Map(allTeams.map(team => [team.name, team.id]));
+  const teamIds = teamNames.map(teamName => teamNameToId.get(teamName));
+
+  const playerObjects = playerNames.map((name, index) => ({ name, team: teamIds[index] }));
+
+  const allPlayers = await getPlayers();
+  const teamPlayers = playerObjects.map(playerObject => allPlayers
+    .find(player => player.web_name === playerObject.name && player.team === playerObject.team));
+
+  return [teamPlayers, playerSpans];
+}
 
 /**
- *  Returns the user with the given `userId`.
- * @param {number|string} userId
- * @returns {Object}
+ * Adds a div containing the player's upcoming 5 fixtures under each player element
+ * in the team section.
  */
-const getUser = async userId => retry(async () => {
-  const response = await fetch(`https://fantasy.premierleague.com/drf/entry/${userId}`);
-  if (response.status === 200) {
-    const json = await response.json();
-    return json;
-  }
+async function addPlayerFixtures() {
+  const [players, playerSpans] = await initPlayers();
 
-  throw new Error(response.status);
-});
+  /* Assign player's fixtures to property and use them to create the div. */
+  await Promise.all(players.map(async (player) => {
+    const response = await getPlayer(player.id);
+    player.fixtures = response.fixtures.slice(0, 5);
+  }));
+
+  players.forEach((player) => {
+    Array.from(playerSpans).forEach((span) => {
+      const playerDiv = span.querySelector('div');
+      const playerName = playerDiv.querySelector('.ism-element__name').textContent;
+
+      if (playerName === player.web_name) {
+        const fixturesDiv = getFixturesDiv(player.fixtures);
+        playerDiv.insertAdjacentHTML('beforeend', fixturesDiv);
+      }
+    });
+  });
+}
 
 /**
- * Returns the picks in the given gameweek of the user with the given `userId`.
- * @param {number|string} userId
- * @param {number} gameweek
- * @returns {Object}
+ * Adds each player's expection points next to their next fixture.
  */
-const getUserPicks = async (userId, gameweek) => retry(async () => {
-  const response = await fetch(`https://fantasy.premierleague.com/drf/entry/${userId}/event/${gameweek}/picks`);
-  if (response.status === 200) {
-    const json = await response.json();
-    return json;
-  }
+async function addPlayerExpectedPoints() {
+  const [players, playerSpans] = await initPlayers();
 
-  throw new Error(response.status);
-});
+  players.forEach((player) => {
+    Array.from(playerSpans).forEach((span) => {
+      const playerDiv = span.querySelector('div');
+      const playerName = playerDiv.querySelector('.ism-element__name').textContent;
+      const nextFixture = playerDiv.querySelector('.ism-element__data');
+
+      if (playerName === player.web_name) {
+        nextFixture.textContent += ` - ${player.ep_this}`;
+      }
+    });
+  });
+}
 
 /**
- * Returns the history of the user with the given `userId`.
- * @param {number|string} userId
- * @returns {Object}
+ * Unrounds the bottom border of the player's next fixture.
  */
-const getUserHistory = async userId => retry(async () => {
-  const response = await fetch(`https://fantasy.premierleague.com/drf/entry/${userId}/history`);
-  if (response.status === 200) {
-    const json = await response.json();
-    return json;
-  }
-
-  throw new Error(response.status);
-});
+function updateFixtureStyle() {
+  const nextFixtures = Array.from(document.getElementsByClassName('ism-element__data'));
+  nextFixtures.forEach((fixture) => {
+    fixture.style.borderBottomLeftRadius = 0;
+    fixture.style.borderBottomRightRadius = 0;
+  });
+}
 
 /**
- * Returns a classic league.
- * @returns {Object}
+ * Increases the bench's height so the bench numbers still show.
  */
-const getClassicLeague = async () => retry(async () => {
-  const endpoint = getLeagueEndpoint();
-  const response = await fetch(endpoint);
-  if (response.status === 200) {
-    const json = await response.json();
-    return json;
-  }
+function updateBenchStyle() {
+  const bench = document.getElementsByClassName('ism-bench')[0];
+  bench.style.minHeight = '18rem';
 
-  throw new Error(response.status);
-});
+  const benchHeaders = Array.from(document.getElementsByClassName('ism-bench__heading'));
+  benchHeaders.forEach((header) => {
+    header.style.bottom = '-1.375rem';
+  });
+}
 
 /**
- * Returns an array of all players playing for teams in the Premier League.
+ * Updates My Team's style to accomodate the changes.
  */
-const getPlayers = async () => retry(async () => {
-  const response = await fetch('https://fantasy.premierleague.com/drf/elements/');
-  if (response.status === 200) {
-    const json = await response.json();
-    return json;
-  }
+function updateMyTeamStyle() {
+  updateFixtureStyle();
+  updateBenchStyle();
+}
 
-  throw new Error(response.status);
+const myTeamObserver = new MutationObserver((mutations) => {
+  mutations.forEach((mutation) => {
+    if (mutation.addedNodes && mutation.addedNodes.length > 0
+        && (mutation.target.id === 'ismr-main' || mutation.target.id === 'ismr-summary-bench')
+        && document.URL === 'https://fantasy.premierleague.com/a/team/my') {
+      updateMyTeamStyle();
+      addPlayerFixtures();
+      addPlayerExpectedPoints();
+    }
+  });
 });
+myTeamObserver.observe(document.getElementById('ismr-main'), {
+  childList: true,
+  subtree: true,
+});
+
+// Classic League
 
 /**
  * Returns the manager's ID.
