@@ -17,9 +17,8 @@
   },
     "content_scripts": [
       {
-        "matches": ["*://fantasy.premierleague.com/a/team/my"],
-        "exclude_matches": ["https://fantasy.premierleague.com/a/home"],
-        "js": ["myTeam.bundle.js"],
+        "matches": ["*://fantasy.premierleague.com/*"],
+        "js": ["contentScript.bundle.js"],
         "run_at": "document_idle"
       }
     ],

@@ -1,0 +1,39 @@
+.manager-team-row {
+  &--hidden {
+    display: none;
+  }
+}
+
+.manager-team {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  &--left {
+    display: grid;
+    grid-template-rows: repeat(12, 2.25rem);
+    padding: 2rem;
+  }
+
+  &--right {
+    display: grid;
+    grid-template-rows: repeat(5, 2.25rem);
+    padding: 2rem;
+  }
+}
+
+.button-toggle-team {
+  border-radius: 2px 0 0 2px;
+  background: #E8E8E8;
+  color: #333;
+  font-size: 1.3rem;
+  padding: 1rem 2.7rem;
+  transition: all .2s;
+  width: 13rem;
+  float: right;
+  cursor: pointer;
+
+  &:hover,
+  &--active {
+    background: #E90052;
+    color: #fff !important;
+  }
+}
