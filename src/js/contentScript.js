@@ -1,10 +1,12 @@
 import '../css/main.scss';
 import {
-  getCurrentGameweek, getUser, getUserPicks, getUserHistory, getClassicLeague, getPlayers, getPlayer,
-  leagueRegex, getTeams,
+  getClassicLeague, getCurrentGameweek, getPlayer, getPlayers, getTeams, getUser, getUserPicks,
+  getUserHistory, leagueRegex,
 } from './fpl';
 
-// "My Team"
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * My Team                                                                                         *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
 /**
  * Returns a div containing a player's upcoming fixtures with their respective difficulty.
@@ -141,7 +143,9 @@ myTeamObserver.observe(document.getElementById('ismr-main'), {
   subtree: true,
 });
 
-// Classic League
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * Classic League                                                                                  *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
 /**
  * Returns the manager's ID.
@@ -429,6 +433,7 @@ async function updateLeagueTable() {
   const currentGameweek = await getCurrentGameweek();
   const classicLeague = await getClassicLeague();
   const managerIds = classicLeague.standings.results.map(manager => manager.entry);
+
   const managers = await Promise.all(managerIds.map(async (managerId) => {
     const manager = await getUser(managerId);
     const managerHistory = await getUserHistory(managerId);
@@ -440,6 +445,7 @@ async function updateLeagueTable() {
   }));
 
   const leagueTable = document.getElementsByClassName('ism-table--standings')[0];
+
   addToggleTeamButton(leagueTable);
   addCaptains(leagueTable, managers, players);
   addChips(leagueTable, managers, currentGameweek);

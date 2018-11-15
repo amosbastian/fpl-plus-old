@@ -69,7 +69,8 @@ export const leagueRegex = /^https:\/\/fantasy.premierleague.com\/a\/leagues\/st
 function getLeagueEndpoint() {
   const regexMatch = leagueRegex.exec(document.URL);
   const leagueId = regexMatch[1];
-  const queryParameters = (typeof regexMatch[2] !== 'undefined') ? regexMatch[2] : '?phase=1&le-page=1&ls-page=1';
+  let queryParameters = (typeof regexMatch[2] !== 'undefined') ? regexMatch[2] : '?phase=1&le-page=1&ls-page=1';
+  queryParameters = queryParameters.replace('lePage', 'le-page').replace('lsPage', 'ls-page');
   return `https://fantasy.premierleague.com/drf/leagues-classic-standings/${leagueId}${queryParameters}`;
 }
 
