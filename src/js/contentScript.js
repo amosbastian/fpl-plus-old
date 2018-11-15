@@ -394,7 +394,7 @@ function getUsedChips(chips, currentGameweek) {
 
   return chips.reduce((usedChips, chip) => {
     if (chip.event !== currentGameweek) {
-      usedChips.push(`${toChipString(chip.name)} (GW ${chip.event})`);
+      usedChips.push(`${toChipString(chip.name)} (${chip.event})`);
     }
     return usedChips;
   }, []).join(', ');
@@ -448,8 +448,25 @@ function addSquadValue(leagueTable, managers) {
     const squadValue = currentManager.entry.value / 10;
     const inTheBank = currentManager.entry.bank / 10;
 
-    squadValueCell.textContent = `£${squadValue}`;
-    inTheBankCell.textContent = `£${inTheBank}`;
+    squadValueCell.textContent = `£${squadValue.toFixed(1)}`;
+    inTheBankCell.textContent = `£${inTheBank.toFixed(1)}`;
+  });
+}
+
+function addOverallRank(leagueTable, managers) {
+  const tableHead = leagueTable.tHead.getElementsByTagName('tr')[0];
+  insertTableHeader(tableHead, 'OR', 'Overall rank');
+
+  const tableBody = leagueTable.tBodies[0];
+  const bodyRows = tableBody.getElementsByTagName('tr');
+
+  Array.from(bodyRows).forEach((row) => {
+    const overallRankCell = row.insertCell(-1);
+    const managerId = parseInt(getIdFromRow(row), 10);
+    const currentManager = managers.find(manager => manager.entry.id === managerId);
+    const overallRank = currentManager.entry.summary_overall_rank;
+
+    overallRankCell.textContent = `${overallRank.toLocaleString()}`;
   });
 }
 
@@ -474,6 +491,7 @@ async function updateLeagueTable() {
 
   const leagueTable = document.getElementsByClassName('ism-table--standings')[0];
 
+  addOverallRank(leagueTable, managers);
   addSquadValue(leagueTable, managers);
   addCaptains(leagueTable, managers, players);
   addChips(leagueTable, managers, currentGameweek);
