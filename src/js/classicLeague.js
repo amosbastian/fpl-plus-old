@@ -160,7 +160,7 @@ function createPlayersDiv(allPlayers, picks, playerType) {
       if (player.id === captainId) {
         playerText.textContent = `(C) ${player.web_name}`;
       } else if (player.id === viceCaptainId) {
-        playerText.textContent = `(VC) ${player.web_name}`;
+        playerText.textContent = `(V) ${player.web_name}`;
       } else {
         playerText.textContent = player.web_name;
       }
@@ -291,7 +291,7 @@ function getViceCaptain(picks, players) {
 function addCaptains(leagueTable, managers, players) {
   const tableHead = leagueTable.tHead.getElementsByTagName('tr')[0];
   insertTableHeader(tableHead, 'C', 'Captain');
-  insertTableHeader(tableHead, 'VC', 'Vice captain');
+  insertTableHeader(tableHead, 'V', 'Vice-captain');
   const tableBody = leagueTable.tBodies[0];
   const bodyRows = tableBody.getElementsByTagName('tr');
 
