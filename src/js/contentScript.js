@@ -342,8 +342,8 @@ function addCaptains(leagueTable, managers, players) {
   const bodyRows = tableBody.getElementsByTagName('tr');
 
   Array.from(bodyRows).forEach((row) => {
-    const captainCell = row.insertCell(4);
-    const viceCaptainCell = row.insertCell(5);
+    const captainCell = row.insertCell(-1);
+    const viceCaptainCell = row.insertCell(-1);
     const managerId = parseInt(getIdFromRow(row), 10);
     const currentManager = managers.find(manager => manager.entry.id === managerId);
 
@@ -415,13 +415,41 @@ function addChips(leagueTable, managers, currentGameweek) {
   const bodyRows = tableBody.getElementsByTagName('tr');
 
   Array.from(bodyRows).forEach((row) => {
-    const activeChipCell = row.insertCell(6);
-    const usedChipsCell = row.insertCell(7);
+    const activeChipCell = row.insertCell(-1);
+    const usedChipsCell = row.insertCell(-1);
     const managerId = parseInt(getIdFromRow(row), 10);
     const currentManager = managers.find(manager => manager.entry.id === managerId);
 
     activeChipCell.textContent = getActiveChip(currentManager.history.chips, currentGameweek);
     usedChipsCell.textContent = getUsedChips(currentManager.history.chips, currentGameweek);
+  });
+}
+
+/**
+ * Adds the manager's squad value and total money in the bank to the league table.
+ * @param {None} leagueTable
+ * @param {Array<Object>} managers
+ */
+function addSquadValue(leagueTable, managers) {
+  const tableHead = leagueTable.tHead.getElementsByTagName('tr')[0];
+  insertTableHeader(tableHead, 'SV', 'Squad value');
+  insertTableHeader(tableHead, 'ITB', 'In the bank');
+
+  const tableBody = leagueTable.tBodies[0];
+  const bodyRows = tableBody.getElementsByTagName('tr');
+
+  Array.from(bodyRows).forEach((row) => {
+    const squadValueCell = row.insertCell(-1);
+    const inTheBankCell = row.insertCell(-1);
+
+    const managerId = parseInt(getIdFromRow(row), 10);
+    const currentManager = managers.find(manager => manager.entry.id === managerId);
+
+    const squadValue = currentManager.entry.value / 10;
+    const inTheBank = currentManager.entry.bank / 10;
+
+    squadValueCell.textContent = `£${squadValue}`;
+    inTheBankCell.textContent = `£${inTheBank}`;
   });
 }
 
@@ -446,9 +474,10 @@ async function updateLeagueTable() {
 
   const leagueTable = document.getElementsByClassName('ism-table--standings')[0];
 
-  addToggleTeamButton(leagueTable);
+  addSquadValue(leagueTable, managers);
   addCaptains(leagueTable, managers, players);
   addChips(leagueTable, managers, currentGameweek);
+  addToggleTeamButton(leagueTable);
   addTeamRow(leagueTable, managers, players);
 }
 
