@@ -161,7 +161,6 @@ function updateMyTeamStyle() {
 }
 
 const myTeamObserver = new MutationObserver((mutations) => {
-  console.log('myTeam.js');
   mutations.forEach((mutation) => {
     if (mutation.addedNodes && mutation.addedNodes.length > 0
         && (mutation.target.id === 'ismr-main' || mutation.target.id === 'ismr-summary-bench')
