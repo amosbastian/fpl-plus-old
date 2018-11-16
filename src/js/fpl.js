@@ -1,5 +1,7 @@
 const retry = require('async-retry');
 
+export const leagueRegex = /^https:\/\/fantasy.premierleague.com\/a\/leagues\/standings\/(\d+)\/classic(\S+)?$/;
+
 /**
  * Returns the current gameweek.
  * @returns {number}
@@ -59,8 +61,6 @@ export const getUserHistory = async userId => retry(async () => {
 
   throw new Error(response.status);
 });
-
-export const leagueRegex = /^https:\/\/fantasy.premierleague.com\/a\/leagues\/standings\/(\d+)\/classic(\S+)?$/;
 
 /**
  * Returns the league's API endpoint depending on the current page the user is on.

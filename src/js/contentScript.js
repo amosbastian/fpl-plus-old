@@ -12,15 +12,19 @@ import {
  * Returns a div containing a player's upcoming fixtures with their respective difficulty.
  * @param {Array} fixtures
  */
-function getFixturesDiv(fixtures) {
+function getFixturesDiv(fixtures, transfers = false) {
   let fixtureElements = '';
+  let className = transfers ? 'fixture-square--small' : 'fixture-square';
   fixtures.forEach((fixture) => {
     const fixtureTitle = `${fixture.opponent_short_name} (${fixture.is_home ? 'H' : 'A'})`;
-    const fixtureElement = `<div class="fixture-square fdr--${fixture.difficulty}" title="${fixtureTitle}"></div>`;
+    const fixtureElement = `<div class="${className} fdr--${fixture.difficulty}" title="${fixtureTitle}"></div>`;
     fixtureElements += fixtureElement;
   });
+
+  className = transfers ? 'transfer-fixtures' : 'player-fixtures';
+
   return `
-  <div class="player-fixtures">
+  <div class="${className}">
     ${fixtureElements}
   </div>
   `;
@@ -509,6 +513,76 @@ const classicLeagueObserver = new MutationObserver((mutations) => {
   });
 });
 classicLeagueObserver.observe(document.getElementById('ismr-main'), {
+  childList: true,
+  subtree: true,
+});
+
+/**
+ * Returns an array of player objects that are currently shown in the transfer page sidebar.
+ * @param {HTMLCollection} playerSelectionElements
+ * @param {Array<Object>} allTeams
+ * @param {Array<Object>} allPlayers
+ */
+function getPlayerSelection(playerSelectionElements, allTeams, allPlayers) {
+  /* Roundabout way of getting each player's team's ID. */
+  const playerNames = Array.from(playerSelectionElements).map(collection => collection.querySelector('a').textContent);
+  const teamShortNames = Array.from(playerSelectionElements).map(collection => collection.querySelector('span').textContent);
+  const teamShortNameToId = new Map(allTeams.map(team => [team.short_name, team.id]));
+  const teamIds = teamShortNames.map(teamShortName => teamShortNameToId.get(teamShortName));
+  const playerObjects = playerNames.map((name, index) => ({ name, team: teamIds[index] }));
+
+  const playerSelection = playerObjects.map(playerObject => allPlayers
+    .find(player => player.web_name === playerObject.name && player.team === playerObject.team));
+
+  return playerSelection;
+}
+
+/**
+ * Adds the fixtures of all players in the transfer page sidebar.
+ * @param {Array<Object>} players
+ * @param {HTMLCollection} selectionElements
+ */
+async function addTransferFixtures(players, selectionElements) {
+  await Promise.all(players.map(async (player) => {
+    const response = await getPlayer(player.id);
+    player.fixtures = response.fixtures.slice(0, 5);
+  }));
+
+  players.forEach((player) => {
+    Array.from(selectionElements).forEach((element) => {
+      const playerName = element.querySelector('a').textContent;
+
+      if (playerName === player.web_name) {
+        const fixturesDiv = getFixturesDiv(player.fixtures, true);
+        element.insertAdjacentHTML('beforeend', fixturesDiv);
+      }
+    });
+  });
+}
+
+/**
+ * Function for handling the transfer page sidebar fixtures.
+ */
+async function handleTransferFixtures() {
+  const playerSelectionElements = Array
+    .from(document.getElementsByClassName('ism-media__body ism-table--el__primary-text'))
+    .slice(15);
+  const allTeams = await getTeams();
+  const allPlayers = await getPlayers();
+  const playerSelection = getPlayerSelection(playerSelectionElements, allTeams, allPlayers);
+  addTransferFixtures(playerSelection, playerSelectionElements);
+}
+
+const transferObserver = new MutationObserver((mutations) => {
+  mutations.forEach((mutation) => {
+    if (mutation.addedNodes && mutation.addedNodes.length > 0
+          && (mutation.target.id === 'ismr-side' || mutation.target.id === 'ismjs-elements-list-tables')
+          && document.URL === 'https://fantasy.premierleague.com/a/squad/transfers') {
+      handleTransferFixtures();
+    }
+  });
+});
+transferObserver.observe(document.getElementById('ismr-side'), {
   childList: true,
   subtree: true,
 });
