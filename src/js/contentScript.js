@@ -1,8 +1,14 @@
 import '../css/main.scss';
 import {
   getClassicLeague, getCurrentGameweek, getPlayer, getPlayers, getTeams, getUser, getUserPicks,
-  getUserHistory, leagueRegex, getLocalTeams, getLocalPlayers, getTeamToFixtures,
+  getUserHistory, leagueRegex, getTeamToFixtures,
 } from './fpl';
+
+let teamToFixtures = [];
+async function loadTeamToFixtures() {
+  teamToFixtures = await getTeamToFixtures();
+}
+loadTeamToFixtures();
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * My Team                                                                                         *
@@ -59,24 +65,14 @@ async function initPlayers() {
  * in the team section.
  */
 async function addPlayerFixtures() {
-  const [players, playerSpans] = await initPlayers();
-
-  /* Assign player's fixtures to property and use them to create the div. */
-  await Promise.all(players.map(async (player) => {
-    const response = await getPlayer(player.id);
-    player.fixtures = response.fixtures.slice(0, 5);
-  }));
-
-  players.forEach((player) => {
-    Array.from(playerSpans).forEach((span) => {
-      const playerDiv = span.querySelector('div');
-      const playerName = playerDiv.querySelector('.ism-element__name').textContent;
-
-      if (playerName === player.web_name) {
-        const fixturesDiv = getFixturesDiv(player.fixtures);
-        playerDiv.insertAdjacentHTML('beforeend', fixturesDiv);
-      }
-    });
+  const playerDivs = Array.from(document.getElementsByClassName('ismjs-menu')).slice(0, 15);
+  playerDivs.forEach((div) => {
+    const teamName = div.querySelector('picture > img').getAttribute('alt');
+    if (teamName !== 'Click to select a replacement') {
+      const fixtures = teamToFixtures[teamName];
+      const fixturesDiv = getFixturesDiv(fixtures);
+      div.insertAdjacentHTML('beforeend', fixturesDiv);
+    }
   });
 }
 
@@ -523,8 +519,6 @@ classicLeagueObserver.observe(document.getElementById('ismr-main'), {
  * @param {HTMLCollection} selectionElements
  */
 async function addTransferFixtures(selectionElements) {
-  const teamToFixtures = await getTeamToFixtures();
-
   Array.from(selectionElements).forEach((element) => {
     const teamShortName = element.querySelector('span').textContent.trim();
     const fixturesDiv = getFixturesDiv(teamToFixtures[teamShortName], true);
@@ -542,7 +536,7 @@ async function handleTransferFixtures() {
   addTransferFixtures(playerSelectionElements);
 }
 
-const transferObserver = new MutationObserver((mutations) => {
+const transferSidebarObserver = new MutationObserver((mutations) => {
   mutations.forEach((mutation) => {
     if (mutation.addedNodes && mutation.addedNodes.length > 0
           && (mutation.target.id === 'ismr-side' || mutation.target.id === 'ismjs-elements-list-tables')
@@ -551,7 +545,21 @@ const transferObserver = new MutationObserver((mutations) => {
     }
   });
 });
-transferObserver.observe(document.getElementById('ismr-side'), {
+transferSidebarObserver.observe(document.getElementsByClassName('ism-container')[0], {
+  childList: true,
+  subtree: true,
+});
+
+const transferMainObserver = new MutationObserver((mutations) => {
+  mutations.forEach((mutation) => {
+    if (mutation.addedNodes && mutation.addedNodes.length > 0
+          && (mutation.target.id === 'ismr-main' || /ism-pitch__unit ism-pitch__unit--\d+/.test(mutation.target.className))
+          && document.URL === 'https://fantasy.premierleague.com/a/squad/transfers') {
+      transfersAddPlayerFixtures();
+    }
+  });
+});
+transferMainObserver.observe(document.getElementsByClassName('ism-container')[0], {
   childList: true,
   subtree: true,
 });
