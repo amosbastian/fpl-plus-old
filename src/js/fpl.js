@@ -129,3 +129,15 @@ export const getTeams = async () => retry(async () => {
 
   throw new Error(response.status);
 });
+
+export const getLocalTeams = () => new Promise((resolve) => {
+  chrome.storage.local.get('teams', data => resolve(data.teams));
+});
+
+export const getLocalPlayers = () => new Promise((resolve) => {
+  chrome.storage.local.get('players', data => resolve(data.players));
+});
+
+export const getTeamToFixtures = () => new Promise((resolve) => {
+  chrome.storage.local.get('teamToFixtures', data => resolve(data.teamToFixtures));
+});
