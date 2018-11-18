@@ -139,8 +139,8 @@ async function addTotalExpectedPoints(transfers = false) {
   }
 
   const teamPlayers = await getTeamPlayers();
-  const expectedPoints = teamPlayers.slice(0, 11)
-    .reduce((points, players) => points + parseFloat(players.ep_this), 0);
+  const players = transfers ? teamPlayers : teamPlayers.slice(0, 11);
+  const expectedPoints = players.reduce((points, player) => points + parseFloat(player.ep_this), 0);
   const element = document.getElementsByClassName('expected-points--value')[0];
 
   element.textContent = `${expectedPoints.toFixed(1)}`;
