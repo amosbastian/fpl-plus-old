@@ -1,7 +1,7 @@
 import '../css/main.scss';
 import {
   getClassicLeague, getCurrentGameweek, getPlayers, getTeams, getUser, getUserPicks,
-  getUserHistory, leagueRegex, getTeamToFixtures,
+  getUserHistory, leagueRegex, getTeamToFixtures, getLocalTeams, getLocalPlayers,
 } from './fpl';
 
 let teamToFixtures = [];
@@ -52,6 +52,14 @@ function getFixturesDiv(fixtures, transfers = false) {
  * Returns an array of players that are in the user's current team.
  */
 async function getTeamPlayers() {
+  if (allTeams.length === 0) {
+    allTeams = await getLocalTeams();
+  }
+
+  if (allPlayers.length === 0) {
+    allPlayers = await getLocalPlayers();
+  }
+
   const playerElements = Array.from(document.getElementsByClassName('ismjs-menu')).slice(0, 15);
   const teamPlayers = playerElements.map((element) => {
     const playerName = element.querySelector('div > .ism-element__name').textContent;
@@ -61,7 +69,6 @@ async function getTeamPlayers() {
       // TODO: make more robust.
       return allPlayers.find(player => player.web_name);
     }
-
     const teamId = allTeams.find(team => team.name === teamName).id;
     return allPlayers.find(player => player.web_name === playerName && player.team === teamId);
   });
@@ -109,6 +116,35 @@ async function addPlayerExpectedPoints(transfers = false) {
   });
 }
 
+function createExpectedPointsElement() {
+  const mainSection = document.getElementsByTagName('section')[1];
+  const mainHTML = `
+    <div class="expected-points">
+      <h3 class="expected-points--header">
+        Expected points
+      </h3>
+      <div class="expected-points--value">
+      </div>
+    </div>
+  `;
+  mainSection.insertAdjacentHTML('beforebegin', mainHTML);
+
+  return mainSection.getElementsByClassName('expected-points');
+}
+
+async function addTotalExpectedPoints() {
+  if (!document.querySelector('.expected-points')) {
+    createExpectedPointsElement();
+  }
+
+  const teamPlayers = await getTeamPlayers();
+  const expectedPoints = teamPlayers.slice(0, 11)
+    .reduce((points, players) => points + parseFloat(players.ep_this), 0);
+  const element = document.getElementsByClassName('expected-points--value')[0];
+
+  element.textContent = `${expectedPoints.toFixed(1)}`;
+}
+
 /**
  * Unrounds the bottom border of the player's next fixture.
  */
@@ -149,6 +185,7 @@ const myTeamObserver = new MutationObserver((mutations) => {
       updateMyTeamStyle();
       addPlayerFixtures();
       addPlayerExpectedPoints();
+      addTotalExpectedPoints();
     }
   });
 });
@@ -533,6 +570,10 @@ classicLeagueObserver.observe(document.getElementById('ismr-main'), {
  * @param {HTMLCollection} selectionElements
  */
 async function addTransferFixtures(selectionElements) {
+  if (teamToFixtures.length === 0) {
+    teamToFixtures = await getTeamToFixtures();
+  }
+
   Array.from(selectionElements).forEach((element) => {
     const teamShortName = element.querySelector('span').textContent.trim();
     const fixturesDiv = getFixturesDiv(teamToFixtures[teamShortName], true);
@@ -549,6 +590,14 @@ async function handleTransferFixtures() {
     .slice(15);
   addTransferFixtures(playerSelectionElements);
 }
+
+// function updatePriceFilter() {
+//   const priceFilter = document.getElementById('ismjs-element-price');
+//   const newOption = document.createElement('option');
+//   newOption.setAttribute('value', 35);
+//   newOption.textContent = '£3.5';
+//   priceFilter.insertAdjacentElement('beforeend', newOption);
+// }
 
 const transferSidebarObserver = new MutationObserver((mutations) => {
   mutations.forEach((mutation) => {
