@@ -55,6 +55,11 @@
   border: 1px solid #E8E8E8;
   margin-bottom: 1rem;
 
+  &--transfers {
+    margin-bottom: 0;
+    border-top: none;
+  }
+
   &--header {
     font-size: 1.2rem;
     padding-top: 1rem;

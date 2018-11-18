@@ -116,10 +116,11 @@ async function addPlayerExpectedPoints(transfers = false) {
   });
 }
 
-function createExpectedPointsElement() {
+function createExpectedPointsElement(transfers) {
   const mainSection = document.getElementsByTagName('section')[1];
+  const mainClass = transfers ? 'expected-points expected-points--transfers' : 'expected-points';
   const mainHTML = `
-    <div class="expected-points">
+    <div class="${mainClass}">
       <h3 class="expected-points--header">
         Expected points
       </h3>
@@ -132,9 +133,9 @@ function createExpectedPointsElement() {
   return mainSection.getElementsByClassName('expected-points');
 }
 
-async function addTotalExpectedPoints() {
+async function addTotalExpectedPoints(transfers = false) {
   if (!document.querySelector('.expected-points')) {
-    createExpectedPointsElement();
+    createExpectedPointsElement(transfers);
   }
 
   const teamPlayers = await getTeamPlayers();
@@ -621,6 +622,7 @@ const transferMainObserver = new MutationObserver((mutations) => {
       addPlayerFixtures();
       updateFixtureStyle();
       addPlayerExpectedPoints(true);
+      addTotalExpectedPoints(true);
     }
   });
 });
