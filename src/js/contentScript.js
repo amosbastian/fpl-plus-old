@@ -1,6 +1,6 @@
 import '../css/main.scss';
 import {
-  getClassicLeague, getCurrentGameweek, getPlayer, getPlayers, getTeams, getUser, getUserPicks,
+  getClassicLeague, getCurrentGameweek, getPlayers, getTeams, getUser, getUserPicks,
   getUserHistory, leagueRegex, getTeamToFixtures,
 } from './fpl';
 
@@ -9,6 +9,18 @@ async function loadTeamToFixtures() {
   teamToFixtures = await getTeamToFixtures();
 }
 loadTeamToFixtures();
+
+let allPlayers = [];
+async function loadPlayers() {
+  allPlayers = await getPlayers();
+}
+loadPlayers();
+
+let allTeams = [];
+async function loadTeams() {
+  allTeams = await getTeams();
+}
+loadTeams();
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * My Team                                                                                         *
@@ -37,36 +49,32 @@ function getFixturesDiv(fixtures, transfers = false) {
 }
 
 /**
- * Returns an Array containing an Array of a team's players and an HTMLCollection containing each
- * player's respective span.
+ * Returns an array of players that are in the user's current team.
  */
-async function initPlayers() {
-  const playerSpans = document.getElementsByClassName('ism-element__menu');
-  const playerNames = Array.from(playerSpans).map(collection => collection.querySelector('div > .ism-element__name').textContent);
+async function getTeamPlayers() {
+  const playerElements = Array.from(document.getElementsByClassName('ismjs-menu')).slice(0, 15);
+  const teamPlayers = playerElements.map((element) => {
+    const playerName = element.querySelector('div > .ism-element__name').textContent;
+    const teamName = element.querySelector('picture > img').getAttribute('alt');
 
-  const allTeams = await getTeams();
+    if (teamName === 'Click to select a replacement') {
+      // TODO: make more robust.
+      return allPlayers.find(player => player.web_name);
+    }
 
-  /* Roundabout way of getting each player's team's ID. */
-  const teamNames = Array.from(playerSpans).map(collection => collection.querySelector('picture > img').getAttribute('alt'));
-  const teamNameToId = new Map(allTeams.map(team => [team.name, team.id]));
-  const teamIds = teamNames.map(teamName => teamNameToId.get(teamName));
-
-  const playerObjects = playerNames.map((name, index) => ({ name, team: teamIds[index] }));
-
-  const allPlayers = await getPlayers();
-  const teamPlayers = playerObjects.map(playerObject => allPlayers
-    .find(player => player.web_name === playerObject.name && player.team === playerObject.team));
-
-  return [teamPlayers, playerSpans];
+    const teamId = allTeams.find(team => team.name === teamName).id;
+    return allPlayers.find(player => player.web_name === playerName && player.team === teamId);
+  });
+  return teamPlayers;
 }
 
 /**
- * Adds a div containing the player's upcoming 5 fixtures under each player element
- * in the team section.
+ * Adds a div containing the player's upcoming 5 fixtures under each player element in the team
+ * section.
  */
 async function addPlayerFixtures() {
-  const playerDivs = Array.from(document.getElementsByClassName('ismjs-menu')).slice(0, 15);
-  playerDivs.forEach((div) => {
+  const playerElements = Array.from(document.getElementsByClassName('ismjs-menu')).slice(0, 15);
+  playerElements.forEach((div) => {
     const teamName = div.querySelector('picture > img').getAttribute('alt');
     if (teamName !== 'Click to select a replacement') {
       const fixtures = teamToFixtures[teamName];
@@ -79,16 +87,22 @@ async function addPlayerFixtures() {
 /**
  * Adds each player's expection points next to their next fixture.
  */
-async function addPlayerExpectedPoints() {
-  const [players, playerSpans] = await initPlayers();
+async function addPlayerExpectedPoints(transfers = false) {
+  const teamPlayers = await getTeamPlayers();
+  const playerElements = Array.from(document.getElementsByClassName('ismjs-menu')).slice(0, 15);
 
-  players.forEach((player) => {
-    Array.from(playerSpans).forEach((span) => {
-      const playerDiv = span.querySelector('div');
-      const playerName = playerDiv.querySelector('.ism-element__name').textContent;
-      const nextFixture = playerDiv.querySelector('.ism-element__data');
+  teamPlayers.forEach((player) => {
+    Array.from(playerElements).forEach((playerElement) => {
+      let element = playerElement;
+      if (!transfers) {
+        element = playerElement.querySelector('div');
+      }
 
-      if (playerName === player.web_name) {
+      const playerName = element.querySelector('.ism-element__name').textContent;
+      const nextFixture = element.querySelector('.ism-element__data');
+      const alreadyAdded = nextFixture.textContent.includes('-');
+
+      if (playerName === player.web_name && !alreadyAdded) {
         nextFixture.textContent += ` - ${player.ep_this}`;
       }
     });
@@ -165,7 +179,7 @@ function getIdFromRow(row) {
  * @param {Array<Object>} picks
  * @param {string} playerType
  */
-function createPlayersDiv(allPlayers, picks, playerType) {
+function createPlayersDiv(picks, playerType) {
   const starterOrBench = (position) => {
     if (playerType === 'starter') {
       return position <= 11;
@@ -222,7 +236,7 @@ function createPlayersDiv(allPlayers, picks, playerType) {
  * "Show team" button is clicked.
  * @param {Array<Object>} picks
  */
-function createTeamDiv(picks, allPlayers) {
+function createTeamDiv(picks) {
   const teamDiv = document.createElement('div');
   teamDiv.className = 'manager-team';
   teamDiv.appendChild(createPlayersDiv(allPlayers, picks, 'starter'));
@@ -555,7 +569,9 @@ const transferMainObserver = new MutationObserver((mutations) => {
     if (mutation.addedNodes && mutation.addedNodes.length > 0
           && (mutation.target.id === 'ismr-main' || /ism-pitch__unit ism-pitch__unit--\d+/.test(mutation.target.className))
           && document.URL === 'https://fantasy.premierleague.com/a/squad/transfers') {
-      transfersAddPlayerFixtures();
+      addPlayerFixtures();
+      updateFixtureStyle();
+      addPlayerExpectedPoints(true);
     }
   });
 });
