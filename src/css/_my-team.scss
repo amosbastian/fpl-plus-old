@@ -78,3 +78,14 @@
     color: #03aa68;
   }
 }
+
+.ism-element__data {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+}
+
+.grid-center {
+  display: grid;
+  justify-content: center;
+  align-items: center;
+}

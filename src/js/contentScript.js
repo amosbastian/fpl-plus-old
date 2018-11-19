@@ -98,24 +98,55 @@ async function addPlayerExpectedPoints(transfers = false) {
   const teamPlayers = await getTeamPlayers();
   const playerElements = Array.from(document.getElementsByClassName('ismjs-menu')).slice(0, 15);
 
-  teamPlayers.forEach((player) => {
-    Array.from(playerElements).forEach((playerElement) => {
-      let element = playerElement;
-      if (!transfers) {
-        element = playerElement.querySelector('div');
-      }
+  Array.from(playerElements).forEach((playerElement) => {
+    let element = playerElement;
+    if (!transfers) {
+      element = playerElement.querySelector('div');
+    }
 
-      const playerName = element.querySelector('.ism-element__name').textContent;
-      const nextFixture = element.querySelector('.ism-element__data');
-      const alreadyAdded = nextFixture.textContent.includes('-');
+    const playerName = element.querySelector('.ism-element__name').textContent;
+    const nextFixture = element.querySelector('.ism-element__data');
+    const player = teamPlayers.find(playerObject => playerObject.web_name === playerName);
 
-      if (playerName === player.web_name && !alreadyAdded) {
-        nextFixture.textContent += ` - ${player.ep_this}`;
-      }
-    });
+    const alreadyAdded = nextFixture.getElementsByClassName('ep-this');
+    if (alreadyAdded.length === 0) {
+      nextFixture.insertAdjacentHTML('beforeend', `<div class="grid-center ep-this">${player.ep_this}</div>`);
+    }
   });
 }
 
+async function getSelectedByElement(player) {
+  const totalPlayers = 59000;
+  const selectedBy = player.selected_by_percent * totalPlayers;
+  const transfersOut = player.transfers_out_event;
+  const transfersIn = player.transfers_in_event;
+}
+
+async function addPlayerTransferChange(transfers = false) {
+  const teamPlayers = await getTeamPlayers();
+  const playerElements = Array.from(document.getElementsByClassName('ismjs-menu')).slice(0, 15);
+
+  Array.from(playerElements).forEach((playerElement) => {
+    let element = playerElement;
+    if (!transfers) {
+      element = playerElement.querySelector('div');
+    }
+
+    const playerName = element.querySelector('.ism-element__name').textContent;
+    const nextFixture = element.querySelector('.ism-element__data');
+    const player = teamPlayers.find(playerObject => playerObject.web_name === playerName);
+
+    const alreadyAdded = nextFixture.getElementsByClassName('selected-by');
+    if (alreadyAdded.length === 0) {
+      nextFixture.insertAdjacentHTML('afterbegin', `<div class="grid-center selected-by">${player.selected_by_percent}</div>`);
+    }
+  });
+}
+
+/**
+ * Creates the expected points header shown at the top of /team/my and /transfers.
+ * @param {boolean} transfers
+ */
 function createExpectedPointsElement(transfers) {
   const mainSection = document.getElementsByTagName('section')[1];
   const mainClass = transfers ? 'expected-points expected-points--transfers' : 'expected-points';
@@ -187,6 +218,7 @@ const myTeamObserver = new MutationObserver((mutations) => {
       addPlayerFixtures();
       addPlayerExpectedPoints();
       addTotalExpectedPoints();
+      addPlayerTransferChange();
     }
   });
 });
@@ -623,6 +655,7 @@ const transferMainObserver = new MutationObserver((mutations) => {
       updateFixtureStyle();
       addPlayerExpectedPoints(true);
       addTotalExpectedPoints(true);
+      addPlayerTransferChange(true);
     }
   });
 });

@@ -1,0 +1,39 @@
+@import "variables";
+
+@font-face {
+  font-family: '#{$icomoon-font-family}';
+  src:  url('chrome-extension://__MSG_@@extension_id__/fonts/icomoon.eot?stbhl2');
+  src:  url('chrome-extension://__MSG_@@extension_id__/fonts/icomoon.eot?stbhl2#iefix') format('embedded-opentype'),
+    url('chrome-extension://__MSG_@@extension_id__/fonts/icomoon.ttf?stbhl2') format('truetype'),
+    url('chrome-extension://__MSG_@@extension_id__/fonts/icomoon.woff?stbhl2') format('woff'),
+    url('chrome-extension://__MSG_@@extension_id__/fonts/icomoon.svg?stbhl2##{$icomoon-font-family}') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: '#{$icomoon-font-family}' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-angle-up {
+  &:before {
+    content: $icon-angle-up;
+  }
+}
+.icon-angle-double-up {
+  &:before {
+    content: $icon-angle-double-up;
+  }
+}
+
