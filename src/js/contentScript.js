@@ -111,11 +111,16 @@ async function addPlayerExpectedPoints(transfers = false) {
 
     const alreadyAdded = nextFixture.getElementsByClassName('ep-this');
     if (alreadyAdded.length === 0) {
-      nextFixture.insertAdjacentHTML('beforeend', `<div class="grid-center ep-this">${expectedPoints}</div>`);
+      nextFixture.insertAdjacentHTML('beforeend',
+        `<div title="Expected points" class="grid-center ep-this">${expectedPoints}</div>`);
     }
   });
 }
 
+/**
+ * Returns a span with the icon showing the player's transfer change (in or out).
+ * @param {Object} player
+ */
 function getTransferChangeIcon(player) {
   if (typeof player === 'undefined') {
     return ['0', '<span>0</span>'];
@@ -134,6 +139,10 @@ function getTransferChangeIcon(player) {
   return [title, `<span class="${icon} transfer-icon ${className}"></span>`];
 }
 
+/**
+ * Adds the transfer change icon to each player's element.
+ * @param {boolean} transfers
+ */
 async function addPlayerTransferChange(transfers = false) {
   const teamPlayers = await getTeamPlayers();
   const playerElements = Array.from(document.getElementsByClassName('ismjs-menu')).slice(0, 15);
@@ -151,7 +160,8 @@ async function addPlayerTransferChange(transfers = false) {
       const playerName = element.querySelector('.ism-element__name').textContent;
       const player = teamPlayers.find(playerObject => playerObject.web_name === playerName);
       const [title, icon] = getTransferChangeIcon(player);
-      nextFixture.insertAdjacentHTML('afterbegin', `<div title="${title}" class="grid-center selected-by">${icon}</div>`);
+      nextFixture.insertAdjacentHTML('afterbegin',
+        `<div title="${title}" class="grid-center selected-by">${icon}</div>`);
     }
   });
 }
@@ -177,6 +187,10 @@ function createExpectedPointsElement(transfers) {
   return mainSection.getElementsByClassName('expected-points');
 }
 
+/**
+ * Adds the player's expected points for the next gameweek to each player's element.
+ * @param {boolean} transfers
+ */
 async function addTotalExpectedPoints(transfers = false) {
   if (!document.querySelector('.expected-points')) {
     createExpectedPointsElement(transfers);
@@ -648,7 +662,8 @@ async function handleTransferFixtures() {
 const transferSidebarObserver = new MutationObserver((mutations) => {
   mutations.forEach((mutation) => {
     if (mutation.addedNodes && mutation.addedNodes.length > 0
-          && (mutation.target.id === 'ismr-side' || mutation.target.id === 'ismjs-elements-list-tables')
+          && (mutation.target.id === 'ismr-side'
+          || mutation.target.id === 'ismjs-elements-list-tables')
           && document.URL === 'https://fantasy.premierleague.com/a/squad/transfers') {
       handleTransferFixtures();
     }
@@ -662,7 +677,8 @@ transferSidebarObserver.observe(document.getElementsByClassName('ism-container')
 const transferMainObserver = new MutationObserver((mutations) => {
   mutations.forEach((mutation) => {
     if (mutation.addedNodes && mutation.addedNodes.length > 0
-          && (mutation.target.id === 'ismr-main' || /ism-pitch__unit ism-pitch__unit--\d+/.test(mutation.target.className))
+          && (mutation.target.id === 'ismr-main'
+          || /ism-pitch__unit ism-pitch__unit--\d+/.test(mutation.target.className))
           && document.URL === 'https://fantasy.premierleague.com/a/squad/transfers') {
       addPlayerFixtures();
       updateFixtureStyle();
@@ -673,6 +689,30 @@ const transferMainObserver = new MutationObserver((mutations) => {
   });
 });
 transferMainObserver.observe(document.getElementsByClassName('ism-container')[0], {
+  childList: true,
+  subtree: true,
+});
+
+/**
+ * Tempoary fix for /points CSS Grid.
+ */
+function fixPoints() {
+  const playerElements = Array.from(document.getElementsByClassName('ism-element__data')).slice(0, 15);
+  playerElements.forEach((element) => {
+    element.insertAdjacentHTML('afterbegin', '<div></div>');
+  });
+}
+
+const pointsObserver = new MutationObserver((mutations) => {
+  mutations.forEach((mutation) => {
+    if (mutation.addedNodes && mutation.addedNodes.length > 0
+          && (mutation.target.id === 'ismr-main'
+          && /https:\/\/fantasy.premierleague.com\/a\/team\/\d+\/event\/\d+/.test(document.URL))) {
+      fixPoints();
+    }
+  });
+});
+pointsObserver.observe(document.getElementsByClassName('ism-container')[0], {
   childList: true,
   subtree: true,
 });
