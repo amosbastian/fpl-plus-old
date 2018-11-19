@@ -97,3 +97,22 @@
   margin-bottom: .35rem;
   cursor: pointer;
 }
+
+.transfer-icon {
+  font-weight: 900;
+}
+
+.price-rising {
+  color: rgba(0,111,55,0.9);;
+  fill: rgba(0,111,55,0.9);;
+}
+
+.price-falling {
+  color: $fdr-5;
+  fill: $fdr-5;
+  -webkit-transform: rotate(180deg);
+  -moz-transform: rotate(180deg);
+  -o-transform: rotate(180deg);
+  -ms-transform: rotate(180deg);
+  transform: rotate(180deg);
+}

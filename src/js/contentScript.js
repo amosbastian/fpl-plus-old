@@ -107,19 +107,31 @@ async function addPlayerExpectedPoints(transfers = false) {
     const playerName = element.querySelector('.ism-element__name').textContent;
     const nextFixture = element.querySelector('.ism-element__data');
     const player = teamPlayers.find(playerObject => playerObject.web_name === playerName);
+    const expectedPoints = (typeof player === 'undefined') ? 0 : player.ep_this;
 
     const alreadyAdded = nextFixture.getElementsByClassName('ep-this');
     if (alreadyAdded.length === 0) {
-      nextFixture.insertAdjacentHTML('beforeend', `<div class="grid-center ep-this"><span class="icon-angle-up"></span>${player.ep_this}</div>`);
+      nextFixture.insertAdjacentHTML('beforeend', `<div class="grid-center ep-this">${expectedPoints}</div>`);
     }
   });
 }
 
-async function getSelectedByElement(player) {
+function getTransferChangeIcon(player) {
+  if (typeof player === 'undefined') {
+    return ['0', '<span>0</span>'];
+  }
   const totalPlayers = 59000;
-  const selectedBy = player.selected_by_percent * totalPlayers;
   const transfersOut = player.transfers_out_event;
   const transfersIn = player.transfers_in_event;
+  const transfers = (transfersIn > transfersOut) ? transfersIn : transfersOut;
+  const selectedBy = player.selected_by_percent * totalPlayers;
+  const percentageChange = transfers / selectedBy * 100;
+
+  const className = (transfersIn > transfersOut) ? 'price-rising' : 'price-falling';
+  const title = (transfersIn > transfersOut) ? `+${transfersIn}` : `-${transfersOut}`;
+  const icon = (percentageChange > 7.5) ? 'icon-angle-double-up' : 'icon-angle-up';
+
+  return [title, `<span class="${icon} transfer-icon ${className}"></span>`];
 }
 
 async function addPlayerTransferChange(transfers = false) {
@@ -132,13 +144,14 @@ async function addPlayerTransferChange(transfers = false) {
       element = playerElement.querySelector('div');
     }
 
-    const playerName = element.querySelector('.ism-element__name').textContent;
     const nextFixture = element.querySelector('.ism-element__data');
-    const player = teamPlayers.find(playerObject => playerObject.web_name === playerName);
-
     const alreadyAdded = nextFixture.getElementsByClassName('selected-by');
+
     if (alreadyAdded.length === 0) {
-      nextFixture.insertAdjacentHTML('afterbegin', `<div class="grid-center selected-by">${player.selected_by_percent}</div>`);
+      const playerName = element.querySelector('.ism-element__name').textContent;
+      const player = teamPlayers.find(playerObject => playerObject.web_name === playerName);
+      const [title, icon] = getTransferChangeIcon(player);
+      nextFixture.insertAdjacentHTML('afterbegin', `<div title="${title}" class="grid-center selected-by">${icon}</div>`);
     }
   });
 }
