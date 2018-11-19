@@ -32,7 +32,7 @@ loadTeams();
  */
 function getFixturesDiv(fixtures, transfers = false) {
   let fixtureElements = '';
-  let className = transfers ? 'fixture-square--small' : 'fixture-square';
+  let className = transfers ? 'fixture-square fixture-square--small' : 'fixture-square';
   fixtures.forEach((fixture) => {
     const fixtureTitle = `${fixture.opponent_short_name} (${fixture.is_home ? 'H' : 'A'})`;
     const fixtureElement = `<div class="${className} fdr--${fixture.difficulty}" title="${fixtureTitle}"></div>`;
