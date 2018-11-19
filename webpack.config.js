@@ -60,9 +60,12 @@ module.exports = {
         exclude: /node_modules/,
       },
       {
-        test: /\.(ttf|otf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/,
-        loader: 'file-loader?name=fonts/[name].[ext]',
-        exclude: /node_modules/,
+        test: /\.(png|woff|woff2|eot|ttf|svg)$/,
+        loader: 'url-loader',
+        options: {
+          name: '[name].[ext]',
+          limit: 100000,
+        },
       },
     ],
   },

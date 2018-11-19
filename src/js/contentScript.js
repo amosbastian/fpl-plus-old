@@ -110,7 +110,7 @@ async function addPlayerExpectedPoints(transfers = false) {
 
     const alreadyAdded = nextFixture.getElementsByClassName('ep-this');
     if (alreadyAdded.length === 0) {
-      nextFixture.insertAdjacentHTML('beforeend', `<div class="grid-center ep-this">${player.ep_this}</div>`);
+      nextFixture.insertAdjacentHTML('beforeend', `<div class="grid-center ep-this"><i class="fas fa-angle-up"></i>${player.ep_this}</div>`);
     }
   });
 }
