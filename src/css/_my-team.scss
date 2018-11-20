@@ -116,3 +116,22 @@
   -ms-transform: rotate(180deg);
   transform: rotate(180deg);
 }
+
+.reddit-rmt {
+  height: 3rem;
+  width: 3rem;
+  position: relative;
+  float: right;
+  margin-right: 2rem;
+}
+
+.rmt-icon {
+  font-size: 3rem;
+  cursor: pointer;
+  color: #ebe7ec;
+  transition: all 0.1s;
+
+  &:hover {
+    color: white;
+  }
+}

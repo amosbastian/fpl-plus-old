@@ -228,6 +228,24 @@ function updateBenchStyle() {
   });
 }
 
+
+function filterPlayersByPosition(players, position) {
+  return players.filter(player => player.element_type === position);
+}
+
+async function copyRMT() {
+  console.log(this);
+}
+
+function addRedditButton() {
+  const squadWrapper = document.getElementsByClassName('ism-squad-wrapper')[0];
+  const buttonDiv = document.createElement('div');
+  buttonDiv.className = 'reddit-rmt grid-center';
+  buttonDiv.onclick = copyRMT;
+  buttonDiv.innerHTML = '<span class="rmt-icon icon-reddit-square"></span>';
+  squadWrapper.insertAdjacentElement('afterbegin', buttonDiv);
+}
+
 /**
  * Updates My Team's style to accomodate the changes.
  */
@@ -246,6 +264,7 @@ const myTeamObserver = new MutationObserver((mutations) => {
       addPlayerExpectedPoints();
       addTotalExpectedPoints();
       addPlayerTransferChange();
+      addRedditButton();
     }
   });
 });
