@@ -59,6 +59,14 @@ module.exports = {
         },
         exclude: /node_modules/,
       },
+      {
+        test: /\.(png|woff|woff2|eot|ttf|svg)$/,
+        loader: 'url-loader',
+        options: {
+          name: '[name].[ext]',
+          limit: 100000,
+        },
+      },
     ],
   },
   plugins: [

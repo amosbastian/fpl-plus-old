@@ -1,5 +1,7 @@
 const retry = require('async-retry');
 
+export const leagueRegex = /^https:\/\/fantasy.premierleague.com\/a\/leagues\/standings\/(\d+)\/classic(\S+)?$/;
+
 /**
  * Returns the current gameweek.
  * @returns {number}
@@ -59,8 +61,6 @@ export const getUserHistory = async userId => retry(async () => {
 
   throw new Error(response.status);
 });
-
-export const leagueRegex = /^https:\/\/fantasy.premierleague.com\/a\/leagues\/standings\/(\d+)\/classic(\S+)?$/;
 
 /**
  * Returns the league's API endpoint depending on the current page the user is on.
@@ -128,4 +128,16 @@ export const getTeams = async () => retry(async () => {
   }
 
   throw new Error(response.status);
+});
+
+export const getLocalTeams = () => new Promise((resolve) => {
+  chrome.storage.local.get('teams', data => resolve(data.teams));
+});
+
+export const getLocalPlayers = () => new Promise((resolve) => {
+  chrome.storage.local.get('players', data => resolve(data.players));
+});
+
+export const getTeamToFixtures = () => new Promise((resolve) => {
+  chrome.storage.local.get('teamToFixtures', data => resolve(data.teamToFixtures));
 });
