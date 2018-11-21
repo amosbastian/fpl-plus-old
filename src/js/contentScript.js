@@ -62,6 +62,15 @@ async function getTeamPlayers() {
 
   const playerElements = Array.from(document.getElementsByClassName('ismjs-menu')).slice(0, 15);
   const teamPlayers = playerElements.map((element) => {
+    const captainDiv = element.nextElementSibling.querySelector('.ism-element__control--captain');
+    let isCaptain = false;
+    let isViceCaptain = false;
+
+    if (captainDiv !== null) {
+      isCaptain = captainDiv.querySelector('span').title === 'Captain';
+      isViceCaptain = captainDiv.querySelector('span').title === 'Vice-captain';
+    }
+
     const playerName = element.querySelector('div > .ism-element__name').textContent;
     const teamName = element.querySelector('picture > img').getAttribute('alt');
 
@@ -70,7 +79,12 @@ async function getTeamPlayers() {
       return allPlayers.find(player => player.web_name);
     }
     const teamId = allTeams.find(team => team.name === teamName).id;
-    return allPlayers.find(player => player.web_name === playerName && player.team === teamId);
+    const foundPlayer = allPlayers
+      .find(player => player.web_name === playerName && player.team === teamId);
+    foundPlayer.is_captain = isCaptain;
+    foundPlayer.is_vice_captain = isViceCaptain;
+
+    return foundPlayer;
   });
   return teamPlayers;
 }
@@ -233,8 +247,54 @@ function filterPlayersByPosition(players, position) {
   return players.filter(player => player.element_type === position);
 }
 
+function getPositionStrings(goalkeeper, defenders, midfielders, forwards) {
+  const positionStrings = [];
+  [goalkeeper, defenders, midfielders, forwards].forEach((position) => {
+    const positionString = [];
+    position.forEach((player) => {
+      let badge = '';
+      if (player.is_captain) {
+        badge = ' (C)';
+      } else if (player.is_vice_captain) {
+        badge = ' (V)';
+      }
+      positionString.push(`${player.web_name}${badge}`);
+    });
+    positionStrings.push(positionString.join(' - '));
+  });
+  return positionStrings;
+}
+
+function getMaxWidth(positionStrings) {
+  return Math.max(...positionStrings.map(positionString => positionString.length));
+}
+
+async function getRMTString() {
+  const teamPlayers = await getTeamPlayers();
+  const starters = teamPlayers.slice(0, 11);
+  const bench = teamPlayers.slice(11, 15);
+
+  const goalkeeper = [starters[0]];
+  const defenders = filterPlayersByPosition(starters, 2);
+  const midfielders = filterPlayersByPosition(starters, 3);
+  const forwards = filterPlayersByPosition(starters, 4);
+
+  const positionStrings = getPositionStrings(goalkeeper, defenders, midfielders, forwards);
+  const maxWidth = getMaxWidth(positionStrings);
+
+  let RMT = '';
+  positionStrings.forEach((positionString) => {
+    const padding = maxWidth / 2 + positionString.length / 2 + 4;
+    RMT += `${positionString.padStart(padding, ' ')}\n`;
+  });
+  RMT += `\n    Bench${bench[0].web_name} - ${bench.slice(1).map(player => player.web_name).join(', ')}`;
+
+  return RMT;
+}
+
 async function copyRMT() {
-  console.log(this);
+  const RMTString = await getRMTString();
+  console.log(RMTString);
 }
 
 function addRedditButton() {
