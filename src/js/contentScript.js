@@ -245,11 +245,26 @@ function updateBenchStyle() {
   });
 }
 
-
+/**
+ * Filters player's by their position:
+ * 1: Goalkeeper
+ * 2: Defender
+ * 3: Midfielder
+ * 4: Forward
+ * @param {Object} players
+ * @param {number} position
+ */
 function filterPlayersByPosition(players, position) {
   return players.filter(player => player.element_type === position);
 }
 
+/**
+ * Converts arrays of players to strings used in RMT threads on Reddit, e.g.:
+ *                        Patrício
+ *               Robertson - Alonso - Duffy
+ * Richarlison (C) - Mané - Sterling (V) - Hazard - Fraser
+ *                    Jiménez - Wilson
+ */
 function getPositionStrings(goalkeeper, defenders, midfielders, forwards) {
   const positionStrings = [];
   [goalkeeper, defenders, midfielders, forwards].forEach((position) => {
@@ -272,6 +287,12 @@ function getMaxWidth(positionStrings) {
   return Math.max(...positionStrings.map(positionString => positionString.length));
 }
 
+/**
+ * Returns the player's team converted to a string usable in RMT threads on Reddit.
+ * @param {number} squadValue
+ * @param {number} inTheBank
+ * @param {number} freeTransfers
+ */
 async function getRMTString(squadValue, inTheBank, freeTransfers) {
   const teamPlayers = await getTeamPlayers();
   const starters = teamPlayers.slice(0, 11);
@@ -296,6 +317,9 @@ async function getRMTString(squadValue, inTheBank, freeTransfers) {
   return RMT;
 }
 
+/**
+ * Copies RMT string top clipboard and updates alert.
+ */
 async function copyRMT() {
   const pointsURL = document.querySelector('.ism-nav__list__item > a[data-nav-tab="points"]').getAttribute('href');
   const userId = parseInt(/.*\/(\d+)\//.exec(pointsURL)[1], 10);
@@ -314,6 +338,9 @@ async function copyRMT() {
   alert.innerHTML = '<p class="ism-alert__item">Copied team to clipboard!</p>';
 }
 
+/**
+ * Adds button for copying team for use in RMT threads on /r/FantasyPL.
+ */
 function addRedditButton() {
   const squadWrapper = document.getElementsByClassName('ism-squad-wrapper')[0];
   if (squadWrapper.firstChild.className === 'reddit-rmt grid-center') {
@@ -640,7 +667,7 @@ function addChips(leagueTable, managers, currentGameweek) {
 
 /**
  * Adds the manager's squad value and total money in the bank to the league table.
- * @param {None} leagueTable
+ * @param {Node} leagueTable
  * @param {Array<Object>} managers
  */
 function addSquadValue(leagueTable, managers) {
@@ -666,6 +693,11 @@ function addSquadValue(leagueTable, managers) {
   });
 }
 
+/**
+ * Adds each manager's overall rank to the league table.
+ * @param {Node} leagueTable
+ * @param {Array<Object>} managers
+ */
 function addOverallRank(leagueTable, managers) {
   const tableHead = leagueTable.tHead.getElementsByTagName('tr')[0];
   insertTableHeader(tableHead, 'OR', 'Overall rank');
@@ -776,6 +808,36 @@ transferSidebarObserver.observe(document.getElementsByClassName('ism-container')
   subtree: true,
 });
 
+/**
+ * Updates the header style of the /transfer page to be more consistent.
+ */
+function updateHeaderStyle() {
+  const elements = Array.from(document.getElementsByClassName('ism-scoreboard__item--3'));
+
+  elements.forEach((element) => {
+    element.style.height = '7rem';
+    element.style.margin = 0;
+    element.style.padding = 0;
+    element.style.paddingTop = '0.5rem';
+    element.style.borderBottomWidth = 0;
+  });
+
+  const autoPick = elements[0];
+  const reset = elements[1];
+  reset.style.borderLeft = '1px solid #E8E8E8';
+  [autoPick, reset].forEach((element) => {
+    element.style.padding = 0;
+    element.style.borderTop = '1px solid #E8E8E8';
+
+    const button = element.getElementsByClassName('ism-scoreboard__button')[0];
+    button.style.border = 'none';
+    button.style.height = '7rem';
+    button.style.margin = 0;
+    // Only transition background, not all
+    button.style.transition = 'background 0.2s';
+  });
+}
+
 const transferMainObserver = new MutationObserver((mutations) => {
   mutations.forEach((mutation) => {
     if (mutation.addedNodes && mutation.addedNodes.length > 0
@@ -784,6 +846,7 @@ const transferMainObserver = new MutationObserver((mutations) => {
           && document.URL === 'https://fantasy.premierleague.com/a/squad/transfers') {
       addPlayerFixtures();
       updateFixtureStyle();
+      updateHeaderStyle();
       addPlayerExpectedPoints(true);
       addTotalExpectedPoints(true);
       addPlayerTransferChange(true);
