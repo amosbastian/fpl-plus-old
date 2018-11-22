@@ -316,11 +316,15 @@ async function copyRMT() {
 
 function addRedditButton() {
   const squadWrapper = document.getElementsByClassName('ism-squad-wrapper')[0];
+  if (squadWrapper.firstChild.className === 'reddit-rmt grid-center') {
+    return;
+  }
   const buttonDiv = document.createElement('div');
   buttonDiv.className = 'reddit-rmt grid-center';
   buttonDiv.title = 'Copy team for RMT thread!';
   buttonDiv.onclick = copyRMT;
   buttonDiv.innerHTML = '<span class="rmt-icon icon-reddit-square"></span>';
+
   squadWrapper.insertAdjacentElement('afterbegin', buttonDiv);
 }
 
@@ -335,7 +339,8 @@ function updateMyTeamStyle() {
 const myTeamObserver = new MutationObserver((mutations) => {
   mutations.forEach((mutation) => {
     if (mutation.addedNodes && mutation.addedNodes.length > 0
-        && (mutation.target.id === 'ismr-main' || mutation.target.id === 'ismr-summary-bench')
+        && (mutation.target.id === 'ismr-main' || mutation.target.id === 'ismr-summary-bench'
+        || mutation.target.id === 'ismr-pos11')
         && document.URL === 'https://fantasy.premierleague.com/a/team/my') {
       updateMyTeamStyle();
       addPlayerFixtures();
