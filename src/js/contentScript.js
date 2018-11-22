@@ -51,7 +51,7 @@ function getFixturesDiv(fixtures, transfers = false) {
 /**
  * Returns an array of players that are in the user's current team.
  */
-async function getTeamPlayers() {
+async function getTeamPlayers(transfers = false) {
   if (allTeams.length === 0) {
     allTeams = await getLocalTeams();
   }
@@ -62,13 +62,16 @@ async function getTeamPlayers() {
 
   const playerElements = Array.from(document.getElementsByClassName('ismjs-menu')).slice(0, 15);
   const teamPlayers = playerElements.map((element) => {
-    const captainDiv = element.nextElementSibling.querySelector('.ism-element__control--captain');
     let isCaptain = false;
     let isViceCaptain = false;
 
-    if (captainDiv !== null) {
-      isCaptain = captainDiv.querySelector('span').title === 'Captain';
-      isViceCaptain = captainDiv.querySelector('span').title === 'Vice-captain';
+    if (!transfers) {
+      const captainDiv = element.nextElementSibling.querySelector('.ism-element__control--captain');
+
+      if (captainDiv !== null) {
+        isCaptain = captainDiv.querySelector('span').title === 'Captain';
+        isViceCaptain = captainDiv.querySelector('span').title === 'Vice-captain';
+      }
     }
 
     const playerName = element.querySelector('div > .ism-element__name').textContent;
@@ -109,7 +112,7 @@ async function addPlayerFixtures() {
  * Adds each player's expection points next to their next fixture.
  */
 async function addPlayerExpectedPoints(transfers = false) {
-  const teamPlayers = await getTeamPlayers();
+  const teamPlayers = await getTeamPlayers(transfers);
   const playerElements = Array.from(document.getElementsByClassName('ismjs-menu')).slice(0, 15);
 
   Array.from(playerElements).forEach((playerElement) => {
@@ -158,7 +161,7 @@ function getTransferChangeIcon(player) {
  * @param {boolean} transfers
  */
 async function addPlayerTransferChange(transfers = false) {
-  const teamPlayers = await getTeamPlayers();
+  const teamPlayers = await getTeamPlayers(transfers);
   const playerElements = Array.from(document.getElementsByClassName('ismjs-menu')).slice(0, 15);
 
   Array.from(playerElements).forEach((playerElement) => {
@@ -210,7 +213,7 @@ async function addTotalExpectedPoints(transfers = false) {
     createExpectedPointsElement(transfers);
   }
 
-  const teamPlayers = await getTeamPlayers();
+  const teamPlayers = await getTeamPlayers(transfers);
   const players = transfers ? teamPlayers : teamPlayers.slice(0, 11);
   const expectedPoints = players.reduce((points, player) => points + parseFloat(player.ep_this), 0);
   const element = document.getElementsByClassName('expected-points--value')[0];
