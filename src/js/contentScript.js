@@ -272,7 +272,7 @@ function getMaxWidth(positionStrings) {
   return Math.max(...positionStrings.map(positionString => positionString.length));
 }
 
-async function getRMTString() {
+async function getRMTString(squadValue, inTheBank, freeTransfers) {
   const teamPlayers = await getTeamPlayers();
   const starters = teamPlayers.slice(0, 11);
   const bench = teamPlayers.slice(11, 15);
@@ -290,20 +290,35 @@ async function getRMTString() {
     const padding = maxWidth / 2 + positionString.length / 2 + 4;
     RMT += `${positionString.padStart(padding, ' ')}\n`;
   });
-  RMT += `\n    Bench${bench[0].web_name} - ${bench.slice(1).map(player => player.web_name).join(', ')}`;
+  RMT += `\n    Bench: ${bench[0].web_name} - ${bench.slice(1).map(player => player.web_name).join(', ')}\n`;
+  RMT += `\n    SV:  £${squadValue}\n    ITB: £${inTheBank}\n    FTs: ${freeTransfers}`;
 
   return RMT;
 }
 
 async function copyRMT() {
-  const RMTString = await getRMTString();
-  console.log(RMTString);
+  const pointsURL = document.querySelector('.ism-nav__list__item > a[data-nav-tab="points"]').getAttribute('href');
+  const userId = parseInt(/.*\/(\d+)\//.exec(pointsURL)[1], 10);
+  const user = await getUser(userId);
+  const alert = document.getElementsByClassName('ism-alert--info')[0];
+
+  const squadValue = user.entry.value / 10;
+  const inTheBank = user.entry.bank / 10;
+  const freeTransfers = user.entry.event_transfers_cost < 0
+    ? 0 : user.entry.extra_free_transfers + 1 - user.entry.event_transfers;
+
+  const RMTString = await getRMTString(squadValue, inTheBank, freeTransfers);
+  navigator.clipboard.writeText(RMTString);
+
+  alert.className = 'ism-alert--success';
+  alert.innerHTML = '<p class="ism-alert__item">Copied team to clipboard!</p>';
 }
 
 function addRedditButton() {
   const squadWrapper = document.getElementsByClassName('ism-squad-wrapper')[0];
   const buttonDiv = document.createElement('div');
   buttonDiv.className = 'reddit-rmt grid-center';
+  buttonDiv.title = 'Copy team for RMT thread!';
   buttonDiv.onclick = copyRMT;
   buttonDiv.innerHTML = '<span class="rmt-icon icon-reddit-square"></span>';
   squadWrapper.insertAdjacentElement('afterbegin', buttonDiv);
