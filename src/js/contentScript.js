@@ -793,16 +793,42 @@ async function handleTransferFixtures() {
 //   priceFilter.insertAdjacentElement('beforeend', newOption);
 // }
 
+/**
+ * Increases the price of the /transfers maximum price filter.
+ */
+function increasePrice() {
+  const priceFilter = document.getElementById('ismjs-element-price');
+  if (priceFilter.options[priceFilter.selectedIndex].value === '') return;
+  priceFilter.selectedIndex -= 1;
+}
+
+/**
+ * Decreases the price of the /transfers maximum price filter.
+ */
+function decreasePrice() {
+  const priceFilter = document.getElementById('ismjs-element-price');
+  if (priceFilter.options.length - 1 === priceFilter.selectedIndex) return;
+  priceFilter.selectedIndex += 1;
+}
+
+/**
+ * Adds the increase and decrease price buttons for filtering players by the their maximum price to
+ * the /transfers sidebar.
+ */
 function addPriceButtons() {
   const priceDiv = document.getElementById('ismr-price');
+  if (priceDiv.classList.contains('price-filter')) return;
+
   priceDiv.className += ' price-filter';
   const increaseButton = document.createElement('div');
   const decreaseButton = document.createElement('div');
 
   increaseButton.className = 'price-change-button grid-center';
   increaseButton.textContent = '+';
+  increaseButton.onclick = increasePrice;
   decreaseButton.className = 'price-change-button grid-center';
   decreaseButton.textContent = '-';
+  decreaseButton.onclick = decreasePrice;
 
   priceDiv.insertAdjacentElement('beforeend', increaseButton);
   priceDiv.insertAdjacentElement('beforeend', decreaseButton);
@@ -897,3 +923,5 @@ pointsObserver.observe(document.getElementsByClassName('ism-container')[0], {
   childList: true,
   subtree: true,
 });
+
+window.addEventListener('load', () => console.log(window.ISMApp));
