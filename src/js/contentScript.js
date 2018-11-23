@@ -798,8 +798,9 @@ async function handleTransferFixtures() {
  */
 function increasePrice() {
   const priceFilter = document.getElementById('ismjs-element-price');
-  if (priceFilter.options[priceFilter.selectedIndex].value === '') return;
+  if (priceFilter.selectedIndex === 0) return;
   priceFilter.selectedIndex -= 1;
+  priceFilter.dispatchEvent(new Event('change', { bubbles: true }));
 }
 
 /**
@@ -807,8 +808,9 @@ function increasePrice() {
  */
 function decreasePrice() {
   const priceFilter = document.getElementById('ismjs-element-price');
-  if (priceFilter.options.length - 1 === priceFilter.selectedIndex) return;
+  if (priceFilter.selectedIndex === priceFilter.options.length - 1) return;
   priceFilter.selectedIndex += 1;
+  priceFilter.dispatchEvent(new Event('change', { bubbles: true }));
 }
 
 /**
