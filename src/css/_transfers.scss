@@ -12,3 +12,24 @@
   font-size: 1.3rem;
   cursor: default;
 }
+
+.price-filter {
+  display: grid;
+  grid-template-columns: 1fr repeat(2, 4rem);
+  grid-gap: .5rem;
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+
+.price-change-button {
+  height: 4rem;
+  background-color: #e8e8e8;
+  font-size: 2.5rem;
+  border-bottom: 1px solid #76766f;
+  transition: all 0.2s;
+  cursor: pointer;
+
+  &:hover {
+    border-bottom-color: #E90052;
+  }
+}

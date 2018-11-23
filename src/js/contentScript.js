@@ -793,6 +793,21 @@ async function handleTransferFixtures() {
 //   priceFilter.insertAdjacentElement('beforeend', newOption);
 // }
 
+function addPriceButtons() {
+  const priceDiv = document.getElementById('ismr-price');
+  priceDiv.className += ' price-filter';
+  const increaseButton = document.createElement('div');
+  const decreaseButton = document.createElement('div');
+
+  increaseButton.className = 'price-change-button grid-center';
+  increaseButton.textContent = '+';
+  decreaseButton.className = 'price-change-button grid-center';
+  decreaseButton.textContent = '-';
+
+  priceDiv.insertAdjacentElement('beforeend', increaseButton);
+  priceDiv.insertAdjacentElement('beforeend', decreaseButton);
+}
+
 const transferSidebarObserver = new MutationObserver((mutations) => {
   mutations.forEach((mutation) => {
     if (mutation.addedNodes && mutation.addedNodes.length > 0
@@ -800,6 +815,7 @@ const transferSidebarObserver = new MutationObserver((mutations) => {
           || mutation.target.id === 'ismjs-elements-list-tables')
           && document.URL === 'https://fantasy.premierleague.com/a/squad/transfers') {
       handleTransferFixtures();
+      addPriceButtons();
     }
   });
 });
