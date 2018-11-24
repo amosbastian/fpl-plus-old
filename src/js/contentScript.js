@@ -51,7 +51,7 @@ function getFixturesDiv(fixtures, transfers = false) {
 /**
  * Returns an array of players that are in the user's current team.
  */
-async function getTeamPlayers() {
+async function getTeamPlayers(transfers = false) {
   if (allTeams.length === 0) {
     allTeams = await getLocalTeams();
   }
@@ -62,6 +62,18 @@ async function getTeamPlayers() {
 
   const playerElements = Array.from(document.getElementsByClassName('ismjs-menu')).slice(0, 15);
   const teamPlayers = playerElements.map((element) => {
+    let isCaptain = false;
+    let isViceCaptain = false;
+
+    if (!transfers) {
+      const captainDiv = element.nextElementSibling.querySelector('.ism-element__control--captain');
+
+      if (captainDiv !== null) {
+        isCaptain = captainDiv.querySelector('span').title === 'Captain';
+        isViceCaptain = captainDiv.querySelector('span').title === 'Vice-captain';
+      }
+    }
+
     const playerName = element.querySelector('div > .ism-element__name').textContent;
     const teamName = element.querySelector('picture > img').getAttribute('alt');
 
@@ -70,7 +82,12 @@ async function getTeamPlayers() {
       return allPlayers.find(player => player.web_name);
     }
     const teamId = allTeams.find(team => team.name === teamName).id;
-    return allPlayers.find(player => player.web_name === playerName && player.team === teamId);
+    const foundPlayer = allPlayers
+      .find(player => player.web_name === playerName && player.team === teamId);
+    foundPlayer.is_captain = isCaptain;
+    foundPlayer.is_vice_captain = isViceCaptain;
+
+    return foundPlayer;
   });
   return teamPlayers;
 }
@@ -95,7 +112,7 @@ async function addPlayerFixtures() {
  * Adds each player's expection points next to their next fixture.
  */
 async function addPlayerExpectedPoints(transfers = false) {
-  const teamPlayers = await getTeamPlayers();
+  const teamPlayers = await getTeamPlayers(transfers);
   const playerElements = Array.from(document.getElementsByClassName('ismjs-menu')).slice(0, 15);
 
   Array.from(playerElements).forEach((playerElement) => {
@@ -144,7 +161,7 @@ function getTransferChangeIcon(player) {
  * @param {boolean} transfers
  */
 async function addPlayerTransferChange(transfers = false) {
-  const teamPlayers = await getTeamPlayers();
+  const teamPlayers = await getTeamPlayers(transfers);
   const playerElements = Array.from(document.getElementsByClassName('ismjs-menu')).slice(0, 15);
 
   Array.from(playerElements).forEach((playerElement) => {
@@ -196,7 +213,7 @@ async function addTotalExpectedPoints(transfers = false) {
     createExpectedPointsElement(transfers);
   }
 
-  const teamPlayers = await getTeamPlayers();
+  const teamPlayers = await getTeamPlayers(transfers);
   const players = transfers ? teamPlayers : teamPlayers.slice(0, 11);
   const expectedPoints = players.reduce((points, player) => points + parseFloat(player.ep_this), 0);
   const element = document.getElementsByClassName('expected-points--value')[0];
@@ -229,6 +246,121 @@ function updateBenchStyle() {
 }
 
 /**
+ * Filters player's by their position:
+ * 1: Goalkeeper
+ * 2: Defender
+ * 3: Midfielder
+ * 4: Forward
+ * @param {Object} players
+ * @param {number} position
+ */
+function filterPlayersByPosition(players, position) {
+  return players.filter(player => player.element_type === position);
+}
+
+/**
+ * Converts arrays of players to strings used in RMT threads on Reddit, e.g.:
+ *                        Patrício
+ *               Robertson - Alonso - Duffy
+ * Richarlison (C) - Mané - Sterling (V) - Hazard - Fraser
+ *                    Jiménez - Wilson
+ */
+function getPositionStrings(goalkeeper, defenders, midfielders, forwards) {
+  const positionStrings = [];
+  [goalkeeper, defenders, midfielders, forwards].forEach((position) => {
+    const positionString = [];
+    position.forEach((player) => {
+      let badge = '';
+      if (player.is_captain) {
+        badge = ' (C)';
+      } else if (player.is_vice_captain) {
+        badge = ' (V)';
+      }
+      positionString.push(`${player.web_name}${badge}`);
+    });
+    positionStrings.push(positionString.join(' - '));
+  });
+  return positionStrings;
+}
+
+/**
+ * Returns the max width of the given position strings, which is used to center the players in the
+ * getRMTString function.
+ * @param {Array<string>} positionStrings
+ */
+function getMaxWidth(positionStrings) {
+  return Math.max(...positionStrings.map(positionString => positionString.length));
+}
+
+/**
+ * Returns the player's team converted to a string usable in RMT threads on Reddit.
+ * @param {number} squadValue
+ * @param {number} inTheBank
+ * @param {number} freeTransfers
+ */
+async function getRMTString(squadValue, inTheBank, freeTransfers) {
+  const teamPlayers = await getTeamPlayers();
+  const starters = teamPlayers.slice(0, 11);
+  const bench = teamPlayers.slice(11, 15);
+
+  const goalkeeper = [starters[0]];
+  const defenders = filterPlayersByPosition(starters, 2);
+  const midfielders = filterPlayersByPosition(starters, 3);
+  const forwards = filterPlayersByPosition(starters, 4);
+
+  const positionStrings = getPositionStrings(goalkeeper, defenders, midfielders, forwards);
+  const maxWidth = getMaxWidth(positionStrings);
+
+  let RMT = '';
+  positionStrings.forEach((positionString) => {
+    const padding = maxWidth / 2 + positionString.length / 2 + 4;
+    RMT += `${positionString.padStart(padding, ' ')}\n`;
+  });
+  RMT += `\n    Bench: ${bench[0].web_name} - ${bench.slice(1).map(player => player.web_name).join(', ')}\n`;
+  RMT += `\n    SV:  £${squadValue}\n    ITB: £${inTheBank}\n    FTs: ${freeTransfers}`;
+
+  return RMT;
+}
+
+/**
+ * Copies RMT string top clipboard and updates alert.
+ */
+async function copyRMT() {
+  const pointsURL = document.querySelector('.ism-nav__list__item > a[data-nav-tab="points"]').getAttribute('href');
+  const userId = parseInt(/.*\/(\d+)\//.exec(pointsURL)[1], 10);
+  const user = await getUser(userId);
+  const alert = document.getElementsByClassName('ism-alert--info')[0];
+
+  const squadValue = user.entry.value / 10;
+  const inTheBank = user.entry.bank / 10;
+  const freeTransfers = user.entry.event_transfers_cost < 0
+    ? 0 : user.entry.extra_free_transfers + 1 - user.entry.event_transfers;
+
+  const RMTString = await getRMTString(squadValue, inTheBank, freeTransfers);
+  navigator.clipboard.writeText(RMTString);
+
+  alert.className = 'ism-alert--success';
+  alert.innerHTML = '<p class="ism-alert__item">Copied team to clipboard!</p>';
+}
+
+/**
+ * Adds button for copying team for use in RMT threads on /r/FantasyPL.
+ */
+function addRedditButton() {
+  const squadWrapper = document.getElementsByClassName('ism-squad-wrapper')[0];
+  if (squadWrapper.firstChild.className === 'reddit-rmt grid-center') {
+    return;
+  }
+  const buttonDiv = document.createElement('div');
+  buttonDiv.className = 'reddit-rmt grid-center';
+  buttonDiv.title = 'Copy team for RMT thread!';
+  buttonDiv.onclick = copyRMT;
+  buttonDiv.innerHTML = '<span class="rmt-icon icon-reddit-square"></span>';
+
+  squadWrapper.insertAdjacentElement('afterbegin', buttonDiv);
+}
+
+/**
  * Updates My Team's style to accomodate the changes.
  */
 function updateMyTeamStyle() {
@@ -239,13 +371,15 @@ function updateMyTeamStyle() {
 const myTeamObserver = new MutationObserver((mutations) => {
   mutations.forEach((mutation) => {
     if (mutation.addedNodes && mutation.addedNodes.length > 0
-        && (mutation.target.id === 'ismr-main' || mutation.target.id === 'ismr-summary-bench')
+        && (mutation.target.id === 'ismr-main' || mutation.target.id === 'ismr-summary-bench'
+        || mutation.target.id === 'ismr-pos11')
         && document.URL === 'https://fantasy.premierleague.com/a/team/my') {
       updateMyTeamStyle();
       addPlayerFixtures();
       addPlayerExpectedPoints();
       addTotalExpectedPoints();
       addPlayerTransferChange();
+      addRedditButton();
     }
   });
 });
@@ -336,8 +470,8 @@ function createPlayersDiv(picks, playerType) {
 function createTeamDiv(picks) {
   const teamDiv = document.createElement('div');
   teamDiv.className = 'manager-team';
-  teamDiv.appendChild(createPlayersDiv(allPlayers, picks, 'starter'));
-  teamDiv.appendChild(createPlayersDiv(allPlayers, picks, 'ben'));
+  teamDiv.appendChild(createPlayersDiv(picks, 'starter'));
+  teamDiv.appendChild(createPlayersDiv(picks, 'ben'));
   return teamDiv;
 }
 
@@ -538,7 +672,7 @@ function addChips(leagueTable, managers, currentGameweek) {
 
 /**
  * Adds the manager's squad value and total money in the bank to the league table.
- * @param {None} leagueTable
+ * @param {Node} leagueTable
  * @param {Array<Object>} managers
  */
 function addSquadValue(leagueTable, managers) {
@@ -564,6 +698,11 @@ function addSquadValue(leagueTable, managers) {
   });
 }
 
+/**
+ * Adds each manager's overall rank to the league table.
+ * @param {Node} leagueTable
+ * @param {Array<Object>} managers
+ */
 function addOverallRank(leagueTable, managers) {
   const tableHead = leagueTable.tHead.getElementsByTagName('tr')[0];
   insertTableHeader(tableHead, 'OR', 'Overall rank');
@@ -659,6 +798,49 @@ async function handleTransferFixtures() {
 //   priceFilter.insertAdjacentElement('beforeend', newOption);
 // }
 
+/**
+ * Increases the price of the /transfers maximum price filter.
+ */
+function increasePrice() {
+  const priceFilter = document.getElementById('ismjs-element-price');
+  if (priceFilter.selectedIndex === 0) return;
+  priceFilter.selectedIndex -= 1;
+  priceFilter.dispatchEvent(new Event('change', { bubbles: true }));
+}
+
+/**
+ * Decreases the price of the /transfers maximum price filter.
+ */
+function decreasePrice() {
+  const priceFilter = document.getElementById('ismjs-element-price');
+  if (priceFilter.selectedIndex === priceFilter.options.length - 1) return;
+  priceFilter.selectedIndex += 1;
+  priceFilter.dispatchEvent(new Event('change', { bubbles: true }));
+}
+
+/**
+ * Adds the increase and decrease price buttons for filtering players by the their maximum price to
+ * the /transfers sidebar.
+ */
+function addPriceButtons() {
+  const priceDiv = document.getElementById('ismr-price');
+  if (priceDiv.classList.contains('price-filter')) return;
+
+  priceDiv.className += ' price-filter';
+  const increaseButton = document.createElement('div');
+  const decreaseButton = document.createElement('div');
+
+  increaseButton.className = 'price-change-button grid-center';
+  increaseButton.textContent = '+';
+  increaseButton.onclick = increasePrice;
+  decreaseButton.className = 'price-change-button grid-center';
+  decreaseButton.textContent = '-';
+  decreaseButton.onclick = decreasePrice;
+
+  priceDiv.insertAdjacentElement('beforeend', increaseButton);
+  priceDiv.insertAdjacentElement('beforeend', decreaseButton);
+}
+
 const transferSidebarObserver = new MutationObserver((mutations) => {
   mutations.forEach((mutation) => {
     if (mutation.addedNodes && mutation.addedNodes.length > 0
@@ -666,6 +848,7 @@ const transferSidebarObserver = new MutationObserver((mutations) => {
           || mutation.target.id === 'ismjs-elements-list-tables')
           && document.URL === 'https://fantasy.premierleague.com/a/squad/transfers') {
       handleTransferFixtures();
+      addPriceButtons();
     }
   });
 });
@@ -673,6 +856,36 @@ transferSidebarObserver.observe(document.getElementsByClassName('ism-container')
   childList: true,
   subtree: true,
 });
+
+/**
+ * Updates the header style of the /transfer page to be more consistent.
+ */
+function updateHeaderStyle() {
+  const elements = Array.from(document.getElementsByClassName('ism-scoreboard__item--3'));
+
+  elements.forEach((element) => {
+    element.style.height = '7rem';
+    element.style.margin = 0;
+    element.style.padding = 0;
+    element.style.paddingTop = '0.5rem';
+    element.style.borderBottomWidth = 0;
+  });
+
+  const autoPick = elements[0];
+  const reset = elements[1];
+  reset.style.borderLeft = '1px solid #E8E8E8';
+  [autoPick, reset].forEach((element) => {
+    element.style.padding = 0;
+    element.style.borderTop = '1px solid #E8E8E8';
+
+    const button = element.getElementsByClassName('ism-scoreboard__button')[0];
+    button.style.border = 'none';
+    button.style.height = '7rem';
+    button.style.margin = 0;
+    // Only transition background, not all
+    button.style.transition = 'background 0.2s';
+  });
+}
 
 const transferMainObserver = new MutationObserver((mutations) => {
   mutations.forEach((mutation) => {
@@ -682,6 +895,7 @@ const transferMainObserver = new MutationObserver((mutations) => {
           && document.URL === 'https://fantasy.premierleague.com/a/squad/transfers') {
       addPlayerFixtures();
       updateFixtureStyle();
+      updateHeaderStyle();
       addPlayerExpectedPoints(true);
       addTotalExpectedPoints(true);
       addPlayerTransferChange(true);
@@ -716,3 +930,24 @@ pointsObserver.observe(document.getElementsByClassName('ism-container')[0], {
   childList: true,
   subtree: true,
 });
+
+/**
+ * Changes game settings to allow filtering by more prices on /transfers by injecting script into
+ * webpage.
+ */
+function runInPage() {
+  const script = document.createElement('script');
+  document.head.appendChild(script).text = `
+    function setPriceGap() {
+      const game = window.ISMApp.data['game-settings'].game;
+      if (typeof game === 'undefined') {
+        setTimeout(setPriceGap, 50);
+      }
+      game.ui_selection_price_gap = 1;
+    }
+    setPriceGap();
+  `;
+  script.remove();
+}
+
+runInPage();

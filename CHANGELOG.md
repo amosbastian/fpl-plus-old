@@ -1,3 +1,10 @@
+### v.0.4.0
+
+- Add RMT button for Reddit on /team/my
+- Update header style for /transfers
+- Add buttons for changing maximum price player on /transfers
+- Change price increment of maximum price selection from 0.5 to 0.1 on /transfers
+
 ### v0.3.0
 
 - Improve performance loading fixtures & expected points
