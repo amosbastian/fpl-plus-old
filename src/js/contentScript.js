@@ -465,8 +465,8 @@ function createPlayersDiv(picks, playerType) {
 function createTeamDiv(picks) {
   const teamDiv = document.createElement('div');
   teamDiv.className = 'manager-team';
-  teamDiv.appendChild(createPlayersDiv(allPlayers, picks, 'starter'));
-  teamDiv.appendChild(createPlayersDiv(allPlayers, picks, 'ben'));
+  teamDiv.appendChild(createPlayersDiv(picks, 'starter'));
+  teamDiv.appendChild(createPlayersDiv(picks, 'ben'));
   return teamDiv;
 }
 
