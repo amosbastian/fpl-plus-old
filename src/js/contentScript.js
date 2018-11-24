@@ -926,4 +926,23 @@ pointsObserver.observe(document.getElementsByClassName('ism-container')[0], {
   subtree: true,
 });
 
-window.addEventListener('load', () => console.log(window.ISMApp));
+/**
+ * Changes game settings to allow filtering by more prices on /transfers by injecting script into
+ * webpage.
+ */
+function runInPage() {
+  const script = document.createElement('script');
+  document.head.appendChild(script).text = `
+    function setPriceGap() {
+      const game = window.ISMApp.data['game-settings'].game;
+      if (typeof game === 'undefined') {
+        setTimeout(setPriceGap, 50);
+      }
+      game.ui_selection_price_gap = 1;
+    }
+    setPriceGap();
+  `;
+  script.remove();
+}
+
+runInPage();
