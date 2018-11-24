@@ -23,7 +23,7 @@
 
 .price-change-button {
   height: 4rem;
-  background-color: #e8e8e8;
+  background-color: $fpl-grey;
   font-size: 2.5rem;
   border-bottom: 1px solid #76766f;
   transition: all 0.2s;
@@ -31,7 +31,7 @@
   cursor: pointer;
 
   &:hover {
-    border-bottom-color: #E90052;
+    border-bottom-color: $fpl-red;
   }
 
   &:active {
