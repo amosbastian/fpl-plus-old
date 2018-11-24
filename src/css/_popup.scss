@@ -1,0 +1,59 @@
+.fpl-body {
+  height: 100%;
+  font-weight: 400;
+  padding: 0 !important;
+  width: 100%;
+  margin: 0 !important;
+  overflow: hidden;
+}
+
+.login {
+  display: grid;
+  grid-template-rows: 1fr 3fr 1fr;
+  height: 20rem;
+  width: 20rem;
+}
+
+.login-header {
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
+  color: #fff;
+  background-color: $fpl-green;
+}
+
+.login-body {
+  display: grid;
+  align-items: center;
+}
+
+.login__form {
+  display: grid;
+  grid-gap: 1rem;
+  justify-content: center;
+}
+
+.login__input {
+  width: 15rem;
+}
+
+.login-footer {
+  display: grid;
+  grid-gap: 5px;
+  grid-template-rows: 1fr 1fr;
+  padding: 1rem;
+  align-items: center;
+  background-color: $fpl-purple;
+  color: #fff;
+
+  a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 0.7rem;
+    display: block;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+}
