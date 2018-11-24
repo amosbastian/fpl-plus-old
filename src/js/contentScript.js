@@ -283,6 +283,11 @@ function getPositionStrings(goalkeeper, defenders, midfielders, forwards) {
   return positionStrings;
 }
 
+/**
+ * Returns the max width of the given position strings, which is used to center the players in the
+ * getRMTString function.
+ * @param {Array<string>} positionStrings
+ */
 function getMaxWidth(positionStrings) {
   return Math.max(...positionStrings.map(positionString => positionString.length));
 }
