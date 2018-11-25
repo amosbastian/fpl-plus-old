@@ -141,3 +141,7 @@ export const getLocalPlayers = () => new Promise((resolve) => {
 export const getTeamToFixtures = () => new Promise((resolve) => {
   chrome.storage.local.get('teamToFixtures', data => resolve(data.teamToFixtures));
 });
+
+export const getLocalUser = () => new Promise((resolve) => {
+  chrome.storage.local.get('user', data => resolve(data.user));
+});

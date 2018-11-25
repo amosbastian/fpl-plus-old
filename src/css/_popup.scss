@@ -38,6 +38,7 @@
   width: 15rem;
 }
 
+.logout__button,
 .login__button {
   background-color: $fpl-purple;
   color: #fff;
@@ -68,4 +69,34 @@
     overflow: hidden;
     white-space: nowrap;
   }
+}
+
+.welcome {
+  display: none;
+  grid-template-rows: 1fr 4fr;
+  height: 20rem;
+  width: 20rem;
+}
+
+.welcome-body {
+  display: grid;
+  grid-template-rows: 1fr 4fr;
+  padding: 1rem 2rem 2rem 2rem;
+}
+
+.welcome-information {
+  display: grid;
+  grid-gap: 1rem;
+}
+
+.welcome-user-information {
+  background-color: $fpl-light-grey;
+  border: 1px solid $fpl-grey;
+  padding: 1rem;
+}
+
+.welcome-user-information div {
+  display: grid;
+  justify-content: space-evenly;
+  grid-template-columns: 1fr 1fr;
 }
