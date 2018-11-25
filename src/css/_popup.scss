@@ -98,5 +98,10 @@
 .welcome-user-information div {
   display: grid;
   justify-content: space-evenly;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 2fr 1fr;
+  align-items: center;
+}
+
+.welcome-user-information h4 {
+  text-align: right;
 }
