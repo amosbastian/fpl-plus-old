@@ -764,6 +764,43 @@ function addLivePoints(leagueTable, managers, liveData) {
 }
 
 /**
+ * Returns the number of players in the manager's starting eleven who have already played.
+ * @param {Array<Object>} picks
+ * @param {Object} liveData
+ */
+function getPlayersPlayed(picks, liveData) {
+  const livePlayers = liveData.elements;
+
+  const playersPlayed = picks.slice(0, 11)
+    .filter(player => livePlayers[player.element].explain[0][0].minutes.value > 0);
+
+  return playersPlayed.length;
+}
+
+/**
+ * Adds the number of players (out of 11) in the manager's starting eleven who have already played
+ * to the league table.
+ * @param {Node} leagueTable
+ * @param {Array<Object>} managers
+ * @param {Object} liveData
+ */
+function addPlayersPlayed(leagueTable, managers, liveData) {
+  const tableHead = leagueTable.tHead.getElementsByTagName('tr')[0];
+  insertTableHeader(tableHead, 'PP', 'Players played');
+  const tableBody = leagueTable.tBodies[0];
+  const bodyRows = tableBody.getElementsByTagName('tr');
+
+  Array.from(bodyRows).forEach((row) => {
+    const playersPlayedCell = row.insertCell(-1);
+    const managerId = parseInt(getIdFromRow(row), 10);
+    const currentManager = managers.find(manager => manager.entry.id === managerId);
+
+    const playersPlayed = getPlayersPlayed(currentManager.picks.picks, liveData);
+    playersPlayedCell.textContent = `${playersPlayed}/11`;
+  });
+}
+
+/**
  * Updates the league table with additional information.
  */
 async function updateLeagueTable() {
@@ -786,6 +823,7 @@ async function updateLeagueTable() {
   const leagueTable = document.getElementsByClassName('ism-table--standings')[0];
 
   addLivePoints(leagueTable, managers, liveData);
+  addPlayersPlayed(leagueTable, managers, liveData);
   addOverallRank(leagueTable, managers);
   addSquadValue(leagueTable, managers);
   addCaptains(leagueTable, managers, players);
