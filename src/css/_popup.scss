@@ -9,7 +9,7 @@
 
 .login {
   display: grid;
-  grid-template-rows: 1fr 3fr 1fr;
+  grid-template-rows: 50px 3fr 1fr;
   height: 20rem;
   width: 20rem;
 }
@@ -73,7 +73,7 @@
 
 .welcome {
   display: none;
-  grid-template-rows: 1fr 4fr;
+  grid-template-rows: 50px 4fr;
   height: 20rem;
   width: 20rem;
 }
