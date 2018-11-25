@@ -38,6 +38,18 @@
   width: 15rem;
 }
 
+.login__button {
+  background-color: $fpl-purple;
+  color: #fff;
+  padding: .5rem .75rem;
+  transition: all 0.2s;
+  cursor: pointer;
+
+  &:hover {
+    background-color: $fpl-red;
+  }
+}
+
 .login-footer {
   display: grid;
   grid-gap: 5px;
