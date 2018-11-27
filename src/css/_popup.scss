@@ -1,17 +1,16 @@
 .fpl-body {
-  height: 100%;
   font-weight: 400;
   padding: 0 !important;
-  width: 100%;
   margin: 0 !important;
   overflow: hidden;
+  width: 400px;
+  height: 600px;
 }
 
 .login {
   display: grid;
-  grid-template-rows: 50px 3fr 1fr;
-  height: 20rem;
-  width: 20rem;
+  height: 100%;
+  grid-template-rows: 50px 5fr 1fr;
 }
 
 .login-header {
@@ -73,20 +72,25 @@
 
 .welcome {
   display: none;
-  grid-template-rows: 50px 4fr;
-  height: 20rem;
-  width: 20rem;
+  grid-template-rows: 50px;
+  height: 100%;
+  min-height: 0;
+  min-width: 0;
 }
 
 .welcome-body {
   display: grid;
-  grid-template-rows: 1fr 4fr;
   padding: 1rem 2rem 2rem 2rem;
+  min-height: 0;
+  min-width: 0;
 }
 
 .welcome-information {
   display: grid;
   grid-gap: 1rem;
+  grid-template-rows: 1fr 2fr 10fr 1fr;
+  min-height: 0;
+  min-width: 0;
 }
 
 .welcome-user-information {
@@ -95,13 +99,34 @@
   padding: 1rem;
 }
 
-.welcome-user-information div {
+.welcome-user-statistics {
   display: grid;
-  justify-content: space-evenly;
   grid-template-columns: 2fr 1fr;
   align-items: center;
 }
 
 .welcome-user-information h4 {
   text-align: right;
+}
+
+.welcome-buttons {
+  display: grid;
+  grid-template-rows: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: .5rem;
+}
+
+.welcome-button {
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  background-color: $fpl-purple;
+  color: #fff;
+  padding: .5rem .75rem;
+  transition: all 0.2s;
+  cursor: pointer;
+
+  &:hover {
+    background-color: $fpl-red;
+  }
 }
