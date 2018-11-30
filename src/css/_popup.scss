@@ -130,3 +130,64 @@
     background-color: $fpl-red;
   }
 }
+
+.my-team {
+  display: none;
+  grid-template-rows: 50px;
+}
+
+.player-table {
+  border-left: 1px solid $fpl-grey;
+  border-right: 1px solid $fpl-grey;
+  margin: 1rem;
+}
+
+.player-table-header {
+  background-color: $fpl-purple !important;
+  color: #fff;
+  padding: .35rem;
+  border-bottom: none !important;
+}
+
+.player-row {
+  display: grid;
+  padding: .35rem;
+  align-items: center;
+  grid-template-columns: 1fr 1.5fr 1.5fr 1.5fr 1fr;
+  border-bottom: 1px solid $fpl-grey;
+  cursor: pointer;
+  transition: all .2s;
+
+  &--starter {
+    background-color: $fpl-light-grey;
+  }
+
+  &--bench {
+    background-color: $fpl-grey;
+  }
+
+  &:hover {
+    background-color: $fpl-dark-grey;
+  }
+}
+
+.player-cell {
+  display: grid;
+  align-items: center;
+}
+
+.player-table-fixtures {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-gap: .25rem;
+}
+
+.player-table-expected-points {
+  text-align: right;
+}
+
+.back-row {
+  display: flex;
+  margin-top: 1rem;
+  margin-left: 1rem;
+}
