@@ -65,6 +65,7 @@ function getFixtureElements(fixtures) {
  * Returns the player row div.
  * @param {Object} player
  * @param {number} position
+ * @param {boolean} myTeam
  */
 function createPlayerRow(player, position, myTeam) {
   const teamName = allTeams.find(team => team.id === player.team).short_name;
@@ -88,6 +89,7 @@ function createPlayerRow(player, position, myTeam) {
 
 /**
  * Add player rows to the myTeam popup page.
+ * @param {boolean} myTeam
  */
 async function addPlayerRows(myTeam = true) {
   const user = await getLocalUser();
