@@ -66,13 +66,14 @@ function getFixtureElements(fixtures) {
  * @param {Object} player
  * @param {number} position
  */
-function createPlayerRow(player, position) {
+function createPlayerRow(player, position, myTeam) {
   const teamName = allTeams.find(team => team.id === player.team).short_name;
   const fixtures = teamToFixtures[teamName];
   const fixtureElements = getFixtureElements(fixtures);
   const fixtureTitle = `${fixtures[0].opponent_short_name} (${fixtures[0].is_home ? 'H' : 'A'})`;
 
   const className = (position <= 11) ? 'starter' : 'bench';
+  const pointValue = (myTeam) ? player.ep_this : player.event_points;
 
   return `
     <div class="player-row player-row--${className}">
@@ -80,7 +81,7 @@ function createPlayerRow(player, position) {
       <div class="player-cell">${player.web_name}</div>
       <div class="player-cell player-table-next-fixture">${fixtureTitle}</div>
       <div class="player-table-fixtures">${fixtureElements}</div>
-      <div class="player-cell player-table-expected-points">${player.ep_this}</div>
+      <div class="player-cell player-table-expected-points">${pointValue}</div>
     <div>
   `;
 }
@@ -88,17 +89,17 @@ function createPlayerRow(player, position) {
 /**
  * Add player rows to the myTeam popup page.
  */
-async function addPlayerRows() {
+async function addPlayerRows(myTeam = true) {
   const user = await getLocalUser();
   const [...picks] = user.picks.picks;
   const playerIds = picks.map(player => player.element);
   const players = allPlayers.filter(player => playerIds.includes(player.id));
-  const playerTable = document.getElementById('player-table');
+  const playerTable = myTeam ? document.getElementById('myteam-table') : document.getElementById('points-table');
 
   players
     .sort((a, b) => (playerIds.indexOf(a.id) > playerIds.indexOf(b.id) ? 1 : -1))
     .forEach((player) => {
-      const playerRow = createPlayerRow(player, playerIds.indexOf(player.id));
+      const playerRow = createPlayerRow(player, playerIds.indexOf(player.id), myTeam);
       playerTable.insertAdjacentHTML('beforeend', playerRow);
     });
 }
@@ -110,30 +111,54 @@ function showMyTeamPage() {
   const welcomePage = document.getElementById('welcome');
   welcomePage.style.display = 'none';
 
+  const pointsPage = document.getElementById('points');
+  pointsPage.style.display = 'none';
+
   const myTeamPage = document.getElementById('my-team');
   myTeamPage.style.display = 'grid';
 
-  const backButton = document.getElementById('fpl-back');
-  backButton.addEventListener('click', showWelcomePage);
-
-  if (Array.from(document.getElementsByClassName('player-row')).length <= 1) {
+  if (Array.from(document.getElementById('my-team').getElementsByClassName('player-row')).length <= 1) {
     addPlayerRows();
   }
 }
 
+/**
+ * Show the points page.
+ */
+function showPointsPage() {
+  const welcomePage = document.getElementById('welcome');
+  welcomePage.style.display = 'none';
+
+  const pointsPage = document.getElementById('points');
+  pointsPage.style.display = 'grid';
+
+  if (Array.from(document.getElementById('points').getElementsByClassName('player-row')).length <= 1) {
+    addPlayerRows(false);
+  }
+}
+
+/**
+ * Shows the index page.
+ */
 function showWelcomePage() {
   const loginDiv = document.getElementById('login');
   loginDiv.style.display = 'none';
+
   const myTeamPage = document.getElementById('my-team');
   myTeamPage.style.display = 'none';
+
+  const pointsPage = document.getElementById('points');
+  pointsPage.style.display = 'none';
+
   const welcomePage = document.getElementById('welcome');
   welcomePage.style.display = 'grid';
-  const myTeamButton = document.getElementById('my-team-button');
-  myTeamButton.addEventListener('click', showMyTeamPage);
 
   updateWelcomePage();
 }
 
+/**
+ * Logs in the user by using their user ID.
+ */
 async function login() {
   const userId = document.getElementById('fpl-user-id').value;
   const currentGameweek = await getCurrentGameweek();
@@ -150,22 +175,38 @@ async function login() {
   showWelcomePage();
 }
 
+/**
+ * Removes the user from localStorage.
+ */
 async function logout() {
   const welcomePage = document.getElementById('welcome');
   const myTeamPage = document.getElementById('my-team');
+  const pointsPage = document.getElementById('points');
   const loginDiv = document.getElementById('login');
+
   chrome.storage.local.set({ loggedIn: false }, () => {
     welcomePage.style.display = 'none';
     myTeamPage.style.display = 'none';
+    pointsPage.style.display = 'none';
     loginDiv.style.display = 'grid';
   });
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  const backButtons = Array.from(document.getElementsByClassName('back-button'));
+  backButtons.forEach(button => button.addEventListener('click', showWelcomePage));
+
   const loginButton = document.getElementById('fpl-login');
   loginButton.onclick = login;
+
   const logoutButton = document.getElementById('fpl-logout');
   logoutButton.onclick = logout;
+
+  const myTeamButton = document.getElementById('my-team-button');
+  myTeamButton.addEventListener('click', showMyTeamPage);
+
+  const pointsButton = document.getElementById('points-button');
+  pointsButton.addEventListener('click', showPointsPage);
 
   chrome.storage.local.get(['loggedIn'], (data) => {
     if (data.loggedIn) {
