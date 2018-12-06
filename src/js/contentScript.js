@@ -1,7 +1,7 @@
 import '../css/main.scss';
 import {
   getClassicLeague, getCurrentGameweek, getPlayers, getTeams, getUser, getUserPicks,
-  getUserHistory, leagueRegex, getTeamToFixtures, getLocalTeams, getLocalPlayers,
+  getUserHistory, leagueRegex, getTeamToFixtures, getLocalTeams, getLocalPlayers, getLiveData,
 } from './fpl';
 
 let teamToFixtures = [];
@@ -721,11 +721,99 @@ function addOverallRank(leagueTable, managers) {
 }
 
 /**
+ * Returns the current live points scored by the given picks.
+ * @param {Array<Object>} picks
+ * @param {Object} liveData
+ */
+function getLivePoints(picks, liveData) {
+  const livePlayers = liveData.elements;
+
+  const livePoints = picks.slice(0, 11).reduce((totalPoints, player) => {
+    const playerStats = livePlayers[player.element].explain[0][0];
+    let playerPoints = 0;
+    Object.values(playerStats).forEach((statistic) => {
+      const points = statistic.points * player.multiplier;
+      playerPoints += points;
+    });
+    return totalPoints + playerPoints;
+  }, 0);
+
+  return livePoints;
+}
+
+/**
+ * Adds the manager's live points to the league table.
+ * @param {Node} leagueTable
+ * @param {Array<Object>} managers
+ * @param {Object} liveData
+ */
+function addLivePoints(leagueTable, managers, liveData) {
+  const tableHead = leagueTable.tHead.getElementsByTagName('tr')[0];
+  insertTableHeader(tableHead, 'LP', 'Live points');
+  const tableBody = leagueTable.tBodies[0];
+  const bodyRows = tableBody.getElementsByTagName('tr');
+
+  Array.from(bodyRows).forEach((row) => {
+    const totalPointsCell = row.cells[3];
+    const gameweekPoints = parseInt(row.cells[2].textContent, 10);
+    const totalPoints = parseInt(totalPointsCell.textContent, 10);
+
+    const livePointsCell = row.insertCell(-1);
+    const managerId = parseInt(getIdFromRow(row), 10);
+    const currentManager = managers.find(manager => manager.entry.id === managerId);
+
+    const livePoints = getLivePoints(currentManager.picks.picks, liveData);
+    livePointsCell.textContent = livePoints;
+
+    const pointsDifference = livePoints - gameweekPoints;
+    totalPointsCell.textContent = totalPoints + pointsDifference;
+  });
+}
+
+/**
+ * Returns the number of players in the manager's starting eleven who have already played.
+ * @param {Array<Object>} picks
+ * @param {Object} liveData
+ */
+function getPlayersPlayed(picks, liveData) {
+  const livePlayers = liveData.elements;
+
+  const playersPlayed = picks.slice(0, 11)
+    .filter(player => livePlayers[player.element].explain[0][0].minutes.value > 0);
+
+  return playersPlayed.length;
+}
+
+/**
+ * Adds the number of players (out of 11) in the manager's starting eleven who have already played
+ * to the league table.
+ * @param {Node} leagueTable
+ * @param {Array<Object>} managers
+ * @param {Object} liveData
+ */
+function addPlayersPlayed(leagueTable, managers, liveData) {
+  const tableHead = leagueTable.tHead.getElementsByTagName('tr')[0];
+  insertTableHeader(tableHead, 'PP', 'Players played');
+  const tableBody = leagueTable.tBodies[0];
+  const bodyRows = tableBody.getElementsByTagName('tr');
+
+  Array.from(bodyRows).forEach((row) => {
+    const playersPlayedCell = row.insertCell(-1);
+    const managerId = parseInt(getIdFromRow(row), 10);
+    const currentManager = managers.find(manager => manager.entry.id === managerId);
+
+    const playersPlayed = getPlayersPlayed(currentManager.picks.picks, liveData);
+    playersPlayedCell.textContent = `${playersPlayed}/11`;
+  });
+}
+
+/**
  * Updates the league table with additional information.
  */
 async function updateLeagueTable() {
   const players = await getPlayers();
   const currentGameweek = await getCurrentGameweek();
+  const liveData = await getLiveData(currentGameweek);
   const classicLeague = await getClassicLeague();
   const managerIds = classicLeague.standings.results.map(manager => manager.entry);
 
@@ -741,6 +829,8 @@ async function updateLeagueTable() {
 
   const leagueTable = document.getElementsByClassName('ism-table--standings')[0];
 
+  addLivePoints(leagueTable, managers, liveData);
+  addPlayersPlayed(leagueTable, managers, liveData);
   addOverallRank(leagueTable, managers);
   addSquadValue(leagueTable, managers);
   addCaptains(leagueTable, managers, players);

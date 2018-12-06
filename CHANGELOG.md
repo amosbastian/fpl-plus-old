@@ -1,3 +1,12 @@
+### v.0.5.0
+
+- Add live points and players played to classic league table
+- Implement popup with login functionality using user ID
+- Add index popup page
+- Add myTeam popup page
+- Add points popup page
+- Implement alarm for updating team, player and user data
+
 ### v.0.4.0
 
 - Add RMT button for Reddit on /team/my

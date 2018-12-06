@@ -130,6 +130,20 @@ export const getTeams = async () => retry(async () => {
   throw new Error(response.status);
 });
 
+/**
+ * Returns a JSON object containing live data for the current gameweek.
+ * @param {number} gameweek
+ */
+export const getLiveData = async gameweek => retry(async () => {
+  const response = await fetch(`https://fantasy.premierleague.com/drf/event/${gameweek}/live`);
+  if (response.status === 200) {
+    const json = await response.json();
+    return json;
+  }
+
+  throw new Error(response.status);
+});
+
 export const getLocalTeams = () => new Promise((resolve) => {
   chrome.storage.local.get('teams', data => resolve(data.teams));
 });
@@ -140,4 +154,8 @@ export const getLocalPlayers = () => new Promise((resolve) => {
 
 export const getTeamToFixtures = () => new Promise((resolve) => {
   chrome.storage.local.get('teamToFixtures', data => resolve(data.teamToFixtures));
+});
+
+export const getLocalUser = () => new Promise((resolve) => {
+  chrome.storage.local.get('user', data => resolve(data.user));
 });

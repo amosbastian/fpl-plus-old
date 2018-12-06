@@ -1,4 +1,7 @@
-import { getTeams, getPlayers, getPlayer } from './fpl';
+import {
+  getTeams, getPlayers, getPlayer, getUser, getUserPicks, getUserHistory, getCurrentGameweek,
+  getLocalUser,
+} from './fpl';
 
 /**
  * Creates a Map containing each team's short name and name as property and their next 5 fixtures
@@ -44,8 +47,43 @@ async function savePlayers() {
   chrome.storage.local.set({ players });
 }
 
-chrome.runtime.onInstalled.addListener(async () => {
+/**
+ * Updates the information of the user saved in localStorage.
+ * @param {number} userId
+ */
+async function updateUser(userId) {
+  const currentGameweek = await getCurrentGameweek();
+  const user = await getUser(userId);
+  const picks = await getUserPicks(userId, currentGameweek);
+  const history = await getUserHistory(userId);
+
+  user.picks = picks;
+  user.history = history;
+
+  chrome.storage.local.set({ user });
+}
+
+/**
+ * Updates teams, players, teamToFixtures and user in localStorage (if applicable).
+ */
+async function updateData() {
   saveTeams();
   savePlayers();
   saveTeamToFixtures();
+  const user = await getLocalUser();
+  if (typeof user !== 'undefined') {
+    updateUser(user.entry.id);
+  }
+}
+
+chrome.runtime.onInstalled.addListener(async () => {
+  updateData();
+  // Set alarm to update data that could be outdated.
+  chrome.alarms.create('updater', { delayInMinutes: 0.1, periodInMinutes: 30.0 });
+});
+
+chrome.alarms.onAlarm.addListener((alarm) => {
+  if (alarm.name === 'updater') {
+    updateData();
+  }
 });
