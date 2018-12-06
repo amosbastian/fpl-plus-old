@@ -754,12 +754,19 @@ function addLivePoints(leagueTable, managers, liveData) {
   const bodyRows = tableBody.getElementsByTagName('tr');
 
   Array.from(bodyRows).forEach((row) => {
+    const totalPointsCell = row.cells[3];
+    const gameweekPoints = parseInt(row.cells[2].textContent, 10);
+    const totalPoints = parseInt(totalPointsCell.textContent, 10);
+
     const livePointsCell = row.insertCell(-1);
     const managerId = parseInt(getIdFromRow(row), 10);
     const currentManager = managers.find(manager => manager.entry.id === managerId);
 
     const livePoints = getLivePoints(currentManager.picks.picks, liveData);
     livePointsCell.textContent = livePoints;
+
+    const pointsDifference = livePoints - gameweekPoints;
+    totalPointsCell.textContent = totalPoints + pointsDifference;
   });
 }
 
