@@ -195,5 +195,5 @@ async function logout() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  chrome.browserAction.setPopup({ popup: 'features.html' });
+  chrome.browserAction.setPopup({ popup: 'index.html' });
 });
