@@ -10,6 +10,9 @@ module.exports = {
     contentScript: path.resolve(__dirname, 'src/js/contentScript.js'),
     options: path.resolve(__dirname, 'src/js/options.js'),
     popup: path.resolve(__dirname, 'src/js/popup.js'),
+    features: path.resolve(__dirname, 'src/js/features.js'),
+    login: path.resolve(__dirname, 'src/js/login.js'),
+    index: path.resolve(__dirname, 'src/js/index.js'),
   },
   output: {
     path: path.resolve(__dirname, 'build'),
@@ -90,6 +93,21 @@ module.exports = {
       template: path.resolve(__dirname, 'src/html/background.html'),
       filename: 'background.html',
       chunks: ['background'],
+    }),
+    new HtmlWebpackPlugin({
+      template: path.resolve(__dirname, 'src/html/features.html'),
+      filename: 'features.html',
+      chunks: ['features'],
+    }),
+    new HtmlWebpackPlugin({
+      template: path.resolve(__dirname, 'src/html/login.html'),
+      filename: 'login.html',
+      chunks: ['login'],
+    }),
+    new HtmlWebpackPlugin({
+      template: path.resolve(__dirname, 'src/html/index.html'),
+      filename: 'index.html',
+      chunks: ['index'],
     }),
   ],
 };

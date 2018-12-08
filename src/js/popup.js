@@ -195,24 +195,5 @@ async function logout() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  const backButtons = Array.from(document.getElementsByClassName('back-button'));
-  backButtons.forEach(button => button.addEventListener('click', showWelcomePage));
-
-  const loginButton = document.getElementById('fpl-login');
-  loginButton.onclick = login;
-
-  const logoutButton = document.getElementById('fpl-logout');
-  logoutButton.onclick = logout;
-
-  const myTeamButton = document.getElementById('my-team-button');
-  myTeamButton.addEventListener('click', showMyTeamPage);
-
-  const pointsButton = document.getElementById('points-button');
-  pointsButton.addEventListener('click', showPointsPage);
-
-  chrome.storage.local.get(['loggedIn'], (data) => {
-    if (data.loggedIn) {
-      showWelcomePage();
-    }
-  });
+  chrome.browserAction.setPopup({ popup: 'features.html' });
 });

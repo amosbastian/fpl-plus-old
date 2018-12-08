@@ -39,3 +39,8 @@
     content: $icon-reddit-square;
   }
 }
+.icon-menu {
+  &:before {
+    content: $icon-menu;
+  }
+}

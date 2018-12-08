@@ -1,193 +1,184 @@
+@import url("https://fonts.googleapis.com/css?family=Open+Sans:400,700|Roboto:400,700");
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+*,
+*::after,
+*::before {
+  box-sizing: inherit;
+}
+
+html {
+  box-sizing: border-box;
+  font-size: 62.5%;
+}
+
 .fpl-body {
-  font-weight: 400;
-  padding: 0 !important;
-  margin: 0 !important;
   overflow: hidden;
-  width: 400px;
-  height: 600px;
+  width: 40rem;
+  height: 60rem;
+  font-weight: 400;
+  line-height: 1.6;
+  outline: none;
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, "Roboto", sans-serif;
 }
 
-.login {
+.fpl-container {
   display: grid;
-  height: 100%;
-  grid-template-rows: 50px 5fr 1fr;
+  grid-template-rows: 5rem 55rem;
 }
 
-.login-header {
+.fpl-header {
   display: grid;
-  justify-content: center;
-  align-items: center;
+  color: #FFFFFF;
   font-size: 2rem;
-  color: #fff;
-  background-color: $fpl-green;
-}
-
-.login-body {
-  display: grid;
+  grid-template-columns: 1fr 7.5rem;
+  background-color: $fpl-deep-purple;
   align-items: center;
+  padding-left: 1.6rem;
+  font-weight: 300;
 }
 
-.login__form {
+.fpl-header-menu {
   display: grid;
-  grid-gap: 1rem;
-  justify-content: center;
+  justify-content: end;
+  align-items: center;
+  background-color: $fpl-light-green;
+  -webkit-clip-path: polygon(25% 0%, 100% 0%, 100% 100%, 0% 100%);
+  clip-path: polygon(25% 0%, 100% 0%, 100% 100%, 0% 100%);
+  padding-right: 1.6rem;
+  height: 5rem;
 }
 
-.login__input {
-  width: 15rem;
+.fpl-header-icon {
+  color: $fpl-deep-purple;
+  fill: $fpl-deep-purple;
+  font-size: 2.5rem;
 }
 
-.logout__button,
-.login__button {
-  background-color: $fpl-purple;
-  color: #fff;
-  padding: .5rem .75rem;
-  transition: all 0.2s;
-  cursor: pointer;
-
-  &:hover {
-    background-color: $fpl-red;
-  }
-}
-
-.login-footer {
+.fpl-feature-content {
   display: grid;
-  grid-gap: 5px;
   grid-template-rows: 1fr 1fr;
-  padding: 1rem;
-  align-items: center;
-  background-color: $fpl-purple;
-  color: #fff;
-
-  a {
-    color: #fff;
-    text-decoration: none;
-    font-size: 0.7rem;
-    display: block;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-  }
 }
 
-.welcome {
-  display: none;
-  grid-template-rows: 50px;
-  height: 100%;
-  min-height: 0;
-  min-width: 0;
-}
-
-.welcome-body {
+.fpl-feature-hero {
   display: grid;
-  padding: 1rem 2rem 2rem 2rem;
-  min-height: 0;
-  min-width: 0;
+  justify-content: center;
+  align-items: center;
 }
 
-.welcome-information {
+.fpl-feature-circle {
+  height: 20rem;
+  width: 20rem;
+  background-color: $fpl-light-grey;
+  border-radius: 50%;
+}
+
+.fpl-feature-bottom {
   display: grid;
   grid-gap: 1rem;
-  grid-template-rows: 1fr 2fr 10fr 1fr;
-  min-height: 0;
-  min-width: 0;
+  padding: 4rem;
 }
 
-.welcome-user-information {
-  background-color: $fpl-light-grey;
-  border: 1px solid $fpl-grey;
-  padding: 1rem;
+.fpl-header-text {
+  font-size: 2rem;
+  font-weight: bold;
+  color: $fpl-deep-purple;
+  text-align: center;
+  font-family: 'Open Sans', sans-serif;
 }
 
-.welcome-user-statistics {
+.fpl-standard-text {
+  font-size: 1.4rem;
+  font-weight: lighter;
+  color: $fpl-darker-grey;
+  text-align: center;
+  font-weight: 300;
+}
+
+.fpl-feature-buttons {
   display: grid;
-  grid-template-columns: 2fr 1fr;
-  align-items: center;
-}
-
-.welcome-user-information h4 {
-  text-align: right;
-}
-
-.welcome-buttons {
-  display: grid;
-  grid-template-rows: repeat(3, 1fr);
-  grid-template-columns: repeat(2, 1fr);
+  justify-content: center;
+  grid-template-rows: 1fr 1fr;
   grid-gap: .5rem;
 }
 
-.welcome-button {
+.fpl-feature-button {
   display: grid;
   justify-content: center;
   align-items: center;
-  background-color: $fpl-purple;
-  color: #fff;
-  padding: .5rem .75rem;
-  transition: all 0.2s;
+
+  padding: .5rem 2rem;
   cursor: pointer;
+  font-size: 1.4rem;
+  font-weight: 700;
+  font-family: 'Open Sans', sans-serif;
 
-  &:hover {
-    background-color: $fpl-red;
+  &--next {
+    background-color: $fpl-deep-purple;
+    color: #FFFFFF;
+  }
+  &--back {
+    color: $fpl-deep-purple;
   }
 }
 
-.my-team {
-  display: none;
-  grid-template-rows: 50px;
-}
-
-.player-table {
-  border-left: 1px solid $fpl-grey;
-  border-right: 1px solid $fpl-grey;
-  margin: 1rem;
-}
-
-.player-table-header {
-  background-color: $fpl-purple !important;
-  color: #fff;
-  padding: .35rem;
-  border-bottom: none !important;
-}
-
-.player-row {
+.fpl-login-content {
   display: grid;
-  padding: .35rem;
-  align-items: center;
-  grid-template-columns: 1fr 1.5fr 1.5fr 1.5fr 1fr;
-  border-bottom: 1px solid $fpl-grey;
-  cursor: pointer;
-  transition: all .2s;
-
-  &--starter {
-    background-color: $fpl-light-grey;
-  }
-
-  &--bench {
-    background-color: $fpl-grey;
-  }
-
-  &:hover {
-    background-color: $fpl-dark-grey;
-  }
+  grid-template-rows: 1fr 1fr;
 }
 
-.player-cell {
+.fpl-login-bottom {
   display: grid;
+  grid-gap: 1rem;
+  padding: 0 4rem 4rem 4rem;
+}
+
+.fpl-login-footer {
+  display: grid;
+  justify-content: center;
   align-items: center;
 }
 
-.player-table-fixtures {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-gap: .25rem;
+.fpl-login-input > input {
+  font-size: 1.4rem;
+  width: 100%;
+  border: none;
+  background-color: $fpl-lighter-grey;
+  padding: 1rem;
+  color: $fpl-deep-purple;
+
+  &:focus {
+    outline: none;
+  }
 }
 
-.player-table-expected-points {
-  text-align: right;
+.fpl-login-button {
+  padding: .5rem 2rem;
+  font-size: 1.4rem;
+  font-weight: 700;
+  font-family: 'Open Sans', sans-serif;
+  background-color: $fpl-deep-purple;
+  color: #FFFFFF;
+  text-align: center;
+  cursor: pointer;
+
+  &--disabled {
+    background-color: $fpl-disabled-grey;
+    color: $fpl-disabled-grey-text;
+    cursor: not-allowed;
+  }
 }
 
-.back-row {
-  display: flex;
-  margin-top: 1rem;
-  margin-left: 1rem;
+.fpl-login-footer-url {
+  text-decoration: none;
+  outline: none;
+  font-size: 1.2rem;
+  color: $fpl-deep-purple;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 700;
+  text-align: center;
 }
