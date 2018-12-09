@@ -24,34 +24,34 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-angle-up {
+.icon-poll {
   &:before {
-    content: $icon-angle-up;
+    content: $icon-poll;
   }
 }
-.icon-angle-double-up {
+.icon-autorenew {
   &:before {
-    content: $icon-angle-double-up;
+    content: $icon-autorenew;
+  }
+}
+.icon-help_outline {
+  &:before {
+    content: $icon-help_outline;
+  }
+}
+.icon-exit_to_app {
+  &:before {
+    content: $icon-exit_to_app;
+  }
+}
+.icon-date_range {
+  &:before {
+    content: $icon-date_range;
   }
 }
 .icon-arrow-left {
   &:before {
     content: $icon-arrow-left;
-  }
-}
-.icon-cross {
-  &:before {
-    content: $icon-cross;
-  }
-}
-.icon-menu {
-  &:before {
-    content: $icon-menu;
-  }
-}
-.icon-reddit-square {
-  &:before {
-    content: $icon-reddit-square;
   }
 }
 .icon-triangle-up {
@@ -72,5 +72,30 @@
 .icon-triangle-down {
   &:before {
     content: $icon-triangle-down;
+  }
+}
+.icon-cross {
+  &:before {
+    content: $icon-cross;
+  }
+}
+.icon-menu {
+  &:before {
+    content: $icon-menu;
+  }
+}
+.icon-reddit-square {
+  &:before {
+    content: $icon-reddit-square;
+  }
+}
+.icon-angle-up {
+  &:before {
+    content: $icon-angle-up;
+  }
+}
+.icon-angle-double-up {
+  &:before {
+    content: $icon-angle-double-up;
   }
 }

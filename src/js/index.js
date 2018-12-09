@@ -49,6 +49,14 @@ async function addUserInformation() {
   document.getElementById('gameweek-deadline').textContent = `Gameweek deadline is ${gameweekDeadline}`;
 }
 
+function openMenu() {
+  this.classList.toggle('icon-menu');
+  this.classList.toggle('icon-cross');
+
+  const menu = document.getElementById('fpl-menu-list');
+  menu.classList.toggle('menu-hidden');
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   const viewTeamButton = document.getElementById('view-team');
   viewTeamButton.addEventListener('click', toTeam);
@@ -58,6 +66,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const viewLeaguesButton = document.getElementById('view-leagues');
   viewLeaguesButton.addEventListener('click', toLeagues);
+
+  const menuIcon = document.getElementById('fpl-menu');
+  menuIcon.addEventListener('click', openMenu);
 
   addUserInformation();
 });

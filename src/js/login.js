@@ -36,4 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const loginButton = document.getElementById('fpl-login-button');
   loginButton.addEventListener('click', login);
+
+  const menuIcon = document.getElementById('fpl-menu');
+  menuIcon.style.cursor = 'not-allowed';
 });

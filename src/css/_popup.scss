@@ -51,6 +51,10 @@ html {
   clip-path: polygon(25% 0%, 100% 0%, 100% 100%, 0% 100%);
   padding-right: 1.6rem;
   height: 5rem;
+
+  & > span {
+    cursor: pointer;
+  }
 }
 
 .fpl-header-icon {
@@ -377,4 +381,53 @@ html {
   justify-content: center;
   align-items: center;
   padding: 2.2rem 0 1.2rem 0;
+}
+
+.menu-hidden {
+  display: none !important;
+}
+
+.fpl-menu-list {
+  display: grid;
+  grid-template-rows: repeat(5, 1fr);
+  position: absolute;
+  background-color: #FFFFFF;
+  border-radius: .5rem;
+  list-style-type: none;
+  height: 22rem;
+  width: 24rem;
+  top: 4rem;
+  left: 14rem;
+  z-index: 69;
+  box-shadow: 0px 10px 50px -5px rgba(0,0,0,0.1);
+  transition: all 0.3s;
+}
+
+.fpl-menu-item {
+  display: grid;
+  grid-template-columns: 2.5rem auto;
+  align-items: center;
+  grid-gap: 2rem;
+  border-top: 1px solid #F4F4F4;
+  transition: all 0.3s;
+  cursor: pointer;
+
+  &:first-child {
+    border-radius: .5rem .5rem 0 0;
+    border-top: none;
+  }
+
+  &:last-child {
+    border-radius: 0 0 .5rem .5rem;
+  }
+
+  & > span {
+    color: $fpl-deep-purple;
+    padding-left: 1.25rem;
+    font-size: 2.4rem;
+  }
+
+  &:hover {
+    background-color: #F9F9F9;
+  }
 }

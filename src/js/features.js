@@ -8,4 +8,7 @@ function toLogin() {
 document.addEventListener('DOMContentLoaded', () => {
   const featureButton = document.getElementById('fpl-feature-button');
   featureButton.addEventListener('click', toLogin);
+
+  const menuIcon = document.getElementById('fpl-menu');
+  menuIcon.style.cursor = 'not-allowed';
 });
