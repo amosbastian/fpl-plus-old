@@ -72,7 +72,7 @@ async function updateUser(userId) {
 /**
  * Updates teams, players, teamToFixtures and user in localStorage (if applicable).
  */
-async function updateData() {
+export async function updateData() {
   saveFixtures();
   saveTeams();
   savePlayers();

@@ -1,5 +1,6 @@
 import '../css/main.scss';
 import { getLocalUser, getLocalFixtures, getCurrentGameweek } from './fpl';
+import { updateData } from './background';
 
 function toTeam() {
   chrome.browserAction.setPopup({ popup: 'team.html' });
@@ -49,9 +50,10 @@ async function addUserInformation() {
   document.getElementById('gameweek-deadline').textContent = `Gameweek deadline is ${gameweekDeadline}`;
 }
 
-function openMenu() {
-  this.classList.toggle('icon-menu');
-  this.classList.toggle('icon-cross');
+function toggleMenu() {
+  const menuIcon = document.getElementById('fpl-menu');
+  menuIcon.classList.toggle('icon-menu');
+  menuIcon.classList.toggle('icon-cross');
 
   const menu = document.getElementById('fpl-menu-list');
   menu.classList.toggle('menu-hidden');
@@ -62,6 +64,11 @@ function logout() {
     chrome.browserAction.setPopup({ popup: 'login.html' });
     window.location.href = 'login.html';
   });
+}
+
+function refreshData() {
+  updateData();
+  toggleMenu();
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -75,10 +82,13 @@ document.addEventListener('DOMContentLoaded', () => {
   viewLeaguesButton.addEventListener('click', toLeagues);
 
   const menuIcon = document.getElementById('fpl-menu');
-  menuIcon.addEventListener('click', openMenu);
+  menuIcon.addEventListener('click', toggleMenu);
 
   const logoutButton = document.getElementById('logout');
   logoutButton.addEventListener('click', logout);
+
+  const refreshDataButton = document.getElementById('refresh-data');
+  refreshDataButton.addEventListener('click', refreshData);
 
   addUserInformation();
 });
