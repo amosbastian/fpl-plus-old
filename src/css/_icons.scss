@@ -24,11 +24,6 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-arrow-left {
-  &:before {
-    content: $icon-arrow-left;
-  }
-}
 .icon-angle-up {
   &:before {
     content: $icon-angle-up;
@@ -39,13 +34,43 @@
     content: $icon-angle-double-up;
   }
 }
-.icon-reddit-square {
+.icon-arrow-left {
   &:before {
-    content: $icon-reddit-square;
+    content: $icon-arrow-left;
+  }
+}
+.icon-cross {
+  &:before {
+    content: $icon-cross;
   }
 }
 .icon-menu {
   &:before {
     content: $icon-menu;
+  }
+}
+.icon-reddit-square {
+  &:before {
+    content: $icon-reddit-square;
+  }
+}
+.icon-triangle-up {
+  &:before {
+    content: $icon-triangle-up;
+  }
+}
+.icon-triangle-right {
+  &:before {
+    content: $icon-triangle-right;
+  }
+}
+.icon-triangle-left {
+  &:before {
+    content: $icon-triangle-left;
+  }
+}
+.icon-triangle-down {
+  &:before {
+    content: $icon-triangle-down;
   }
 }
