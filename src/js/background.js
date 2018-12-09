@@ -1,6 +1,7 @@
 import {
   getTeams, getPlayers, getPlayer, getUser, getUserPicks, getUserHistory, getCurrentGameweek,
   getLocalUser,
+  getFixtures,
 } from './fpl';
 
 /**
@@ -47,6 +48,11 @@ async function savePlayers() {
   chrome.storage.local.set({ players });
 }
 
+async function saveFixtures() {
+  const fixtures = await getFixtures();
+  chrome.storage.local.set({ fixtures });
+}
+
 /**
  * Updates the information of the user saved in localStorage.
  * @param {number} userId
@@ -67,6 +73,7 @@ async function updateUser(userId) {
  * Updates teams, players, teamToFixtures and user in localStorage (if applicable).
  */
 async function updateData() {
+  saveFixtures();
   saveTeams();
   savePlayers();
   saveTeamToFixtures();

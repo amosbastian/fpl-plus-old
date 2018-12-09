@@ -131,6 +131,19 @@ export const getTeams = async () => retry(async () => {
 });
 
 /**
+ * Returns an array of the fixtures in the Premier League.
+ */
+export const getFixtures = async () => retry(async () => {
+  const response = await fetch('https://fantasy.premierleague.com/drf/fixtures/');
+  if (response.status === 200) {
+    const json = await response.json();
+    return json;
+  }
+
+  throw new Error(response.status);
+});
+
+/**
  * Returns a JSON object containing live data for the current gameweek.
  * @param {number} gameweek
  */
@@ -158,4 +171,8 @@ export const getTeamToFixtures = () => new Promise((resolve) => {
 
 export const getLocalUser = () => new Promise((resolve) => {
   chrome.storage.local.get('user', data => resolve(data.user));
+});
+
+export const getLocalFixtures = () => new Promise((resolve) => {
+  chrome.storage.local.get('fixtures', data => resolve(data.fixtures));
 });
