@@ -16,12 +16,19 @@ function toLeagues() {
   window.location.href = 'leagues_overview.html';
 }
 
+/**
+ * Returns the deadline of the next gameweek.
+ * @param {Array<object>} fixtures
+ */
 async function getGameweekDeadline(fixtures) {
   const currentGameweek = await getCurrentGameweek();
   const currentFixture = fixtures.find(fixture => fixture.event === currentGameweek + 1);
   return currentFixture.deadline_time_formatted;
 }
 
+/**
+ * Adds all the user's information to the overview page.
+ */
 async function addUserInformation() {
   const user = await getLocalUser();
   const fixtures = await getLocalFixtures();
