@@ -193,7 +193,7 @@ html {
 }
 
 .fpl-navigation {
-  display: grid;
+  display: flex;
   align-items: center;
   padding-left: 1.6rem;
   font-size: 1.6rem;
@@ -201,6 +201,11 @@ html {
   font-weight: 700;
   font-family: 'Open Sans', sans-serif;
   border-bottom: 1px solid $fpl-border-grey;
+
+  & > span {
+    cursor: pointer;
+    margin-right: 2rem;
+  }
 }
 
 .fpl-week-overview {
@@ -430,4 +435,59 @@ html {
   &:hover {
     background-color: #F9F9F9;
   }
+}
+
+.fpl-team-overview {
+  display: grid;
+  padding: 2rem 1.75rem;
+}
+
+.fpl-team-table {
+  display: grid;
+  grid-template-rows: repeat(16, 2.8rem);
+}
+
+.fpl-team-table-row {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: $fpl-deep-purple;
+  font-family: 'Open Sans', sans-serif;
+  padding: 0 1rem 0 1rem;
+  display: grid;
+  align-items: center;
+  grid-template-columns: 4.75rem 10rem 9rem 8rem auto;
+  background-color: #F7F7F7;
+  border-top: 1px solid #EFEFEF;
+
+  &:nth-child(1),
+  &:nth-child(2) {
+    border-top: none;
+  }
+
+  &--bench {
+    background-color: #F2F2F2 !important;
+  }
+
+  &--header {
+    border-radius: .75rem .75rem 0 0;
+    background-color: $fpl-deep-purple;
+    color: #FFFFFF;
+  }
+}
+
+.fdr-table {
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.fixture-square-table {
+  border-radius: .25rem;
+  height: 1.2rem;
+  width: 1.2rem;
+}
+
+.fpl-team-table-points {
+  text-align: right;
 }

@@ -13,6 +13,8 @@ module.exports = {
     features: path.resolve(__dirname, 'src/js/features.js'),
     login: path.resolve(__dirname, 'src/js/login.js'),
     index: path.resolve(__dirname, 'src/js/index.js'),
+    team: path.resolve(__dirname, 'src/js/team.js'),
+    points: path.resolve(__dirname, 'src/js/points.js'),
   },
   output: {
     path: path.resolve(__dirname, 'build'),
@@ -108,6 +110,16 @@ module.exports = {
       template: path.resolve(__dirname, 'src/html/index.html'),
       filename: 'index.html',
       chunks: ['index'],
+    }),
+    new HtmlWebpackPlugin({
+      template: path.resolve(__dirname, 'src/html/team.html'),
+      filename: 'team.html',
+      chunks: ['team'],
+    }),
+    new HtmlWebpackPlugin({
+      template: path.resolve(__dirname, 'src/html/points.html'),
+      filename: 'points.html',
+      chunks: ['points'],
     }),
   ],
 };
