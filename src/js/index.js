@@ -57,6 +57,13 @@ function openMenu() {
   menu.classList.toggle('menu-hidden');
 }
 
+function logout() {
+  chrome.storage.local.set({ loggedIn: false }, () => {
+    chrome.browserAction.setPopup({ popup: 'login.html' });
+    window.location.href = 'login.html';
+  });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   const viewTeamButton = document.getElementById('view-team');
   viewTeamButton.addEventListener('click', toTeam);
@@ -69,6 +76,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const menuIcon = document.getElementById('fpl-menu');
   menuIcon.addEventListener('click', openMenu);
+
+  const logoutButton = document.getElementById('logout');
+  logoutButton.addEventListener('click', logout);
 
   addUserInformation();
 });
