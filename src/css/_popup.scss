@@ -515,7 +515,7 @@ html {
     cursor: pointer;
     font-size: 2.5rem;
     margin-right: 2rem;
-    transition: all .2s;
+    transition: transform .2s;
 
     &.active {
       -moz-transform: rotate(90deg);
@@ -530,7 +530,6 @@ html {
   height: 22.5rem;
   grid-template-rows: 7fr 2fr;
   padding: 0 2rem 0 2rem;
-  transition: all .2s;
 
   &.active {
     display: grid;
@@ -550,7 +549,7 @@ html {
   padding: 0 1rem 0 1rem;
   display: grid;
   align-items: center;
-  grid-template-columns: 4fr 1fr auto;
+  grid-template-columns: 3.15fr .5fr 1fr ;
   background-color: #F7F7F7;
   border-top: 1px solid #EFEFEF;
 
@@ -564,6 +563,26 @@ html {
     background-color: $fpl-deep-purple;
     color: #FFFFFF;
   }
+
+  & span {
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    &.icon-triangle-up {
+      color: #00FF70;
+    }
+    &.icon-triangle-down {
+      color: #FF4136;
+    }
+  }
+}
+
+.icon-circle {
+  border-radius: 50%;
+  width: 1rem;
+  height: 1rem;
+  background-color: #D5D5D5;
 }
 
 .pagination-wrapper {
@@ -588,11 +607,12 @@ html {
   height: 3rem;
 
   font-size: 1.4rem;
+  font-weight: 700;
   color: #B7B7B7;
   border-radius: .5rem;
   border: 1px solid #F2F2F2;
 
-  transition: all .2s;
+  transition: color .2s;
 
   &.active {
     color: $fpl-deep-purple;
