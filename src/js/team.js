@@ -81,7 +81,6 @@ async function addPlayerRows(teamOverview = true) {
     .sort((a, b) => (playerIds.indexOf(a.id) > playerIds.indexOf(b.id) ? 1 : -1))
     .forEach((player) => {
       const playerRow = getPlayerRow(player, playerIds.indexOf(player.id), teamOverview);
-      console.log(playerRow);
       playerTable.insertAdjacentHTML('beforeend', playerRow);
     });
 }
@@ -94,6 +93,6 @@ function back() {
 document.addEventListener('DOMContentLoaded', () => {
   const backButton = document.getElementById('back');
   backButton.addEventListener('click', back);
-
-  addPlayerRows();
+  const teamOverview = !!(document.URL.endsWith('team.html'));
+  addPlayerRows(teamOverview);
 });
