@@ -528,6 +528,7 @@ html {
 .fpl-league-table-container {
   display: none;
   height: 22.5rem;
+  grid-template-rows: 7fr 2fr;
   padding: 0 2rem 0 2rem;
   transition: all .2s;
 
@@ -539,7 +540,6 @@ html {
 .fpl-league-table {
   display: grid;
   grid-template-rows: repeat(6, 1fr);
-  height: 17.5rem;
 }
 
 .fpl-league-table-row {
@@ -566,7 +566,40 @@ html {
   }
 }
 
+.pagination-wrapper {
+  display: grid;
+  justify-content: center;
+  align-items: center;
+}
+
 .fpl-league-table-pagination {
   display: grid;
-  height: 5rem;
+  grid-template-columns: repeat(7, 1fr);
+  grid-gap: .5rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.fpl-pagination-button {
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  width: 2.5rem;
+  height: 3rem;
+
+  font-size: 1.4rem;
+  color: #B7B7B7;
+  border-radius: .5rem;
+  border: 1px solid #F2F2F2;
+
+  transition: all .2s;
+
+  &.active {
+    color: $fpl-deep-purple;
+  }
+
+  &:hover {
+    cursor: pointer;
+    color: $fpl-deep-purple;
+  }
 }
