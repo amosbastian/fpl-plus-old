@@ -13,8 +13,8 @@ function toPoints() {
 }
 
 function toLeagues() {
-  chrome.browserAction.setPopup({ popup: 'leagues_overview.html' });
-  window.location.href = 'leagues_overview.html';
+  chrome.browserAction.setPopup({ popup: 'leagues.html' });
+  window.location.href = 'leagues.html';
 }
 
 /**

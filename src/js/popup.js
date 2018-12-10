@@ -195,5 +195,5 @@ async function logout() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  chrome.browserAction.setPopup({ popup: 'team.html' });
+  chrome.browserAction.setPopup({ popup: 'leagues.html' });
 });
