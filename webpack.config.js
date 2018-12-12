@@ -15,6 +15,7 @@ module.exports = {
     index: path.resolve(__dirname, 'src/js/index.js'),
     team: path.resolve(__dirname, 'src/js/team.js'),
     leagues: path.resolve(__dirname, 'src/js/leagues.js'),
+    menu: path.resolve(__dirname, 'src/js/menu.js'),
   },
   output: {
     path: path.resolve(__dirname, 'build'),
