@@ -1,7 +1,29 @@
 import '../css/main.scss';
+import { getLocalUser } from './fpl';
 
 const leagueTriangles = Array.from(document.getElementsByClassName('icon-triangle-right leagues'));
 const leagueTables = Array.from(document.getElementsByClassName('fpl-league-table-container'));
+const leagueTableHeader = `
+  <div class="fpl-league-table-row fpl-league-table-row--header">
+    <div>
+      League
+    </div>
+    <span></span>
+    <div>
+      Rank
+    </div>
+  </div>
+`;
+
+const leagueTablePagination = `
+  <div class="pagination-wrapper">
+  <div class="fpl-league-table-pagination">
+    <div class="fpl-pagination-button previous-page"><span class="icon-triangle-left"></span></div>
+    <div class="fpl-pagination-button next-page"><span class="icon-triangle-right"></span></div>
+  </div>
+  </div>
+`;
+
 
 function back() {
   chrome.browserAction.setPopup({ popup: 'index.html' });
@@ -187,14 +209,45 @@ function changePage() {
   showPage(this.parentElement.lastElementChild, parseInt(currentPage, 10) + change);
 }
 
+function populatePrivateClassic(userLeagues) {
+  const privateClassic = userLeagues.classic.filter(league => league.league_type === 'x');
+  const leagueHeader = document.getElementById('private-classic');
+  const leagueTableContainer = document.createElement('div');
+  leagueTableContainer.className = 'fpl-league-table-container active';
+  const leagueTableElement = document.createElement('div');
+  leagueTableElement.className = 'fpl-league-table';
+  leagueTableElement.id = 'private-classic-league-table';
+  leagueTableElement.insertAdjacentHTML('afterbegin', leagueTableHeader);
+  const leagueTableBody = document.createElement('div');
+  leagueTableBody.className = 'fpl-league-table-body';
 
-document.addEventListener('DOMContentLoaded', () => {
-  const backButton = document.getElementById('back');
-  backButton.addEventListener('click', back);
+  privateClassic.forEach((league) => {
+    const leagueTableRow = document.createElement('div');
 
-  leagueTriangles.forEach(triangle => triangle.addEventListener('click', showLeagueTable));
+    let rankChange = '<span class="icon-triangle-up"></span>';
+    if (league.entry_movement === 'down') {
+      rankChange = '<span class="icon-triangle-down"></span>';
+    } else if (league.entry_movement === 'same') {
+      rankChange = '<span><div class="icon-circle"></div></span>';
+    }
 
-  const privateClassicTable = document.getElementById('private-classic');
+    leagueTableRow.className = 'fpl-league-table-row fpl-league-table-row--body hidden';
+    leagueTableRow.insertAdjacentHTML('beforeend', `<div>${league.name}</div>`);
+    leagueTableRow.insertAdjacentHTML('beforeend', rankChange);
+    leagueTableRow.insertAdjacentHTML('beforeend', `<div>${league.entry_rank}</div>`);
+    leagueTableBody.insertAdjacentElement('beforeend', leagueTableRow);
+  });
+  leagueTableElement.insertAdjacentElement('beforeend', leagueTableBody);
+  leagueTableContainer.insertAdjacentHTML('beforeend', leagueTablePagination);
+  leagueTableContainer.insertAdjacentElement('afterbegin', leagueTableElement);
+  leagueHeader.insertAdjacentElement('afterend', leagueTableContainer);
+}
+
+async function populateLeagues() {
+  const user = await getLocalUser();
+  populatePrivateClassic(user.leagues);
+
+  const privateClassicTable = document.getElementById('private-classic-league-table');
   initialiseTable(privateClassicTable);
 
   const paginationElement = document.getElementsByClassName('fpl-league-table-pagination')[0];
@@ -205,4 +258,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const nextButtons = Array.from(document.getElementsByClassName('fpl-pagination-button next-page'));
   nextButtons.forEach(button => button.addEventListener('click', changePage));
+}
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  populateLeagues();
+
+  const backButton = document.getElementById('back');
+  backButton.addEventListener('click', back);
+
+  leagueTriangles.forEach(triangle => triangle.addEventListener('click', showLeagueTable));
 });
