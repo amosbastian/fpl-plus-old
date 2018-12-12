@@ -652,3 +652,13 @@ html {
     color: #B7B7B7;
   }
 }
+
+#fixtures,
+#statistics,
+#feature-guide {
+  cursor: not-allowed;
+
+  &:hover {
+    background-color: #FFFFFF;
+  }
+}

@@ -9,7 +9,6 @@ module.exports = {
     background: path.resolve(__dirname, 'src/js/background.js'),
     contentScript: path.resolve(__dirname, 'src/js/contentScript.js'),
     options: path.resolve(__dirname, 'src/js/options.js'),
-    popup: path.resolve(__dirname, 'src/js/popup.js'),
     features: path.resolve(__dirname, 'src/js/features.js'),
     login: path.resolve(__dirname, 'src/js/login.js'),
     index: path.resolve(__dirname, 'src/js/index.js'),
@@ -82,11 +81,6 @@ module.exports = {
       { from: 'src/manifest.json', flatten: true },
       { from: 'src/images', to: 'images' },
     ]),
-    new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, 'src/html/popup.html'),
-      filename: 'popup.html',
-      chunks: ['popup'],
-    }),
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, 'src/html/options.html'),
       filename: 'options.html',
