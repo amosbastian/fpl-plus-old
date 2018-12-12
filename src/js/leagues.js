@@ -2,7 +2,6 @@ import '../css/main.scss';
 import { getLocalUser } from './fpl';
 
 const leagueTriangles = Array.from(document.getElementsByClassName('icon-triangle-right leagues'));
-const leagueTables = Array.from(document.getElementsByClassName('fpl-league-table-container'));
 const leagueTableHeader = `
   <div class="fpl-league-table-row fpl-league-table-row--header">
     <div>
@@ -180,6 +179,9 @@ function paginationClickHandler(event) {
   showPage(event.srcElement);
 }
 
+/**
+ * Shows a table of all leagues a user is participating in.
+ */
 function showLeagueTable() {
   if (this.classList.contains('active')) {
     this.classList.remove('active');
@@ -187,10 +189,16 @@ function showLeagueTable() {
     return;
   }
 
+  // User is not participating in one of these leagues, so don't show the table
+  if (this.classList.contains('triangle-disabled')) {
+    return;
+  }
+
   // Dropdown triangles
   leagueTriangles.forEach(triangle => triangle.classList.remove('active'));
   this.classList.toggle('active');
 
+  const leagueTables = Array.from(document.getElementsByClassName('fpl-league-table-container'));
   leagueTables.forEach(leagueTable => leagueTable.classList.remove('active'));
   this.parentElement.nextElementSibling.classList.toggle('active');
 
@@ -209,19 +217,30 @@ function changePage() {
   showPage(this.parentElement.lastElementChild, parseInt(currentPage, 10) + change);
 }
 
-function populatePrivateClassic(userLeagues) {
-  const privateClassic = userLeagues.classic.filter(league => league.league_type === 'x');
-  const leagueHeader = document.getElementById('private-classic');
+/**
+ * Populates the league table with the given `leagueType` with the given leagues.
+ * @param {Array<Object>} leagues
+ * @param {string} leagueType
+ */
+function populateLeagueTable(leagues, leagueType) {
+  const leagueHeader = document.getElementById(leagueType);
+
+  // Main container
   const leagueTableContainer = document.createElement('div');
-  leagueTableContainer.className = 'fpl-league-table-container active';
+  leagueTableContainer.className = `fpl-league-table-container ${leagueType === 'private-classic' ? 'active' : ''}`;
+
+  // League table container
   const leagueTableElement = document.createElement('div');
   leagueTableElement.className = 'fpl-league-table';
   leagueTableElement.id = 'private-classic-league-table';
   leagueTableElement.insertAdjacentHTML('afterbegin', leagueTableHeader);
+
+  // League table body
   const leagueTableBody = document.createElement('div');
   leagueTableBody.className = 'fpl-league-table-body';
 
-  privateClassic.forEach((league) => {
+  // Create each row of the table and insert into the body
+  leagues.forEach((league) => {
     const leagueTableRow = document.createElement('div');
 
     let rankChange = '<span class="icon-triangle-up"></span>';
@@ -237,6 +256,8 @@ function populatePrivateClassic(userLeagues) {
     leagueTableRow.insertAdjacentHTML('beforeend', `<div>${league.entry_rank}</div>`);
     leagueTableBody.insertAdjacentElement('beforeend', leagueTableRow);
   });
+
+  // Create the entire element and insert
   leagueTableElement.insertAdjacentElement('beforeend', leagueTableBody);
   leagueTableContainer.insertAdjacentHTML('beforeend', leagueTablePagination);
   leagueTableContainer.insertAdjacentElement('afterbegin', leagueTableElement);
@@ -245,8 +266,24 @@ function populatePrivateClassic(userLeagues) {
 
 async function populateLeagues() {
   const user = await getLocalUser();
-  populatePrivateClassic(user.leagues);
 
+  // Private classic
+  const privateClassicLeagues = user.leagues.classic.filter(league => league.league_type === 'x');
+  if (privateClassicLeagues.length > 0) populateLeagueTable(privateClassicLeagues, 'private-classic');
+
+  // Private H2H
+  const privateH2HLeagues = user.leagues.h2h.filter(league => league.league_type === 'x');
+  if (privateH2HLeagues.length > 0) populateLeagueTable(privateH2HLeagues, 'private-h2h');
+
+  // Public H2H
+  const publicH2HLeagues = user.leagues.h2h.filter(league => league.league_type === 'c');
+  if (publicH2HLeagues.length > 0) populateLeagueTable(publicH2HLeagues, 'public-h2h');
+
+  // Global
+  const globalLeagues = user.leagues.classic.filter(league => league.league_type === 's');
+  if (globalLeagues.length > 0) populateLeagueTable(globalLeagues, 'global');
+
+  // Show private classic league table by default
   const privateClassicTable = document.getElementById('private-classic-league-table');
   initialiseTable(privateClassicTable);
 
@@ -267,5 +304,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const backButton = document.getElementById('back');
   backButton.addEventListener('click', back);
 
-  leagueTriangles.forEach(triangle => triangle.addEventListener('click', showLeagueTable));
+  setTimeout(() => {
+    leagueTriangles.forEach((triangle) => {
+      triangle.addEventListener('click', showLeagueTable);
+
+      // User not participating in this type of league so disable the button
+      if (triangle.parentElement.nextElementSibling.classList.contains('fpl-league')) {
+        triangle.classList.add('triangle-disabled');
+      }
+    });
+  }, 100);
 });

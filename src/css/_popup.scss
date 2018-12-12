@@ -492,12 +492,8 @@ html {
   text-align: right;
 }
 
-.fpl-league-overview {
-  display: grid;
-}
-
 .fpl-league {
-  min-height: 5rem;
+  height: 5rem;
   display: flex;
   align-items: center;
   padding-left: 2.6rem;
@@ -530,6 +526,7 @@ html {
   height: 22.5rem;
   grid-template-rows: 7fr 2fr;
   padding: 0 2rem 0 2rem;
+  overflow: hidden;
 
   &.active {
     display: grid;
@@ -643,6 +640,10 @@ html {
   &:hover {
     color: #B7B7B7;
   }
+}
+
+.triangle-disabled {
+  cursor: not-allowed !important;
 }
 
 .non-number {
