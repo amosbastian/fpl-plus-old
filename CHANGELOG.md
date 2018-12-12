@@ -1,9 +1,17 @@
+### v.0.6.0
+
+- Update popup style (thanks @tobias-g1!)
+- Add features popup page
+- Update login, overview, team and points popup pages
+- Add league overview popup page
+- Add popup header menu with logout and refresh data functionality
+
 ### v.0.5.0
 
 - Add live points and players played to classic league table
 - Implement popup with login functionality using user ID
 - Add index popup page
-- Add myTeam popup page
+- Add team popup page
 - Add points popup page
 - Implement alarm for updating team, player and user data
 
