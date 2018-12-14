@@ -1,6 +1,6 @@
 import '../css/main.scss';
 import {
-  getPlayers, getTeamToFixtures, getTeams, getLocalUser,
+  getPlayers, getTeamToFixtures, getTeams, getLocalUser, showPage,
 } from './fpl';
 
 let allPlayers = [];
@@ -76,7 +76,10 @@ async function addPlayerRows(teamOverview = true) {
     allPlayers = await getPlayers();
   }
   const players = allPlayers.filter(player => playerIds.includes(player.id));
-  const playerTable = document.getElementById('team-table');
+  const tableId = `team-table${teamOverview ? '-points' : ''}`;
+  console.log(tableId);
+  const playerTable = document.getElementById(tableId);
+  console.log(playerTable);
   players
     .sort((a, b) => (playerIds.indexOf(a.id) > playerIds.indexOf(b.id) ? 1 : -1))
     .forEach((player) => {
@@ -85,14 +88,7 @@ async function addPlayerRows(teamOverview = true) {
     });
 }
 
-function back() {
-  chrome.browserAction.setPopup({ popup: 'index.html' });
-  window.location.href = 'index.html';
-}
-
 document.addEventListener('DOMContentLoaded', () => {
-  const backButton = document.getElementById('back');
-  backButton.addEventListener('click', back);
-  const teamOverview = !!(document.URL.endsWith('team.html'));
-  addPlayerRows(teamOverview);
+  addPlayerRows(false);
+  addPlayerRows(true);
 });

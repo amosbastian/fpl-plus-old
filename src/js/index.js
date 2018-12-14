@@ -1,19 +1,18 @@
 import '../css/main.scss';
-import { getLocalUser, getLocalFixtures, getCurrentGameweek } from './fpl';
+import {
+  getLocalUser, getLocalFixtures, getCurrentGameweek, showPage,
+} from './fpl';
 
 function toTeam() {
-  chrome.browserAction.setPopup({ popup: 'team.html' });
-  window.location.href = 'team.html';
+  showPage('team-overview');
 }
 
 function toPoints() {
-  chrome.browserAction.setPopup({ popup: 'points.html' });
-  window.location.href = 'points.html';
+  showPage('points-overview');
 }
 
 function toLeagues() {
-  chrome.browserAction.setPopup({ popup: 'leagues.html' });
-  window.location.href = 'leagues.html';
+  showPage('leagues-overview');
 }
 
 /**

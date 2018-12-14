@@ -1,6 +1,6 @@
 import '../css/main.scss';
 import {
-  getUserHistory, getUserPicks, getUser, getCurrentGameweek,
+  getUserHistory, getUserPicks, getUser, getCurrentGameweek, showPage,
 } from './fpl';
 
 function setLoginButton() {
@@ -26,8 +26,7 @@ async function login() {
   chrome.storage.local.set({ user });
   chrome.storage.local.set({ loggedIn: true });
 
-  chrome.browserAction.setPopup({ popup: 'index.html' });
-  window.location.href = 'index.html';
+  showPage('main-overview');
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -36,7 +35,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const loginButton = document.getElementById('fpl-login-button');
   loginButton.addEventListener('click', login);
-
-  const menuIcon = document.getElementById('fpl-menu');
-  menuIcon.style.cursor = 'not-allowed';
 });

@@ -87,6 +87,7 @@ chrome.runtime.onInstalled.addListener(async () => {
   updateData();
   // Set alarm to update data that could be outdated.
   chrome.alarms.create('updater', { delayInMinutes: 0.1, periodInMinutes: 30.0 });
+  chrome.storage.local.set({ newInstallation: true });
 });
 
 chrome.alarms.onAlarm.addListener((alarm) => {

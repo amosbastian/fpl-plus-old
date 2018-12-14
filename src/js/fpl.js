@@ -176,3 +176,18 @@ export const getLocalUser = () => new Promise((resolve) => {
 export const getLocalFixtures = () => new Promise((resolve) => {
   chrome.storage.local.get('fixtures', data => resolve(data.fixtures));
 });
+
+export const showPage = (pageId) => {
+  const pages = document.querySelectorAll('.fpl-container > div');
+  pages.forEach((page) => {
+    if (page.id) {
+      if (page.id !== pageId) { page.style.display = 'none'; }
+    }
+  });
+  document.querySelector(`.fpl-container > div#${pageId}`).style.display = 'grid';
+  chrome.storage.local.set({ currentPage: pageId });
+};
+
+export const getCurrentPage = () => new Promise((resolve) => {
+  chrome.storage.local.get('currentPage', data => resolve(data.currentPage));
+});

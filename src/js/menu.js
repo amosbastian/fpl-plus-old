@@ -1,6 +1,7 @@
 import { updateData } from './background';
+import { showPage, getCurrentPage } from './fpl';
 
-function toggleMenu() {
+function toggleMenuStyle() {
   const menuIcon = document.getElementById('fpl-menu');
   menuIcon.classList.toggle('icon-menu');
   menuIcon.classList.toggle('icon-cross');
@@ -9,11 +10,20 @@ function toggleMenu() {
   menu.classList.toggle('menu-hidden');
 }
 
+async function toggleMenu() {
+  const currentPage = await getCurrentPage();
+  if (currentPage === 'login-overview' || currentPage === 'features-overview') {
+    return;
+  }
+
+  toggleMenuStyle();
+}
+
 function logout() {
   chrome.storage.local.set({ loggedIn: false }, () => {
-    chrome.browserAction.setPopup({ popup: 'login.html' });
-    window.location.href = 'login.html';
+    showPage('login-overview');
   });
+  toggleMenuStyle();
 }
 
 function refreshData() {

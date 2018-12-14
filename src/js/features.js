@@ -1,14 +1,11 @@
 import '../css/main.scss';
+import { showPage } from './fpl';
 
 function toLogin() {
-  chrome.browserAction.setPopup({ popup: 'login.html' });
-  window.location.href = 'login.html';
+  showPage('login-overview');
 }
 
 document.addEventListener('DOMContentLoaded', () => {
   const featureButton = document.getElementById('fpl-feature-button');
   featureButton.addEventListener('click', toLogin);
-
-  const menuIcon = document.getElementById('fpl-menu');
-  menuIcon.style.cursor = 'not-allowed';
 });

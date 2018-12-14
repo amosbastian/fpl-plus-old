@@ -6,6 +6,7 @@ const path = require('path');
 
 module.exports = {
   entry: {
+    popup: path.resolve(__dirname, 'src/js/popup.js'),
     background: path.resolve(__dirname, 'src/js/background.js'),
     contentScript: path.resolve(__dirname, 'src/js/contentScript.js'),
     options: path.resolve(__dirname, 'src/js/options.js'),
@@ -81,6 +82,11 @@ module.exports = {
       { from: 'src/manifest.json', flatten: true },
       { from: 'src/images', to: 'images' },
     ]),
+    new HtmlWebpackPlugin({
+      template: path.resolve(__dirname, 'src/html/popup.html'),
+      filename: 'popup.html',
+      chunks: ['popup'],
+    }),
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, 'src/html/options.html'),
       filename: 'options.html',

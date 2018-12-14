@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>FPL Plus</title>
+  </head>
+  <body class="fpl-body">
+    <ul id="fpl-menu-list" class="fpl-menu-list menu-hidden">
+      <li id="fixtures" class="fpl-menu-item">
+        <span class="icon-date_range"></span>
+        <div class="fpl-small-header">Fixtures</div>
+      </li>
+      <li id="statistics" class="fpl-menu-item">
+        <span class="icon-poll"></span>
+        <div class="fpl-small-header">Statistics</div>
+      </li>
+      <li id="feature-guide" class="fpl-menu-item">
+        <span class="icon-help_outline"></span>
+        <div class="fpl-small-header">Feature guide</div>
+      </li>
+      <li id="refresh-data" class="fpl-menu-item">
+        <span class="icon-autorenew"></span>
+        <div class="fpl-small-header">Refresh data</div>
+      </li>
+      <li id="logout" class="fpl-menu-item">
+        <span class="icon-exit_to_app"></span>
+        <div class="fpl-small-header">Logout</div>
+      </li>
+    </ul>
+    <div class="fpl-container">
+      <div class="fpl-header">
+        <div><b>FPL</b> Plus</div>
+        <div class="fpl-header-menu">
+          <span id="fpl-menu" class="icon-menu fpl-header-icon"></span>
+        </div>
+      </div>
+
+      <!-- FEATURES -->
+      <div id="features-overview" class="fpl-feature-content">
+        <div class="fpl-feature-hero">
+          <div class="fpl-feature-circle">
+
+          </div>
+        </div>
+        <div class="fpl-feature-bottom">
+          <p class="fpl-header-text">
+            Welcome to FPL Plus
+          </p>
+          <p class="fpl-standard-text">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam vel neque auctor, dignissim lectus quis, iaculis leo.
+          </p>
+          <div class="fpl-feature-buttons">
+            <div id="fpl-feature-button" class="fpl-feature-button fpl-feature-button--next">Get started!</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LOGIN -->
+      <div id="login-overview" class="fpl-login-content">
+        <div class="fpl-feature-hero">
+          <div class="fpl-feature-circle">
+          </div>
+        </div>
+        <div class="fpl-login-bottom">
+          <div class="fpl-header-text">
+            Login with user ID
+          </div>
+          <div class="fpl-standard-text">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+          </div>
+          <div class="fpl-login-input">
+            <input id="fpl-login-input" type="text" placeholder="Enter user ID">
+          </div>
+          <div id="fpl-login-button" class="fpl-login-button fpl-login-button--disabled">
+            Login
+          </div>
+          <div class="fpl-login-footer">
+            <a href="/" class="fpl-login-footer-url">I don't know my user ID</a>
+            <a href="/" class="fpl-login-footer-url">Sign up now!</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- INDEX -->
+      <div id="main-overview" class="fpl-index-content">
+        <div class="fpl-navigation">
+          Overview
+        </div>
+        <div class="fpl-week-overview">
+          <div class="fpl-week-overview-header">
+            <div class="fpl-header-row">
+              <div id="username" class="fpl-medium-header">
+              </div>
+              <div class="fpl-medium-header fpl-medium-header--right">
+                Gameweek Rank
+              </div>
+            </div>
+            <div class="fpl-header-row">
+              <div id="team-name" class="fpl-medium-text">
+              </div>
+              <div id="gameweek-rank" class="fpl-medium-text fpl-medium-text--right">
+              </div>
+            </div>
+          </div>
+          <div class="fpl-week-overview-points">
+            <div class="fpl-medium-header">
+              Points this week
+            </div>
+            <div id="gameweek-points" class="fpl-large-header fpl-large-header--right">
+            </div>
+          </div>
+          <div class="fpl-week-overview-buttons">
+            <div id="view-points" class="fpl-week-overview-button fpl-week-overview-button--purple fpl-small-header">
+              View points
+            </div>
+            <div id="view-team" class="fpl-week-overview-button fpl-week-overview-button--blue fpl-small-header">
+              View team
+            </div>
+          </div>
+          <div id="gameweek-deadline" class="fpl-week-overview-deadline fpl-tiny-header">
+          </div>
+        </div>
+        <div class="fpl-season-overview">
+          <div class="fpl-season-overview-header">
+            <div class="fpl-small-header">
+              This season
+            </div>
+          </div>
+          <div class="fpl-season-overview-points">
+            <div class="fpl-season-points-row">
+              <div class="fpl-small-header">
+                Overall points
+              </div>
+              <div id="overall-points" class="fpl-small-header fpl-small-header--right">
+              </div>
+            </div>
+            <div class="fpl-dark-border"></div>
+            <div class="fpl-season-points-row">
+              <div class="fpl-small-header">
+                Overall rank
+              </div>
+              <div id="overall-rank" class="fpl-small-header fpl-small-header--right">
+              </div>
+            </div>
+          </div>
+          <div class="fpl-season-overview-buttons">
+            <div id="view-leagues" class="fpl-week-overview-button fpl-week-overview-button--blue fpl-small-header">
+              View leagues
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- POINTS -->
+      <div id="points-overview" class="fpl-index-content">
+        <div class="fpl-navigation">
+          <span class="icon-arrow-left back-button"></span>
+          Points
+        </div>
+        <div class="fpl-team-overview">
+          <div id="team-table-points" class="fpl-team-table">
+            <div class="fpl-team-table-row fpl-team-table-row--header">
+              <div>
+                Team
+              </div>
+              <div>
+                Name
+              </div>
+              <div>
+                Next fixture
+              </div>
+              <div>
+                FDR
+              </div>
+              <div class="fpl-team-table-points">
+                P
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TEAM -->
+      <div id="team-overview" class="fpl-index-content">
+        <div class="fpl-navigation">
+          <span class="icon-arrow-left back-button"></span>
+          My team
+        </div>
+        <div class="fpl-team-overview">
+          <div id="team-table" class="fpl-team-table">
+            <div class="fpl-team-table-row fpl-team-table-row--header">
+              <div>
+                Team
+              </div>
+              <div>
+                Name
+              </div>
+              <div>
+                Next fixture
+              </div>
+              <div>
+                FDR
+              </div>
+              <div class="fpl-team-table-points">
+                EP
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LEAGUE OVERVIEW -->
+      <div id="leagues-overview" class="fpl-index-content">
+        <div class="fpl-navigation">
+          <span class="icon-arrow-left back-button"></span>
+          Leagues
+        </div>
+        <div class="fpl-league-overview">
+          <div id="private-classic" class="fpl-league">
+            <span class="icon-triangle-right leagues active"></span>
+            Private classic
+          </div>
+          <div id="private-h2h" class="fpl-league">
+            <span class="icon-triangle-right leagues"></span>
+            Private head-to-head
+          </div>
+          <div id="public-h2h" class="fpl-league">
+            <span class="icon-triangle-right leagues"></span>
+            Public head-to-head
+          </div>
+          <div id="global" class="fpl-league">
+            <span class="icon-triangle-right leagues"></span>
+            Global
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="menu.bundle.js"></script>
+    <script src="features.bundle.js"></script>
+    <script src="login.bundle.js"></script>
+    <script src="index.bundle.js"></script>
+    <script src="team.bundle.js"></script>
+    <script src="leagues.bundle.js"></script>
+  </body>
+</html>

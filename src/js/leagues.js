@@ -1,5 +1,5 @@
 import '../css/main.scss';
-import { getLocalUser } from './fpl';
+import { getLocalUser, showPage } from './fpl';
 
 const leagueTriangles = Array.from(document.getElementsByClassName('icon-triangle-right leagues'));
 const leagueTableHeader = `
@@ -22,12 +22,6 @@ const leagueTablePagination = `
   </div>
   </div>
 `;
-
-
-function back() {
-  chrome.browserAction.setPopup({ popup: 'index.html' });
-  window.location.href = 'index.html';
-}
 
 /**
  * Returns an array of maxLength (or less) page numbers where a 0 in the returned array denotes a
@@ -137,7 +131,7 @@ function updatePagination(currentPage, pageList, paginationElement) {
  * @param {Node} button
  * @param {number} currentPage
  */
-function showPage(button, currentPage = 0) {
+function showLeagueElement(button, currentPage = 0) {
   const whichPage = currentPage || parseInt(button.textContent, 10);
   const leagueRows = Array.from(button.parentElement.parentElement.previousElementSibling
     .getElementsByClassName('fpl-league-table-row--body'));
@@ -176,7 +170,7 @@ function paginationClickHandler(event) {
     || event.srcElement.textContent === '...') {
     return;
   }
-  showPage(event.srcElement);
+  showLeagueElement(event.srcElement);
 }
 
 /**
@@ -214,7 +208,7 @@ function changePage() {
   const currentPage = this.parentElement.getElementsByClassName('active')[0].textContent;
   const change = this.classList.contains('previous-page') ? -1 : 1;
 
-  showPage(this.parentElement.lastElementChild, parseInt(currentPage, 10) + change);
+  showLeagueElement(this.parentElement.lastElementChild, parseInt(currentPage, 10) + change);
 }
 
 /**
@@ -300,9 +294,6 @@ async function populateLeagues() {
 
 document.addEventListener('DOMContentLoaded', () => {
   populateLeagues();
-
-  const backButton = document.getElementById('back');
-  backButton.addEventListener('click', back);
 
   setTimeout(() => {
     leagueTriangles.forEach((triangle) => {
