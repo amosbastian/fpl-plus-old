@@ -97,35 +97,5 @@ module.exports = {
       filename: 'background.html',
       chunks: ['background'],
     }),
-    new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, 'src/html/features.html'),
-      filename: 'features.html',
-      chunks: ['features'],
-    }),
-    new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, 'src/html/login.html'),
-      filename: 'login.html',
-      chunks: ['login'],
-    }),
-    new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, 'src/html/index.html'),
-      filename: 'index.html',
-      chunks: ['index'],
-    }),
-    new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, 'src/html/team.html'),
-      filename: 'team.html',
-      chunks: ['team'],
-    }),
-    new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, 'src/html/points.html'),
-      filename: 'points.html',
-      chunks: ['points'],
-    }),
-    new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, 'src/html/leagues.html'),
-      filename: 'leagues.html',
-      chunks: ['leagues'],
-    }),
   ],
 };
