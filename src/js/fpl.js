@@ -177,6 +177,10 @@ export const getLocalFixtures = () => new Promise((resolve) => {
   chrome.storage.local.get('fixtures', data => resolve(data.fixtures));
 });
 
+/**
+ * Sets the display of all <div>s to 'none' if they have an ID !== pageId.
+ * @param {string} pageId
+ */
 export const showPage = (pageId) => {
   const pages = document.querySelectorAll('.fpl-container > div');
   pages.forEach((page) => {

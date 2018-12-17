@@ -39,11 +39,19 @@ async function addUserInformation() {
   const overallPoints = user.entry.summary_overall_points;
   const gameweekDeadline = await getGameweekDeadline(fixtures);
 
+  const globalLeague = user.leagues.classic.find(league => league.name === 'Overall');
+  let rankChange = '<span class="icon-triangle-up movement movement--up"></span>';
+  if (globalLeague.entry_movement === 'down') {
+    rankChange = '<span class="icon-triangle-down movement movement--down"></span>';
+  } else if (globalLeague.entry_movement === 'same') {
+    rankChange = '<span><div class="icon-circle movement movement--same"></div></span>';
+  }
+
   document.getElementById('username').textContent = username;
   document.getElementById('team-name').textContent = teamName;
   document.getElementById('gameweek-rank').textContent = gameweekRank;
   document.getElementById('gameweek-points').textContent = gameweekPoints;
-  document.getElementById('overall-rank').textContent = overallRank;
+  document.getElementById('overall-rank').innerHTML = `<div class="rank-change">${rankChange}<div>${overallRank}</div></div>`;
   document.getElementById('overall-points').textContent = overallPoints;
   document.getElementById('gameweek-deadline').textContent = `Gameweek deadline is ${gameweekDeadline}`;
 }

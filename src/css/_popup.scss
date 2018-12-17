@@ -662,3 +662,22 @@ html {
     background-color: #FFFFFF;
   }
 }
+
+.rank-change {
+  display: grid;
+  grid-template-columns: repeat(2, auto);
+  justify-content: end;
+  align-items: center;
+}
+
+.movement {
+  font-size: 2.2rem;
+  &--up {
+    color: #00FF70;
+  }
+  &--down {
+    color: #FF4136;
+  }
+  &--same {
+  }
+}
