@@ -23,5 +23,5 @@ See [CHANGELOG.md](https://github.com/amosbastian/fpl-plus/blob/master/CHANGELOG
 
 A couple of people have really helped me out with this project, so I'd like to acknowledge them here. I really appreciate it!
 
-* @podanrj (logo design)
-* @tobias-g1 (popup design)
+* [@podanrj](https://github.com/podanrj) (logo design)
+* [@tobias-g1](https://github.com/tobias-g1) (popup design)
