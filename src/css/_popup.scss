@@ -1,193 +1,691 @@
+@import url("https://fonts.googleapis.com/css?family=Open+Sans:400,700|Roboto:400,700");
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+*,
+*::after,
+*::before {
+  box-sizing: inherit;
+}
+
+html {
+  box-sizing: border-box;
+  font-size: 62.5%;
+}
+
 .fpl-body {
-  font-weight: 400;
-  padding: 0 !important;
-  margin: 0 !important;
   overflow: hidden;
-  width: 400px;
-  height: 600px;
+  width: 40rem;
+  height: 60rem;
+  font-weight: 400;
+  line-height: 1.6;
+  outline: none;
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, "Roboto", sans-serif;
 }
 
-.login {
+.fpl-container {
   display: grid;
-  height: 100%;
-  grid-template-rows: 50px 5fr 1fr;
+  grid-template-rows: 5rem 55rem;
 }
 
-.login-header {
+.fpl-header {
   display: grid;
-  justify-content: center;
-  align-items: center;
+  color: #FFFFFF;
   font-size: 2rem;
-  color: #fff;
-  background-color: $fpl-green;
-}
-
-.login-body {
-  display: grid;
+  grid-template-columns: 1fr 7.5rem;
+  background-color: $fpl-deep-purple;
   align-items: center;
+  padding-left: 1.6rem;
+  font-weight: 300;
 }
 
-.login__form {
+.fpl-header-menu {
   display: grid;
-  grid-gap: 1rem;
-  justify-content: center;
-}
+  justify-content: end;
+  align-items: center;
+  background-color: $fpl-light-green;
+  -webkit-clip-path: polygon(25% 0%, 100% 0%, 100% 100%, 0% 100%);
+  clip-path: polygon(25% 0%, 100% 0%, 100% 100%, 0% 100%);
+  padding-right: 1.6rem;
+  height: 5rem;
 
-.login__input {
-  width: 15rem;
-}
-
-.logout__button,
-.login__button {
-  background-color: $fpl-purple;
-  color: #fff;
-  padding: .5rem .75rem;
-  transition: all 0.2s;
-  cursor: pointer;
-
-  &:hover {
-    background-color: $fpl-red;
+  & > span {
+    cursor: pointer;
   }
 }
 
-.login-footer {
+.fpl-header-icon {
+  color: $fpl-deep-purple;
+  fill: $fpl-deep-purple;
+  font-size: 2.5rem;
+}
+
+.fpl-feature-content {
   display: grid;
-  grid-gap: 5px;
   grid-template-rows: 1fr 1fr;
-  padding: 1rem;
-  align-items: center;
-  background-color: $fpl-purple;
-  color: #fff;
+}
 
-  a {
-    color: #fff;
-    text-decoration: none;
-    font-size: 0.7rem;
-    display: block;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
+.fpl-feature-hero {
+  display: grid;
+  justify-content: center;
+  align-items: center;
+}
+
+.fpl-feature-circle {
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  height: 20rem;
+  width: 20rem;
+  background-color: $fpl-light-grey;
+  border-radius: 50%;
+
+  & > img {
+    height: 17.5rem;
+    width: 17.5rem;
   }
 }
 
-.welcome {
-  display: none;
-  grid-template-rows: 50px;
-  height: 100%;
-  min-height: 0;
-  min-width: 0;
-}
-
-.welcome-body {
-  display: grid;
-  padding: 1rem 2rem 2rem 2rem;
-  min-height: 0;
-  min-width: 0;
-}
-
-.welcome-information {
+.fpl-feature-bottom {
   display: grid;
   grid-gap: 1rem;
-  grid-template-rows: 1fr 2fr 10fr 1fr;
-  min-height: 0;
-  min-width: 0;
+  padding: 4rem;
 }
 
-.welcome-user-information {
-  background-color: $fpl-light-grey;
-  border: 1px solid $fpl-grey;
-  padding: 1rem;
+.fpl-header-text {
+  font-size: 2rem;
+  font-weight: bold;
+  color: $fpl-deep-purple;
+  text-align: center;
+  font-family: 'Open Sans', sans-serif;
 }
 
-.welcome-user-statistics {
+.fpl-standard-text {
+  font-size: 1.4rem;
+  font-weight: lighter;
+  color: $fpl-darker-grey;
+  text-align: center;
+  font-weight: 300;
+}
+
+.fpl-feature-buttons {
   display: grid;
-  grid-template-columns: 2fr 1fr;
-  align-items: center;
-}
-
-.welcome-user-information h4 {
-  text-align: right;
-}
-
-.welcome-buttons {
-  display: grid;
-  grid-template-rows: repeat(3, 1fr);
-  grid-template-columns: repeat(2, 1fr);
+  justify-content: center;
+  grid-template-rows: 1fr 1fr;
   grid-gap: .5rem;
 }
 
-.welcome-button {
+.fpl-feature-button {
   display: grid;
   justify-content: center;
   align-items: center;
-  background-color: $fpl-purple;
-  color: #fff;
-  padding: .5rem .75rem;
-  transition: all 0.2s;
-  cursor: pointer;
 
-  &:hover {
-    background-color: $fpl-red;
+  padding: .5rem 2rem;
+  cursor: pointer;
+  font-size: 1.4rem;
+  font-weight: 700;
+  font-family: 'Open Sans', sans-serif;
+
+  &--next {
+    background-color: $fpl-deep-purple;
+    color: #FFFFFF;
+  }
+  &--back {
+    color: $fpl-deep-purple;
   }
 }
 
-.my-team {
-  display: none;
-  grid-template-rows: 50px;
-}
-
-.player-table {
-  border-left: 1px solid $fpl-grey;
-  border-right: 1px solid $fpl-grey;
-  margin: 1rem;
-}
-
-.player-table-header {
-  background-color: $fpl-purple !important;
-  color: #fff;
-  padding: .35rem;
-  border-bottom: none !important;
-}
-
-.player-row {
+.fpl-login-content {
   display: grid;
-  padding: .35rem;
-  align-items: center;
-  grid-template-columns: 1fr 1.5fr 1.5fr 1.5fr 1fr;
-  border-bottom: 1px solid $fpl-grey;
-  cursor: pointer;
-  transition: all .2s;
+  grid-template-rows: 1fr 1fr;
+}
 
-  &--starter {
-    background-color: $fpl-light-grey;
+.fpl-login-bottom {
+  display: grid;
+  grid-gap: 1rem;
+  padding: 0 4rem 4rem 4rem;
+}
+
+.fpl-login-footer {
+  display: grid;
+  justify-content: center;
+  align-items: center;
+}
+
+.fpl-login-input > input {
+  font-size: 1.4rem;
+  width: 100%;
+  border: none;
+  background-color: $fpl-lighter-grey;
+  padding: 1rem;
+  color: $fpl-deep-purple;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.fpl-login-button {
+  padding: .5rem 2rem;
+  font-size: 1.4rem;
+  font-weight: 700;
+  font-family: 'Open Sans', sans-serif;
+  background-color: $fpl-deep-purple;
+  color: #FFFFFF;
+  text-align: center;
+  cursor: pointer;
+
+  &--disabled {
+    background-color: $fpl-disabled-grey;
+    color: $fpl-disabled-grey-text;
+    cursor: not-allowed;
+  }
+}
+
+.fpl-login-footer-url {
+  text-decoration: none;
+  outline: none;
+  font-size: 1.2rem;
+  color: $fpl-deep-purple;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 700;
+  text-align: center;
+}
+
+.fpl-index-content {
+  display: grid;
+  grid-template-rows: 5rem 5fr 4fr;
+}
+
+.fpl-navigation {
+  display: flex;
+  align-items: center;
+  padding-left: 1.6rem;
+  font-size: 1.6rem;
+  color: $fpl-deep-purple;
+  font-weight: 700;
+  font-family: 'Open Sans', sans-serif;
+  border-bottom: 1px solid $fpl-border-grey;
+
+  & > span {
+    cursor: pointer;
+    margin-right: 2rem;
+  }
+}
+
+.fpl-week-overview {
+  padding: 0 3rem 0 3rem;
+}
+
+.fpl-week-overview-header {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  padding: 1.2rem 0 1.2rem 0;
+}
+
+.fpl-header-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  justify-content: space-between;
+}
+
+.fpl-tiny-header {
+  display: grid;
+  font-size: 1.2rem;
+  font-weight: 700;
+  font-family: 'Open Sans', sans-serif;
+  color: $fpl-deep-purple;
+
+  &--left {
+    text-align: left;
+  }
+
+  &--right {
+    text-align: right;
+  }
+}
+
+.fpl-small-header {
+  display: grid;
+  font-size: 1.4rem;
+  font-weight: 700;
+  font-family: 'Open Sans', sans-serif;
+  color: $fpl-deep-purple;
+
+  &--left {
+    text-align: left;
+  }
+
+  &--right {
+    text-align: right;
+  }
+}
+
+.fpl-medium-header {
+  display: grid;
+  font-size: 1.6rem;
+  font-weight: 700;
+  font-family: 'Open Sans', sans-serif;
+  color: $fpl-deep-purple;
+
+  &--left {
+    text-align: left;
+  }
+
+  &--right {
+    text-align: right;
+  }
+}
+
+.fpl-large-header {
+  display: grid;
+  font-size: 2.7rem;
+  font-weight: 700;
+  font-family: 'Open Sans', sans-serif;
+  color: $fpl-deep-purple;
+
+  &--left {
+    text-align: left;
+  }
+
+  &--right {
+    text-align: right;
+  }
+}
+
+.fpl-medium-text {
+  display: grid;
+  font-size: 1.4rem;
+  font-family: 'Open Sans', sans-serif;
+  color: $fpl-deep-purple;
+
+  &--left {
+    text-align: left;
+  }
+
+  &--right {
+    text-align: right;
+  }
+}
+
+.fpl-week-overview-points {
+  background-color: $fpl-lighter-grey;
+  border-radius: .25rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  padding: 0 2.4rem 0 2.4rem;
+  justify-content: space-between;
+  height: 7.5rem;
+}
+
+.fpl-week-overview-buttons {
+  display: grid;
+  grid-gap: 1.6rem;
+  justify-content: center;
+  align-items: center;
+  grid-template-rows: 1fr 1fr;
+  padding: 1.6rem 0 0.8rem 0;
+}
+
+.fpl-week-overview-button {
+  cursor: pointer;
+  text-align: center;
+  color: #FFFFFF;
+  padding: .75rem 0 .75rem 0;
+  width: 66.7vw;
+
+  &--purple {
+    background-color: $fpl-deep-purple;
+  }
+
+  &--blue {
+    background-color: $fpl-blue;
+  }
+}
+
+.fpl-week-overview-deadline {
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: .75rem;
+}
+
+.fpl-season-overview {
+  display: grid;
+  padding: 0 2.4rem 0 2.4rem;
+  background-color: #F0F0F0;
+  grid-template-rows: 5rem 7.5rem 1fr;
+}
+
+.fpl-season-overview-header {
+  display: grid;
+  justify-content: center;
+  align-items: center;
+}
+
+.fpl-season-overview-points {
+  background-color: $fpl-lighter-grey;
+  border-radius: .25rem;
+  display: grid;
+  grid-template-rows: 1fr 1px 1fr;
+  align-items: center;
+  padding: 0 2.4rem 0 2.4rem;
+  height: 8.5rem;
+}
+
+.fpl-season-points-row {
+  display: grid;
+  padding: .6rem 0 .6rem 0;
+  grid-template-columns: 1fr 1fr;
+  justify-content: space-between;
+}
+
+.fpl-dark-border {
+  height: 1px;
+  background-color: #DBDBDB;
+}
+
+.fpl-season-overview-buttons {
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  padding: 2.2rem 0 1.2rem 0;
+}
+
+.menu-hidden {
+  display: none !important;
+}
+
+.fpl-menu-list {
+  display: grid;
+  grid-template-rows: repeat(5, 1fr);
+  position: absolute;
+  background-color: #FFFFFF;
+  border-radius: .5rem;
+  list-style-type: none;
+  height: 22rem;
+  width: 24rem;
+  top: 4rem;
+  left: 14rem;
+  z-index: 69;
+  box-shadow: 0px 10px 50px -5px rgba(0,0,0,0.1);
+  transition: all 0.3s;
+}
+
+.fpl-menu-item {
+  display: grid;
+  grid-template-columns: 2.5rem auto;
+  align-items: center;
+  grid-gap: 2rem;
+  border-top: 1px solid #F4F4F4;
+  transition: all 0.3s;
+  cursor: pointer;
+
+  &:first-child {
+    border-radius: .5rem .5rem 0 0;
+    border-top: none;
+  }
+
+  &:last-child {
+    border-radius: 0 0 .5rem .5rem;
+  }
+
+  & > span {
+    color: $fpl-deep-purple;
+    padding-left: 1.25rem;
+    font-size: 2.4rem;
+  }
+
+  &:hover {
+    background-color: #F9F9F9;
+  }
+}
+
+.fpl-team-overview {
+  display: grid;
+  padding: 2rem 1.75rem;
+}
+
+.fpl-team-table {
+  display: grid;
+  grid-template-rows: repeat(16, 2.8rem);
+}
+
+.fpl-team-table-row {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: $fpl-deep-purple;
+  font-family: 'Open Sans', sans-serif;
+  padding: 0 1rem 0 1rem;
+  display: grid;
+  align-items: center;
+  grid-template-columns: 4.75rem 10rem 9rem 8rem auto;
+  background-color: #F7F7F7;
+  border-top: 1px solid #EFEFEF;
+
+  &:nth-child(1),
+  &:nth-child(2) {
+    border-top: none;
   }
 
   &--bench {
-    background-color: $fpl-grey;
+    background-color: #F2F2F2 !important;
   }
 
-  &:hover {
-    background-color: $fpl-dark-grey;
+  &--header {
+    border-radius: .75rem .75rem 0 0;
+    background-color: $fpl-deep-purple;
+    color: #FFFFFF;
   }
 }
 
-.player-cell {
+.fdr-table {
   display: grid;
+  justify-content: center;
   align-items: center;
-}
-
-.player-table-fixtures {
-  display: grid;
   grid-template-columns: repeat(5, 1fr);
-  grid-gap: .25rem;
 }
 
-.player-table-expected-points {
+.fixture-square-table {
+  border-radius: .25rem;
+  height: 1.2rem;
+  width: 1.2rem;
+}
+
+.fpl-team-table-points {
   text-align: right;
 }
 
-.back-row {
+.fpl-league {
+  height: 5rem;
   display: flex;
-  margin-top: 1rem;
-  margin-left: 1rem;
+  align-items: center;
+  padding-left: 2.6rem;
+  font-size: 1.6rem;
+  color: $fpl-deep-purple;
+  font-weight: 700;
+  font-family: 'Open Sans', sans-serif;
+  border-top: 1px solid $fpl-border-grey;
+
+  &:first-child {
+    border: none;
+  }
+
+  & > span {
+    cursor: pointer;
+    font-size: 2.5rem;
+    margin-right: 2rem;
+    transition: transform .2s;
+
+    &.active {
+      -moz-transform: rotate(90deg);
+      -webkit-transform: rotate(90deg);
+      transform: rotate(90deg);
+    }
+  }
+}
+
+.fpl-league-table-container {
+  display: none;
+  height: 22.5rem;
+  grid-template-rows: 7fr 2fr;
+  padding: 0 2rem 0 2rem;
+  overflow: hidden;
+
+  &.active {
+    display: grid;
+  }
+}
+
+.fpl-league-table {
+  display: grid;
+  grid-template-rows: 1fr 5fr;
+}
+
+.fpl-league-table-body {
+  display: grid;
+  grid-template-rows: repeat(5, 1fr);
+}
+
+.fpl-league-table-row {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: $fpl-deep-purple;
+  font-family: 'Open Sans', sans-serif;
+  padding: 0 1rem 0 1rem;
+  display: grid;
+  align-items: center;
+  grid-template-columns: 3.15fr .5fr 1fr ;
+  background-color: #F7F7F7;
+  border-top: 1px solid #EFEFEF;
+
+  &:nth-child(1),
+  &:nth-child(2) {
+    border-top: none;
+  }
+
+  &--header {
+    border-radius: .75rem .75rem 0 0;
+    background-color: $fpl-deep-purple;
+    color: #FFFFFF;
+  }
+
+  & span {
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    &.icon-triangle-up {
+      color: #00FF70;
+    }
+    &.icon-triangle-down {
+      color: #FF4136;
+    }
+  }
+}
+
+.hidden {
+  display: none;
+}
+
+.icon-circle {
+  border-radius: 50%;
+  width: 1rem;
+  height: 1rem;
+  background-color: #D5D5D5;
+}
+
+.pagination-wrapper {
+  display: grid;
+  justify-content: center;
+  align-items: center;
+}
+
+.fpl-league-table-pagination {
+  display: flex;
+  flex-direction: row;
+  grid-gap: .5rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.fpl-pagination-button {
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  width: 2.5rem;
+  height: 3rem;
+  margin-left: .5rem;
+
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #B7B7B7;
+  border-radius: .5rem;
+  border: 1px solid #F2F2F2;
+
+  transition: color .2s;
+
+  &:first-child {
+    margin-left: 0;
+  }
+
+  &.active {
+    color: $fpl-deep-purple;
+  }
+
+  &:hover {
+    cursor: pointer;
+    color: $fpl-deep-purple;
+  }
+}
+
+.disabled {
+  cursor: not-allowed !important;
+  &:hover {
+    color: #B7B7B7;
+  }
+}
+
+.triangle-disabled {
+  cursor: not-allowed !important;
+}
+
+.non-number {
+  cursor: default !important;
+  &:hover {
+    color: #B7B7B7;
+  }
+}
+
+#fixtures,
+#statistics,
+#feature-guide {
+  cursor: not-allowed;
+
+  &:hover {
+    background-color: #FFFFFF;
+  }
+}
+
+.rank-change {
+  display: grid;
+  grid-template-columns: repeat(2, auto);
+  justify-content: end;
+  align-items: center;
+}
+
+.movement {
+  font-size: 2.2rem;
+  &--up {
+    color: #00FF70;
+  }
+  &--down {
+    color: #FF4136;
+  }
+  &--same {
+  }
 }

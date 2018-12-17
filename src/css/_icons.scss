@@ -24,6 +24,71 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-poll {
+  &:before {
+    content: $icon-poll;
+  }
+}
+.icon-autorenew {
+  &:before {
+    content: $icon-autorenew;
+  }
+}
+.icon-help_outline {
+  &:before {
+    content: $icon-help_outline;
+  }
+}
+.icon-exit_to_app {
+  &:before {
+    content: $icon-exit_to_app;
+  }
+}
+.icon-date_range {
+  &:before {
+    content: $icon-date_range;
+  }
+}
+.icon-arrow-left {
+  &:before {
+    content: $icon-arrow-left;
+  }
+}
+.icon-triangle-up {
+  &:before {
+    content: $icon-triangle-up;
+  }
+}
+.icon-triangle-right {
+  &:before {
+    content: $icon-triangle-right;
+  }
+}
+.icon-triangle-left {
+  &:before {
+    content: $icon-triangle-left;
+  }
+}
+.icon-triangle-down {
+  &:before {
+    content: $icon-triangle-down;
+  }
+}
+.icon-cross {
+  &:before {
+    content: $icon-cross;
+  }
+}
+.icon-menu {
+  &:before {
+    content: $icon-menu;
+  }
+}
+.icon-reddit-square {
+  &:before {
+    content: $icon-reddit-square;
+  }
+}
 .icon-angle-up {
   &:before {
     content: $icon-angle-up;
@@ -32,10 +97,5 @@
 .icon-angle-double-up {
   &:before {
     content: $icon-angle-double-up;
-  }
-}
-.icon-reddit-square {
-  &:before {
-    content: $icon-reddit-square;
   }
 }

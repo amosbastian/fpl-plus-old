@@ -6,10 +6,16 @@ const path = require('path');
 
 module.exports = {
   entry: {
+    popup: path.resolve(__dirname, 'src/js/popup.js'),
     background: path.resolve(__dirname, 'src/js/background.js'),
     contentScript: path.resolve(__dirname, 'src/js/contentScript.js'),
     options: path.resolve(__dirname, 'src/js/options.js'),
-    popup: path.resolve(__dirname, 'src/js/popup.js'),
+    features: path.resolve(__dirname, 'src/js/features.js'),
+    login: path.resolve(__dirname, 'src/js/login.js'),
+    index: path.resolve(__dirname, 'src/js/index.js'),
+    team: path.resolve(__dirname, 'src/js/team.js'),
+    leagues: path.resolve(__dirname, 'src/js/leagues.js'),
+    menu: path.resolve(__dirname, 'src/js/menu.js'),
   },
   output: {
     path: path.resolve(__dirname, 'build'),
@@ -60,7 +66,7 @@ module.exports = {
         exclude: /node_modules/,
       },
       {
-        test: /\.(png|woff|woff2|eot|ttf|svg)$/,
+        test: /\.(woff|woff2|eot|ttf|svg)$/,
         loader: 'url-loader',
         options: {
           name: '[name].[ext]',
