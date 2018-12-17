@@ -1,4 +1,6 @@
-![fpl-plus](https://i.imgur.com/ZnBmH6s.png)
+<center>
+<img src="https://i.imgur.com/RsMW5TH.png">
+</center>
 
 ## FPL Plus
 Browser extension (Chrome) which improves the functionality of https://fantasy.premierleague.com/.
