@@ -75,10 +75,18 @@ html {
 }
 
 .fpl-feature-circle {
+  display: grid;
+  justify-content: center;
+  align-items: center;
   height: 20rem;
   width: 20rem;
   background-color: $fpl-light-grey;
   border-radius: 50%;
+
+  & > img {
+    height: 17.5rem;
+    width: 17.5rem;
+  }
 }
 
 .fpl-feature-bottom {
