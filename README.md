@@ -16,3 +16,10 @@ FPL Plus is currently not available on the Chrome store, so you must install it 
 ### Changelog
 
 See [CHANGELOG.md](https://github.com/amosbastian/fpl-plus/blob/master/CHANGELOG.md).
+
+### Acknowledgments
+
+A couple of people have really helped me out with this project, so I'd like to acknowledge them here. I really appreciate it!
+
+* @podanrj (logo design)
+* @tobias-g1 (popup design)
