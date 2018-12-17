@@ -5,7 +5,7 @@
 - Update login, overview, team and points popup pages
 - Add league overview popup page
 - Add popup header menu with logout and refresh data functionality
-- A new logo!
+- A new logo (thanks @podanrj!)
 
 ### v.0.5.0
 
