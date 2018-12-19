@@ -223,3 +223,7 @@ export const showPage = (pageId) => {
 export const getCurrentPage = () => new Promise((resolve) => {
   chrome.storage.local.get('currentPage', data => resolve(data.currentPage));
 });
+
+export const getCurrentLeague = () => new Promise((resolve) => {
+  chrome.storage.local.get('currentLeague', data => resolve(data.currentLeague));
+});

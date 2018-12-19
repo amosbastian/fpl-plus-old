@@ -293,12 +293,7 @@ async function populateLeagues() {
   nextButtons.forEach(button => button.addEventListener('click', changePage));
 }
 
-async function showLeague(league) {
-  const header = document.getElementById('league-overview').firstElementChild.lastElementChild;
-  header.textContent = `${league.league.name}`;
-}
-
-async function toLeague() {
+async function setLeague() {
   const leagueId = this.dataset.leagueId;
   const leagueType = this.parentElement.parentElement.parentElement.parentElement.id;
 
@@ -308,8 +303,7 @@ async function toLeague() {
   } else {
     league = await getH2HLeague(leagueId);
   }
-
-  showLeague(league);
+  chrome.storage.local.set({ currentLeague: league });
   showPage('league-overview');
 }
 
@@ -328,7 +322,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const leagueURLs = Array.from(document.getElementsByClassName('fpl-league-name'));
     leagueURLs.forEach((element) => {
-      element.addEventListener('click', toLeague);
+      element.addEventListener('click', setLeague);
     });
   }, 100);
 });
