@@ -5,6 +5,10 @@ function back() {
   showPage('main-overview');
 }
 
+function backToLeaguesOverview() {
+  showPage('leagues-overview');
+}
+
 /**
  * If the user has used the extension before then they are taken to the login page, otherwise they
  * are shown the feature page.
@@ -23,6 +27,9 @@ function handleLoggedOutUser() {
 document.addEventListener('DOMContentLoaded', () => {
   const backButton = document.querySelectorAll('.back-button');
   backButton.forEach(button => button.addEventListener('click', back));
+
+  const leagueBackButton = document.querySelector('.back-button-league');
+  leagueBackButton.addEventListener('click', backToLeaguesOverview);
 });
 
 window.onload = async () => {

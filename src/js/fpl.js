@@ -75,12 +75,40 @@ function getLeagueEndpoint() {
 }
 
 /**
+ * Returns a classic league (tailored for the content script).
+ * @returns {Object}
+ */
+export const getClassicLeagueCS = async () => retry(async () => {
+  const endpoint = getLeagueEndpoint();
+  const response = await fetch(endpoint);
+  if (response.status === 200) {
+    const json = await response.json();
+    return json;
+  }
+
+  throw new Error(response.status);
+});
+
+/**
  * Returns a classic league.
  * @returns {Object}
  */
-export const getClassicLeague = async () => retry(async () => {
-  const endpoint = getLeagueEndpoint();
-  const response = await fetch(endpoint);
+export const getClassicLeague = async leagueId => retry(async () => {
+  const response = await fetch(`https://fantasy.premierleague.com/drf/leagues-classic-standings/${leagueId}`);
+  if (response.status === 200) {
+    const json = await response.json();
+    return json;
+  }
+
+  throw new Error(response.status);
+});
+
+/**
+ * Returns a H2H league.
+ * @returns {Object}
+ */
+export const getH2HLeague = async leagueId => retry(async () => {
+  const response = await fetch(`https://fantasy.premierleague.com/drf/leagues-h2h-standings/${leagueId}`);
   if (response.status === 200) {
     const json = await response.json();
     return json;

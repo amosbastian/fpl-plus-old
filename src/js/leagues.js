@@ -1,5 +1,7 @@
 import '../css/main.scss';
-import { getLocalUser, showPage } from './fpl';
+import {
+  getLocalUser, showPage, getClassicLeague, getH2HLeague,
+} from './fpl';
 
 const leagueTriangles = Array.from(document.getElementsByClassName('icon-triangle-right leagues'));
 const leagueTableHeader = `
@@ -216,7 +218,7 @@ function changePage() {
  * @param {Array<Object>} leagues
  * @param {string} leagueType
  */
-function populateLeagueTable(leagues, leagueType) {
+function populateLeaguesTable(leagues, leagueType) {
   const leagueHeader = document.getElementById(leagueType);
 
   // Main container
@@ -245,7 +247,7 @@ function populateLeagueTable(leagues, leagueType) {
     }
 
     leagueTableRow.className = 'fpl-league-table-row fpl-league-table-row--body hidden';
-    leagueTableRow.insertAdjacentHTML('beforeend', `<div>${league.name}</div>`);
+    leagueTableRow.insertAdjacentHTML('beforeend', `<div><a data-league-id="${league.id}" class="fpl-league-name">${league.name}</a></div>`);
     leagueTableRow.insertAdjacentHTML('beforeend', rankChange);
     leagueTableRow.insertAdjacentHTML('beforeend', `<div>${league.entry_rank}</div>`);
     leagueTableBody.insertAdjacentElement('beforeend', leagueTableRow);
@@ -263,19 +265,19 @@ async function populateLeagues() {
 
   // Private classic
   const privateClassicLeagues = user.leagues.classic.filter(league => league.league_type === 'x');
-  if (privateClassicLeagues.length > 0) populateLeagueTable(privateClassicLeagues, 'private-classic');
+  if (privateClassicLeagues.length > 0) populateLeaguesTable(privateClassicLeagues, 'private-classic');
 
   // Private H2H
   const privateH2HLeagues = user.leagues.h2h.filter(league => league.league_type === 'x');
-  if (privateH2HLeagues.length > 0) populateLeagueTable(privateH2HLeagues, 'private-h2h');
+  if (privateH2HLeagues.length > 0) populateLeaguesTable(privateH2HLeagues, 'private-h2h');
 
   // Public H2H
   const publicH2HLeagues = user.leagues.h2h.filter(league => league.league_type === 'c');
-  if (publicH2HLeagues.length > 0) populateLeagueTable(publicH2HLeagues, 'public-h2h');
+  if (publicH2HLeagues.length > 0) populateLeaguesTable(publicH2HLeagues, 'public-h2h');
 
   // Global
   const globalLeagues = user.leagues.classic.filter(league => league.league_type === 's');
-  if (globalLeagues.length > 0) populateLeagueTable(globalLeagues, 'global');
+  if (globalLeagues.length > 0) populateLeaguesTable(globalLeagues, 'global');
 
   // Show private classic league table by default
   const privateClassicTable = document.getElementById('private-classic-league-table');
@@ -291,6 +293,25 @@ async function populateLeagues() {
   nextButtons.forEach(button => button.addEventListener('click', changePage));
 }
 
+async function showLeague(league) {
+  const header = document.getElementById('league-overview').firstElementChild.lastElementChild;
+  header.textContent = `${league.league.name}`;
+}
+
+async function toLeague() {
+  const leagueId = this.dataset.leagueId;
+  const leagueType = this.parentElement.parentElement.parentElement.parentElement.id;
+
+  let league = {};
+  if (leagueType.includes('classic') || leagueType.includes('global')) {
+    league = await getClassicLeague(leagueId);
+  } else {
+    league = await getH2HLeague(leagueId);
+  }
+
+  showLeague(league);
+  showPage('league-overview');
+}
 
 document.addEventListener('DOMContentLoaded', () => {
   populateLeagues();
@@ -303,6 +324,11 @@ document.addEventListener('DOMContentLoaded', () => {
       if (triangle.parentElement.nextElementSibling.classList.contains('fpl-league')) {
         triangle.classList.add('triangle-disabled');
       }
+    });
+
+    const leagueURLs = Array.from(document.getElementsByClassName('fpl-league-name'));
+    leagueURLs.forEach((element) => {
+      element.addEventListener('click', toLeague);
     });
   }, 100);
 });

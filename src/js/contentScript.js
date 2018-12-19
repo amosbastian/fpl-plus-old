@@ -1,7 +1,7 @@
 import '../css/main.scss';
 import {
-  getClassicLeague, getCurrentGameweek, getPlayers, getTeams, getUser, getUserPicks,
-  getUserHistory, leagueRegex, getTeamToFixtures, getLocalTeams, getLocalPlayers, getLiveData,
+  getClassicLeagueCS, getCurrentGameweek, getPlayers, getTeams, getUser, getUserPicks,
+  getUserHistory, leagueRegex, getTeamToFixtures, getLocalTeams, getLocalPlayers, getLiveData, getClassicLeagueCS,
 } from './fpl';
 
 let teamToFixtures = [];
@@ -814,7 +814,7 @@ async function updateLeagueTable() {
   const players = await getPlayers();
   const currentGameweek = await getCurrentGameweek();
   const liveData = await getLiveData(currentGameweek);
-  const classicLeague = await getClassicLeague();
+  const classicLeague = await getClassicLeagueCS();
   const managerIds = classicLeague.standings.results.map(manager => manager.entry);
 
   const managers = await Promise.all(managerIds.map(async (managerId) => {
