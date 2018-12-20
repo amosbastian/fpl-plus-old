@@ -589,7 +589,7 @@ html {
 }
 
 .hidden {
-  display: none;
+  display: none !important;
 }
 
 .icon-circle {
@@ -696,9 +696,9 @@ html {
 
 .fpl-league-overview {
   display: grid;
-  padding: 1.6rem;
-  grid-template-rows: 2.5rem 1fr 5rem;
-  grid-gap: 1.6rem;
+  padding: 1.6rem 1.6rem 2.25rem 1.6rem;
+  grid-template-rows: 2.5rem 1fr 2.5rem;
+  grid-gap: 1.25rem;
   grid-row: 2 / -1;
 }
 
@@ -723,6 +723,7 @@ html {
 }
 
 .fpl-league-table-row {
+  height: 5rem;
   font-size: 1.3rem;
   font-weight: 700;
   color: $fpl-deep-purple;
@@ -735,12 +736,12 @@ html {
   background-color: #F7F7F7;
   border-top: 1px solid #EFEFEF;
 
-  &:nth-child(1),
-  &:nth-child(2) {
+  &:nth-child(1) {
     border-top: none;
   }
 
   &--header {
+    height: 3rem;
     border-radius: .75rem .75rem 0 0;
     background-color: $fpl-deep-purple;
     color: #FFFFFF;
@@ -785,6 +786,9 @@ html {
   }
   &--down {
     color: #FF4136;
+  }
+  &--same {
+    margin-left: 0.55rem;
   }
 }
 

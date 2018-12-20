@@ -293,6 +293,9 @@ async function populateLeagues() {
   nextButtons.forEach(button => button.addEventListener('click', changePage));
 }
 
+/**
+ * Fetches and sets an individual league.
+ */
 async function setLeague() {
   const leagueId = this.dataset.leagueId;
   const leagueType = this.parentElement.parentElement.parentElement.parentElement.id;
@@ -303,6 +306,7 @@ async function setLeague() {
   } else {
     league = await getH2HLeague(leagueId);
   }
+
   chrome.storage.local.set({ currentLeague: league });
   showPage('league-overview');
 }
