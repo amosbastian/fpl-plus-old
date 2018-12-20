@@ -704,6 +704,17 @@ html {
 
 .fpl-gameweek-selection {
   display: grid;
+
+  & > select {
+    font-size: 1.4rem;
+    color: $fpl-deep-purple;
+    font-weight: 700;
+    border: 1px solid #F2F2F2;
+    border-radius: .5rem;
+    background-color: #FFFFFF;
+    padding: .5rem;
+    outline: none;
+  }
 }
 
 .fpl-league-table {
