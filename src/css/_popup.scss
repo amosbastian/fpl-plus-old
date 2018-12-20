@@ -679,7 +679,7 @@ html {
 }
 
 .movement {
-  font-size: 2.2rem;
+  font-size: 2.2rem !important;
   &--up {
     color: #00FF70;
   }
@@ -767,4 +767,30 @@ html {
 
 .align-right {
   text-align: right;
+}
+
+.league-table-manager {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+}
+
+.manager-rank {
+  display: flex;
+}
+
+.movement-league {
+  font-size: 2.1rem !important;
+  &--up {
+    color: #00FF70;
+  }
+  &--down {
+    color: #FF4136;
+  }
+}
+
+.manager-name {
+  font-size: 1.3rem;
+  font-weight: 300;
+  color: #5B5A5C;
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, "Roboto", sans-serif;
 }
