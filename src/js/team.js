@@ -77,9 +77,8 @@ async function addPlayerRows(teamOverview = true) {
   }
   const players = allPlayers.filter(player => playerIds.includes(player.id));
   const tableId = `team-table${teamOverview ? '-points' : ''}`;
-  console.log(tableId);
   const playerTable = document.getElementById(tableId);
-  console.log(playerTable);
+
   players
     .sort((a, b) => (playerIds.indexOf(a.id) > playerIds.indexOf(b.id) ? 1 : -1))
     .forEach((player) => {

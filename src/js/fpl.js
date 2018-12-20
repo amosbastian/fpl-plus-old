@@ -75,12 +75,42 @@ function getLeagueEndpoint() {
 }
 
 /**
- * Returns a classic league.
+ * Returns a classic league (tailored for the content script).
  * @returns {Object}
  */
-export const getClassicLeague = async () => retry(async () => {
+export const getClassicLeagueCS = async () => retry(async () => {
   const endpoint = getLeagueEndpoint();
   const response = await fetch(endpoint);
+  if (response.status === 200) {
+    const json = await response.json();
+    return json;
+  }
+
+  throw new Error(response.status);
+});
+
+/**
+ * Returns the classic league in the given phase with the given leagueId.
+ * @param {number} leagueId
+ * @param {number} phase
+ * @returns {Object}
+ */
+export const getClassicLeague = async (leagueId, phase = 1) => retry(async () => {
+  const response = await fetch(`https://fantasy.premierleague.com/drf/leagues-classic-standings/${leagueId}?phase=${phase}`);
+  if (response.status === 200) {
+    const json = await response.json();
+    return json;
+  }
+
+  throw new Error(response.status);
+});
+
+/**
+ * Returns a H2H league.
+ * @returns {Object}
+ */
+export const getH2HLeague = async leagueId => retry(async () => {
+  const response = await fetch(`https://fantasy.premierleague.com/drf/leagues-h2h-standings/${leagueId}`);
   if (response.status === 200) {
     const json = await response.json();
     return json;
@@ -195,3 +225,49 @@ export const showPage = (pageId) => {
 export const getCurrentPage = () => new Promise((resolve) => {
   chrome.storage.local.get('currentPage', data => resolve(data.currentPage));
 });
+
+export const getCurrentLeague = () => new Promise((resolve) => {
+  chrome.storage.local.get('currentLeague', data => resolve(data.currentLeague));
+});
+
+/**
+ * Returns an array of maxLength (or less) page numbers where a 0 in the returned array denotes a
+ * gap in the series.
+ *
+ * Idea taken from: https://stackoverflow.com/a/46385144/4255859
+ * @param {number} totalLeagues
+ * @param {number} page
+ * @param {number} maxLength
+ */
+export const getPageList = (totalLeagues, page, maxLength) => {
+  function range(start, end) {
+    return Array.from(Array(end - start + 1), (_, i) => i + start);
+  }
+
+  const sideWidth = maxLength < 9 ? 1 : 2;
+  const leftWidth = (maxLength - sideWidth * 2 - 3) >> 1;
+  const rightWidth = (maxLength - sideWidth * 2 - 2) >> 1;
+
+  // No ...
+  if (totalLeagues <= maxLength) {
+    return range(1, totalLeagues);
+  }
+  // No ... on left side
+  if (page <= maxLength - sideWidth - 1 - rightWidth) {
+    return range(1, maxLength - sideWidth - 1)
+      .concat([0])
+      .concat(range(totalLeagues - sideWidth + 1, totalLeagues));
+  }
+  // No ... on right side
+  if (page >= totalLeagues - sideWidth - 1 - rightWidth) {
+    return range(1, sideWidth)
+      .concat([0])
+      .concat(range(totalLeagues - sideWidth - 1 - rightWidth - leftWidth, totalLeagues));
+  }
+  // ... on both sides
+  return range(1, sideWidth)
+    .concat([0])
+    .concat(range(page - leftWidth, page + rightWidth))
+    .concat([0])
+    .concat(range(totalLeagues - sideWidth + 1, totalLeagues));
+};

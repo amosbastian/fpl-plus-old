@@ -1,4 +1,9 @@
-### v.0.6.0
+### v0.7.0
+
+- Add individual league tables to popup (shows top 50)
+- Add phase selection to individual league tables
+
+### v0.6.0
 
 - Update popup style (thanks @tobias-g1!)
 - Add features popup page
@@ -7,7 +12,7 @@
 - Add popup header menu with logout and refresh data functionality
 - A new logo (thanks @podanrj!)
 
-### v.0.5.0
+### v0.5.0
 
 - Add live points and players played to classic league table
 - Implement popup with login functionality using user ID
@@ -16,7 +21,7 @@
 - Add points popup page
 - Implement alarm for updating team, player and user data
 
-### v.0.4.0
+### v0.4.0
 
 - Add RMT button for Reddit on /team/my
 - Update header style for /transfers

@@ -210,13 +210,13 @@
         </div>
       </div>
 
-      <!-- LEAGUE OVERVIEW -->
+      <!-- LEAGUES OVERVIEW -->
       <div id="leagues-overview" class="fpl-index-content">
         <div class="fpl-navigation">
           <span class="icon-arrow-left back-button"></span>
           Leagues
         </div>
-        <div class="fpl-league-overview">
+        <div class="fpl-leagues-overview">
           <div id="private-classic" class="fpl-league">
             <span class="icon-triangle-right leagues active"></span>
             Private classic
@@ -235,6 +235,44 @@
           </div>
         </div>
       </div>
+
+      <!-- LEAGUE OVERVIEW -->
+      <div id="league-overview" class="fpl-index-content">
+        <div class="fpl-navigation">
+          <span class="icon-arrow-left back-button-league"></span>
+          <span>Leagues / Text</span>
+        </div>
+        <div class="fpl-league-overview">
+          <div class="fpl-gameweek-selection">
+            <select id="league-table-select" name="phase">
+            </select>
+          </div>
+          <div class="fpl-league-table">
+            <div class="fpl-league-table-row fpl-league-table-row--header">
+              <div>
+                Rank
+              </div>
+              <div>
+                Team & Manager
+              </div>
+              <div class="align-right">
+                GW
+              </div>
+              <div class="align-right">
+                TOT
+              </div>
+            </div>
+            <div id="league-table" class="fpl-league-table-body">
+            </div>
+          </div>
+          <div class="pagination-wrapper">
+            <div id="league-table-pagination" class="fpl-leagues-table-pagination">
+              <div id="league-table-previous" class="fpl-pagination-button previous-page"><span class="icon-triangle-left"></span></div>
+              <div id="league-table-next" class="fpl-pagination-button next-page"><span class="icon-triangle-right"></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     <script src="menu.bundle.js"></script>
     <script src="features.bundle.js"></script>
@@ -242,5 +280,6 @@
     <script src="index.bundle.js"></script>
     <script src="team.bundle.js"></script>
     <script src="leagues.bundle.js"></script>
+    <script src="league.bundle.js"></script>
   </body>
 </html>

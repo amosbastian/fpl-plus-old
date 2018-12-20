@@ -1,9 +1,11 @@
 import '../css/main.scss';
-import { getLocalUser, showPage } from './fpl';
+import {
+  getLocalUser, showPage, getClassicLeague, getH2HLeague, getPageList,
+} from './fpl';
 
 const leagueTriangles = Array.from(document.getElementsByClassName('icon-triangle-right leagues'));
 const leagueTableHeader = `
-  <div class="fpl-league-table-row fpl-league-table-row--header">
+  <div class="fpl-leagues-table-row fpl-leagues-table-row--header">
     <div>
       League
     </div>
@@ -16,54 +18,13 @@ const leagueTableHeader = `
 
 const leagueTablePagination = `
   <div class="pagination-wrapper">
-  <div class="fpl-league-table-pagination">
+  <div class="fpl-leagues-table-pagination">
     <div class="fpl-pagination-button previous-page"><span class="icon-triangle-left"></span></div>
     <div class="fpl-pagination-button next-page"><span class="icon-triangle-right"></span></div>
   </div>
   </div>
 `;
 
-/**
- * Returns an array of maxLength (or less) page numbers where a 0 in the returned array denotes a
- * gap in the series.
- *
- * Idea taken from: https://stackoverflow.com/a/46385144/4255859
- * @param {number} totalLeagues
- * @param {number} page
- * @param {number} maxLength
- */
-function getPageList(totalLeagues, page, maxLength) {
-  function range(start, end) {
-    return Array.from(Array(end - start + 1), (_, i) => i + start);
-  }
-
-  const sideWidth = maxLength < 9 ? 1 : 2;
-  const leftWidth = (maxLength - sideWidth * 2 - 3) >> 1;
-  const rightWidth = (maxLength - sideWidth * 2 - 2) >> 1;
-
-  // No ...
-  if (totalLeagues <= maxLength) {
-    return range(1, totalLeagues);
-  }
-  // No ... on left side
-  if (page <= maxLength - sideWidth - 1 - rightWidth) {
-    return range(1, maxLength - sideWidth - 1)
-      .concat([0])
-      .concat(range(totalLeagues - sideWidth + 1, totalLeagues));
-  }
-  // No ... on right side
-  if (page >= totalLeagues - sideWidth - 1 - rightWidth) {
-    return range(1, sideWidth)
-      .concat([0])
-      .concat(range(totalLeagues - sideWidth - 1 - rightWidth - leftWidth, totalLeagues));
-  }
-  // ... on both sides
-  return range(1, sideWidth)
-    .concat([0])
-    .concat(range(page - leftWidth, page + rightWidth))
-    .concat([0])
-    .concat(range(totalLeagues - sideWidth + 1, totalLeagues));
-}
 const limitPerPage = 5;
 const paginationSize = 5;
 
@@ -134,7 +95,7 @@ function updatePagination(currentPage, pageList, paginationElement) {
 function showLeagueElement(button, currentPage = 0) {
   const whichPage = currentPage || parseInt(button.textContent, 10);
   const leagueRows = Array.from(button.parentElement.parentElement.previousElementSibling
-    .getElementsByClassName('fpl-league-table-row--body'));
+    .getElementsByClassName('fpl-leagues-table-row--body'));
   const numberOfLeagues = leagueRows.length;
   const totalPages = Math.ceil(numberOfLeagues / limitPerPage);
 
@@ -153,7 +114,7 @@ function showLeagueElement(button, currentPage = 0) {
  */
 function initialiseTable(leagueTable) {
   // Show the first 5 rows of the league table
-  const leagueRows = Array.from(leagueTable.getElementsByClassName('fpl-league-table-row--body'));
+  const leagueRows = Array.from(leagueTable.getElementsByClassName('fpl-leagues-table-row--body'));
   showTableRows(1, leagueRows);
 
   const numberOfLeagues = leagueRows.length;
@@ -192,12 +153,12 @@ function showLeagueTable() {
   leagueTriangles.forEach(triangle => triangle.classList.remove('active'));
   this.classList.toggle('active');
 
-  const leagueTables = Array.from(document.getElementsByClassName('fpl-league-table-container'));
+  const leagueTables = Array.from(document.getElementsByClassName('fpl-leagues-table-container'));
   leagueTables.forEach(leagueTable => leagueTable.classList.remove('active'));
   this.parentElement.nextElementSibling.classList.toggle('active');
 
   // Initialise private classic league table by default
-  initialiseTable(this.parentElement.nextElementSibling.getElementsByClassName('fpl-league-table')[0]);
+  initialiseTable(this.parentElement.nextElementSibling.getElementsByClassName('fpl-leagues-table')[0]);
 }
 
 /**
@@ -216,22 +177,22 @@ function changePage() {
  * @param {Array<Object>} leagues
  * @param {string} leagueType
  */
-function populateLeagueTable(leagues, leagueType) {
+function populateLeaguesTable(leagues, leagueType) {
   const leagueHeader = document.getElementById(leagueType);
 
   // Main container
   const leagueTableContainer = document.createElement('div');
-  leagueTableContainer.className = `fpl-league-table-container ${leagueType === 'private-classic' ? 'active' : ''}`;
+  leagueTableContainer.className = `fpl-leagues-table-container ${leagueType === 'private-classic' ? 'active' : ''}`;
 
   // League table container
   const leagueTableElement = document.createElement('div');
-  leagueTableElement.className = 'fpl-league-table';
+  leagueTableElement.className = 'fpl-leagues-table';
   leagueTableElement.id = 'private-classic-league-table';
   leagueTableElement.insertAdjacentHTML('afterbegin', leagueTableHeader);
 
   // League table body
   const leagueTableBody = document.createElement('div');
-  leagueTableBody.className = 'fpl-league-table-body';
+  leagueTableBody.className = 'fpl-leagues-table-body';
 
   // Create each row of the table and insert into the body
   leagues.forEach((league) => {
@@ -244,8 +205,8 @@ function populateLeagueTable(leagues, leagueType) {
       rankChange = '<span><div class="icon-circle"></div></span>';
     }
 
-    leagueTableRow.className = 'fpl-league-table-row fpl-league-table-row--body hidden';
-    leagueTableRow.insertAdjacentHTML('beforeend', `<div>${league.name}</div>`);
+    leagueTableRow.className = 'fpl-leagues-table-row fpl-leagues-table-row--body hidden';
+    leagueTableRow.insertAdjacentHTML('beforeend', `<div><a data-league-id="${league.id}" class="fpl-league-name">${league.name}</a></div>`);
     leagueTableRow.insertAdjacentHTML('beforeend', rankChange);
     leagueTableRow.insertAdjacentHTML('beforeend', `<div>${league.entry_rank}</div>`);
     leagueTableBody.insertAdjacentElement('beforeend', leagueTableRow);
@@ -263,25 +224,25 @@ async function populateLeagues() {
 
   // Private classic
   const privateClassicLeagues = user.leagues.classic.filter(league => league.league_type === 'x');
-  if (privateClassicLeagues.length > 0) populateLeagueTable(privateClassicLeagues, 'private-classic');
+  if (privateClassicLeagues.length > 0) populateLeaguesTable(privateClassicLeagues, 'private-classic');
 
   // Private H2H
   const privateH2HLeagues = user.leagues.h2h.filter(league => league.league_type === 'x');
-  if (privateH2HLeagues.length > 0) populateLeagueTable(privateH2HLeagues, 'private-h2h');
+  if (privateH2HLeagues.length > 0) populateLeaguesTable(privateH2HLeagues, 'private-h2h');
 
   // Public H2H
   const publicH2HLeagues = user.leagues.h2h.filter(league => league.league_type === 'c');
-  if (publicH2HLeagues.length > 0) populateLeagueTable(publicH2HLeagues, 'public-h2h');
+  if (publicH2HLeagues.length > 0) populateLeaguesTable(publicH2HLeagues, 'public-h2h');
 
   // Global
   const globalLeagues = user.leagues.classic.filter(league => league.league_type === 's');
-  if (globalLeagues.length > 0) populateLeagueTable(globalLeagues, 'global');
+  if (globalLeagues.length > 0) populateLeaguesTable(globalLeagues, 'global');
 
   // Show private classic league table by default
   const privateClassicTable = document.getElementById('private-classic-league-table');
   initialiseTable(privateClassicTable);
 
-  const paginationElement = document.getElementsByClassName('fpl-league-table-pagination')[0];
+  const paginationElement = document.getElementsByClassName('fpl-leagues-table-pagination')[0];
   paginationElement.addEventListener('click', event => paginationClickHandler(event));
 
   const previousButtons = Array.from(document.getElementsByClassName('fpl-pagination-button previous-page'));
@@ -291,6 +252,23 @@ async function populateLeagues() {
   nextButtons.forEach(button => button.addEventListener('click', changePage));
 }
 
+/**
+ * Fetches and sets an individual league.
+ */
+async function setLeague() {
+  const leagueId = this.dataset.leagueId;
+  const leagueType = this.parentElement.parentElement.parentElement.parentElement.id;
+
+  let league = {};
+  if (leagueType.includes('classic') || leagueType.includes('global')) {
+    league = await getClassicLeague(leagueId);
+  } else {
+    league = await getH2HLeague(leagueId);
+  }
+
+  chrome.storage.local.set({ currentLeague: league });
+  showPage('league-overview');
+}
 
 document.addEventListener('DOMContentLoaded', () => {
   populateLeagues();
@@ -303,6 +281,11 @@ document.addEventListener('DOMContentLoaded', () => {
       if (triangle.parentElement.nextElementSibling.classList.contains('fpl-league')) {
         triangle.classList.add('triangle-disabled');
       }
+    });
+
+    const leagueURLs = Array.from(document.getElementsByClassName('fpl-league-name'));
+    leagueURLs.forEach((element) => {
+      element.addEventListener('click', setLeague);
     });
   }, 100);
 });
