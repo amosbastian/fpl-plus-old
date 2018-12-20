@@ -90,7 +90,9 @@ export const getClassicLeagueCS = async () => retry(async () => {
 });
 
 /**
- * Returns a classic league.
+ * Returns the classic league in the given phase with the given leagueId.
+ * @param {number} leagueId
+ * @param {number} phase
  * @returns {Object}
  */
 export const getClassicLeague = async (leagueId, phase = 1) => retry(async () => {
