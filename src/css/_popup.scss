@@ -603,6 +603,7 @@ html {
   display: grid;
   justify-content: center;
   align-items: center;
+  user-select: none;
 }
 
 .fpl-leagues-table-pagination {

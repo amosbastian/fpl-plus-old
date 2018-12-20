@@ -1,4 +1,6 @@
-import { getCurrentLeague, getPageList, getLocalUser } from './fpl';
+import {
+  getCurrentLeague, getPageList, getLocalUser, getClassicLeague,
+} from './fpl';
 
 const FPLSeason = ['August', 'September', 'October', 'November', 'December', 'January', 'February',
   'March', 'April', 'May'];
@@ -115,6 +117,11 @@ async function getManagerId() {
   return user.entry.id;
 }
 
+/**
+ * Populates the league table with all the manager rows and pagination element.
+ * @param {Object} league
+ * @param {number} managerId
+ */
 function populateLeagueTable(league, managerId) {
   const leagueTable = document.getElementById('league-table');
 
@@ -169,13 +176,20 @@ function populateLeagueTable(league, managerId) {
   nextButton.addEventListener('click', changePage);
 }
 
+/**
+ * Updates the current league page.
+ * @param {number} phase
+ */
 async function updateLeague(phase = 1) {
-  const league = await getCurrentLeague();
+  let league = await getCurrentLeague();
+  if (phase > 1) {
+    league = await getClassicLeague(league.league.id, phase);
+  }
   const managerId = await getManagerId();
 
   updateLeagueName(league);
   populateLeagueTable(league, managerId);
-  updateTable(phase);
+  updateTable(1);
 }
 
 /**
@@ -194,18 +208,33 @@ observer.observe(document.getElementById('league-overview'), {
   attributeOldValue: true,
 });
 
+/**
+ * Update the league table to show the given phase.
+ * @param {Object} element
+ */
+function updatePhase(element) {
+  const select = element.srcElement;
+  const selectedPhase = select.options[select.selectedIndex].value;
+  updateLeague(selectedPhase);
+}
+
+/**
+ * Populate the phase select with the possible months.
+ */
 function populateSelect() {
   const currentMonth = new Date().toLocaleString('en-us', { month: 'long' });
   const phaseSelect = document.getElementById('league-table-select');
   const phaseOptions = FPLSeason.slice(0, FPLSeason.indexOf(currentMonth) + 1);
-  phaseOptions.unshift('Overall');
 
+  phaseOptions.unshift('Overall');
   phaseOptions.forEach((phase) => {
     const value = phaseOptions.indexOf(phase) + 1;
     phaseSelect.insertAdjacentHTML('beforeend', `
       <option value="${value}">${phase}</option>
     `);
   });
+
+  phaseSelect.addEventListener('click', updatePhase);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
