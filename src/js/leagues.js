@@ -5,7 +5,7 @@ import {
 
 const leagueTriangles = Array.from(document.getElementsByClassName('icon-triangle-right leagues'));
 const leagueTableHeader = `
-  <div class="fpl-league-table-row fpl-league-table-row--header">
+  <div class="fpl-leagues-table-row fpl-leagues-table-row--header">
     <div>
       League
     </div>
@@ -18,7 +18,7 @@ const leagueTableHeader = `
 
 const leagueTablePagination = `
   <div class="pagination-wrapper">
-  <div class="fpl-league-table-pagination">
+  <div class="fpl-leagues-table-pagination">
     <div class="fpl-pagination-button previous-page"><span class="icon-triangle-left"></span></div>
     <div class="fpl-pagination-button next-page"><span class="icon-triangle-right"></span></div>
   </div>
@@ -136,7 +136,7 @@ function updatePagination(currentPage, pageList, paginationElement) {
 function showLeagueElement(button, currentPage = 0) {
   const whichPage = currentPage || parseInt(button.textContent, 10);
   const leagueRows = Array.from(button.parentElement.parentElement.previousElementSibling
-    .getElementsByClassName('fpl-league-table-row--body'));
+    .getElementsByClassName('fpl-leagues-table-row--body'));
   const numberOfLeagues = leagueRows.length;
   const totalPages = Math.ceil(numberOfLeagues / limitPerPage);
 
@@ -155,7 +155,7 @@ function showLeagueElement(button, currentPage = 0) {
  */
 function initialiseTable(leagueTable) {
   // Show the first 5 rows of the league table
-  const leagueRows = Array.from(leagueTable.getElementsByClassName('fpl-league-table-row--body'));
+  const leagueRows = Array.from(leagueTable.getElementsByClassName('fpl-leagues-table-row--body'));
   showTableRows(1, leagueRows);
 
   const numberOfLeagues = leagueRows.length;
@@ -194,12 +194,12 @@ function showLeagueTable() {
   leagueTriangles.forEach(triangle => triangle.classList.remove('active'));
   this.classList.toggle('active');
 
-  const leagueTables = Array.from(document.getElementsByClassName('fpl-league-table-container'));
+  const leagueTables = Array.from(document.getElementsByClassName('fpl-leagues-table-container'));
   leagueTables.forEach(leagueTable => leagueTable.classList.remove('active'));
   this.parentElement.nextElementSibling.classList.toggle('active');
 
   // Initialise private classic league table by default
-  initialiseTable(this.parentElement.nextElementSibling.getElementsByClassName('fpl-league-table')[0]);
+  initialiseTable(this.parentElement.nextElementSibling.getElementsByClassName('fpl-leagues-table')[0]);
 }
 
 /**
@@ -223,17 +223,17 @@ function populateLeaguesTable(leagues, leagueType) {
 
   // Main container
   const leagueTableContainer = document.createElement('div');
-  leagueTableContainer.className = `fpl-league-table-container ${leagueType === 'private-classic' ? 'active' : ''}`;
+  leagueTableContainer.className = `fpl-leagues-table-container ${leagueType === 'private-classic' ? 'active' : ''}`;
 
   // League table container
   const leagueTableElement = document.createElement('div');
-  leagueTableElement.className = 'fpl-league-table';
+  leagueTableElement.className = 'fpl-leagues-table';
   leagueTableElement.id = 'private-classic-league-table';
   leagueTableElement.insertAdjacentHTML('afterbegin', leagueTableHeader);
 
   // League table body
   const leagueTableBody = document.createElement('div');
-  leagueTableBody.className = 'fpl-league-table-body';
+  leagueTableBody.className = 'fpl-leagues-table-body';
 
   // Create each row of the table and insert into the body
   leagues.forEach((league) => {
@@ -246,7 +246,7 @@ function populateLeaguesTable(leagues, leagueType) {
       rankChange = '<span><div class="icon-circle"></div></span>';
     }
 
-    leagueTableRow.className = 'fpl-league-table-row fpl-league-table-row--body hidden';
+    leagueTableRow.className = 'fpl-leagues-table-row fpl-leagues-table-row--body hidden';
     leagueTableRow.insertAdjacentHTML('beforeend', `<div><a data-league-id="${league.id}" class="fpl-league-name">${league.name}</a></div>`);
     leagueTableRow.insertAdjacentHTML('beforeend', rankChange);
     leagueTableRow.insertAdjacentHTML('beforeend', `<div>${league.entry_rank}</div>`);
@@ -283,7 +283,7 @@ async function populateLeagues() {
   const privateClassicTable = document.getElementById('private-classic-league-table');
   initialiseTable(privateClassicTable);
 
-  const paginationElement = document.getElementsByClassName('fpl-league-table-pagination')[0];
+  const paginationElement = document.getElementsByClassName('fpl-leagues-table-pagination')[0];
   paginationElement.addEventListener('click', event => paginationClickHandler(event));
 
   const previousButtons = Array.from(document.getElementsByClassName('fpl-pagination-button previous-page'));
