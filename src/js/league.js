@@ -1,4 +1,4 @@
-import { getCurrentLeague, getPageList } from './fpl';
+import { getCurrentLeague, getPageList, getLocalUser } from './fpl';
 
 const limitPerPage = 7;
 const paginationSize = 5;
@@ -8,6 +8,10 @@ function updateLeagueName(league) {
   header.textContent = `${league.league.name}`;
 }
 
+/**
+ * Shows certain rows of the league table depending on the given page number and the limit per page.
+ * @param {number} currentPage
+ */
 function showTableRows(currentPage) {
   const leagueRows = Array.from(document.getElementsByClassName('fpl-league-table-row--body'));
   leagueRows.forEach((leagueRow) => {
@@ -103,7 +107,12 @@ function changePage() {
   updateTable(parseInt(currentPage, 10) + change);
 }
 
-function populateLeagueTable(league) {
+async function getManagerId() {
+  const user = await getLocalUser();
+  return user.entry.id;
+}
+
+function populateLeagueTable(league, managerId) {
   const leagueTable = document.getElementById('league-table');
 
   // Remove previously loaded league table.
@@ -113,6 +122,7 @@ function populateLeagueTable(league) {
 
   const standings = league.standings.results;
   standings.forEach((manager) => {
+    // Manager's rank change with regards to the league table.
     let rankChange = '<span class="icon-triangle-up movement-league movement-league--up">';
     if (manager.movement === 'down') {
       rankChange = '<span class="icon-triangle-down movement-league movement-league--down"></span>';
@@ -120,8 +130,13 @@ function populateLeagueTable(league) {
       rankChange = '<span><div class="icon-circle movement-league movement-league--same"></div></span>';
     }
 
+    let rowClass = 'fpl-league-table-row fpl-league-table-row--body';
+    if (managerId === manager.entry) {
+      rowClass += ' current-manager';
+    }
+
     leagueTable.insertAdjacentHTML('beforeend', `
-      <div class="fpl-league-table-row fpl-league-table-row--body">
+      <div class="${rowClass}">
         <div class="manager-rank">
           ${manager.rank}
           ${rankChange}
@@ -140,6 +155,7 @@ function populateLeagueTable(league) {
     `);
   });
 
+  // Add event listeners for the pagination buttons.
   const paginationElement = document.getElementById('league-table-pagination');
   paginationElement.addEventListener('click', event => paginationClickHandler(event));
 
@@ -152,8 +168,10 @@ function populateLeagueTable(league) {
 
 async function updateLeague() {
   const league = await getCurrentLeague();
+  const managerId = await getManagerId();
+  console.log(managerId);
   updateLeagueName(league);
-  populateLeagueTable(league);
+  populateLeagueTable(league, managerId);
   updateTable(1);
 }
 
