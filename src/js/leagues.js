@@ -1,6 +1,6 @@
 import '../css/main.scss';
 import {
-  getLocalUser, showPage, getClassicLeague, getH2HLeague,
+  getLocalUser, showPage, getClassicLeague, getH2HLeague, getPageList,
 } from './fpl';
 
 const leagueTriangles = Array.from(document.getElementsByClassName('icon-triangle-right leagues'));
@@ -25,47 +25,6 @@ const leagueTablePagination = `
   </div>
 `;
 
-/**
- * Returns an array of maxLength (or less) page numbers where a 0 in the returned array denotes a
- * gap in the series.
- *
- * Idea taken from: https://stackoverflow.com/a/46385144/4255859
- * @param {number} totalLeagues
- * @param {number} page
- * @param {number} maxLength
- */
-function getPageList(totalLeagues, page, maxLength) {
-  function range(start, end) {
-    return Array.from(Array(end - start + 1), (_, i) => i + start);
-  }
-
-  const sideWidth = maxLength < 9 ? 1 : 2;
-  const leftWidth = (maxLength - sideWidth * 2 - 3) >> 1;
-  const rightWidth = (maxLength - sideWidth * 2 - 2) >> 1;
-
-  // No ...
-  if (totalLeagues <= maxLength) {
-    return range(1, totalLeagues);
-  }
-  // No ... on left side
-  if (page <= maxLength - sideWidth - 1 - rightWidth) {
-    return range(1, maxLength - sideWidth - 1)
-      .concat([0])
-      .concat(range(totalLeagues - sideWidth + 1, totalLeagues));
-  }
-  // No ... on right side
-  if (page >= totalLeagues - sideWidth - 1 - rightWidth) {
-    return range(1, sideWidth)
-      .concat([0])
-      .concat(range(totalLeagues - sideWidth - 1 - rightWidth - leftWidth, totalLeagues));
-  }
-  // ... on both sides
-  return range(1, sideWidth)
-    .concat([0])
-    .concat(range(page - leftWidth, page + rightWidth))
-    .concat([0])
-    .concat(range(totalLeagues - sideWidth + 1, totalLeagues));
-}
 const limitPerPage = 5;
 const paginationSize = 5;
 

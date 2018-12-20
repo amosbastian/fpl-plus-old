@@ -1,7 +1,7 @@
 import '../css/main.scss';
 import {
   getClassicLeagueCS, getCurrentGameweek, getPlayers, getTeams, getUser, getUserPicks,
-  getUserHistory, leagueRegex, getTeamToFixtures, getLocalTeams, getLocalPlayers, getLiveData, getClassicLeagueCS,
+  getUserHistory, leagueRegex, getTeamToFixtures, getLocalTeams, getLocalPlayers, getLiveData,
 } from './fpl';
 
 let teamToFixtures = [];
