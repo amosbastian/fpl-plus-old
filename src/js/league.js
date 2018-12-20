@@ -1,5 +1,8 @@
 import { getCurrentLeague, getPageList, getLocalUser } from './fpl';
 
+const FPLSeason = ['August', 'September', 'October', 'November', 'December', 'January', 'February',
+  'March', 'April', 'May'];
+
 const limitPerPage = 7;
 const paginationSize = 5;
 
@@ -166,13 +169,13 @@ function populateLeagueTable(league, managerId) {
   nextButton.addEventListener('click', changePage);
 }
 
-async function updateLeague() {
+async function updateLeague(phase = 1) {
   const league = await getCurrentLeague();
   const managerId = await getManagerId();
-  console.log(managerId);
+
   updateLeagueName(league);
   populateLeagueTable(league, managerId);
-  updateTable(1);
+  updateTable(phase);
 }
 
 /**
@@ -189,4 +192,22 @@ observer.observe(document.getElementById('league-overview'), {
   attributes: true,
   attributeFilter: ['style'],
   attributeOldValue: true,
+});
+
+function populateSelect() {
+  const currentMonth = new Date().toLocaleString('en-us', { month: 'long' });
+  const phaseSelect = document.getElementById('league-table-select');
+  const phaseOptions = FPLSeason.slice(0, FPLSeason.indexOf(currentMonth) + 1);
+  phaseOptions.unshift('Overall');
+
+  phaseOptions.forEach((phase) => {
+    const value = phaseOptions.indexOf(phase) + 1;
+    phaseSelect.insertAdjacentHTML('beforeend', `
+      <option value="${value}">${phase}</option>
+    `);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  populateSelect();
 });

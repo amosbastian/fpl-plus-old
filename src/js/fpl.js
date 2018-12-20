@@ -93,8 +93,8 @@ export const getClassicLeagueCS = async () => retry(async () => {
  * Returns a classic league.
  * @returns {Object}
  */
-export const getClassicLeague = async leagueId => retry(async () => {
-  const response = await fetch(`https://fantasy.premierleague.com/drf/leagues-classic-standings/${leagueId}`);
+export const getClassicLeague = async (leagueId, phase = 1) => retry(async () => {
+  const response = await fetch(`https://fantasy.premierleague.com/drf/leagues-classic-standings/${leagueId}?phase=${phase}`);
   if (response.status === 200) {
     const json = await response.json();
     return json;
