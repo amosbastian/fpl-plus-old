@@ -9,6 +9,8 @@ const fixtureTimeOptions = {
   hour: '2-digit', minute: '2-digit',
 };
 
+const gameweeks = [...Array(38).keys()];
+
 /**
  * Shows a table of all leagues a user is participating in.
  */
@@ -31,6 +33,11 @@ function showFixtures() {
   currentContainer.classList.toggle('hidden');
 }
 
+/**
+ * Populates the fixture page with a header showing the gameweek's event days, with each containing
+ * a section beneath it with all the event's fixtures with their kickoff time / score.
+ * @param {number} gameweek
+ */
 async function populateFixtures(gameweek = 0) {
   const teams = await getLocalTeams();
   const currentGameweek = gameweek || await getCurrentGameweek();
@@ -76,6 +83,25 @@ async function populateFixtures(gameweek = 0) {
   });
 }
 
+/**
+ * Populates the gameweek select with all possible gameweeks and sets the selected gameweek as the
+ * current gameweek.
+ */
+async function populateGameweekSelect() {
+  const gameweekSelect = document.getElementById('gameweek-fixtures-select');
+
+  gameweeks.forEach((gameweek) => {
+    const gameweekOption = document.createElement('option');
+    gameweekOption.text = `Gameweek ${gameweek + 1}`;
+    gameweekOption.value = gameweek + 1;
+    gameweekSelect.add(gameweekOption);
+  });
+
+  const currentGameweek = await getCurrentGameweek();
+  gameweekSelect.selectedIndex = currentGameweek - 1;
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   populateFixtures();
+  populateGameweekSelect();
 });
