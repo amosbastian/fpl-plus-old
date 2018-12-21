@@ -843,7 +843,8 @@ html {
 
 .fpl-fixture {
   display: grid;
-  grid-template-columns: 1fr 5rem 1fr;
+  align-items: center;
+  grid-template-columns: 1fr 2.5rem 5rem 2.5rem 1fr;
   height: 3rem;
   grid-gap: 2rem;
 }
@@ -853,7 +854,7 @@ html {
   align-items: center;
 
   color: $fpl-deep-purple;
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   font-weight: 700;
   font-family: 'Open Sans', sans-serif;
 
@@ -875,8 +876,15 @@ html {
   font-weight: 700;
   font-family: 'Open Sans', sans-serif;
 
-  background-color: #00FF87;
   border-radius: .25rem;
+
+  &--score {
+    background-color: #00FF87;
+  }
+
+  &--time {
+    background-color: #F4F4F4;
+  }
 }
 
 .fixtures-container {
@@ -884,4 +892,92 @@ html {
   grid-gap: .75rem;
   margin-top: 1rem;
   margin-bottom: 2rem;
+}
+
+.team-badge {
+  background-image: url(../images/team-badge-sprite.png);
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 2.5rem;
+  height: 2.5rem;
+
+  &.ARS {
+    background-position: 0 -50px;
+  }
+
+  &.BHA {
+    background-position: -100px -100px;
+  }
+
+  &.BOU {
+    background-position: -50px -125px;
+  }
+
+  &.BUR {
+    background-position: -25px -150px;
+  }
+
+  &.CAR {
+    background-position: -75px -150px;
+  }
+
+  &.CHE {
+    background-position: -150px -150px;
+  }
+
+  &.CRY {
+    background-position: -50px -175px;
+  }
+
+  &.EVE {
+    background-position: 0 -200px;
+  }
+
+  &.FUL {
+    background-position: -225px -100px;
+  }
+
+  &.HUD {
+    background-position: -75px -225px;
+  }
+
+  &.LEI {
+    background-position: -250px -125px;
+  }
+
+  &.LIV {
+    background-position: -250px -225px;
+  }
+
+  &.MCI {
+    background-position: -250px -250px;
+  }
+
+  &.MUN {
+    background-position: -275px -200px;
+  }
+
+  &.NEW {
+    background-position: -275px -250px;
+  }
+
+  &.SOU {
+    background-position: -325px -250px;
+  }
+
+  &.TOT {
+    background-position: -275px -325px;
+  }
+
+  &.WAT {
+    background-position: -350px -50px;
+  }
+
+  &.WHU {
+    background-position: -350px -100px;
+  }
+
+  &.WOL {
+    background-position: -350px -225px;
+  }
 }

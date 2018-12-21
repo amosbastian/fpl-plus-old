@@ -91,8 +91,9 @@ async function populateFixtures(gameweek = 0) {
     fixturesContainer.className = `fixtures-container ${fixtureDisplayClass}`;
 
     eventFixtures.forEach((fixture) => {
-      const homeTeam = teams.find(team => team.id === fixture.team_h).name;
-      const awayTeam = teams.find(team => team.id === fixture.team_a).name;
+      const homeTeam = teams.find(team => team.id === fixture.team_h);
+      console.log(homeTeam);
+      const awayTeam = teams.find(team => team.id === fixture.team_a);
 
       const fixtureTime = kickoffTime.toLocaleTimeString('en-GB', fixtureTimeOptions);
       const fixtureScore = `${fixture.team_h_score} - ${fixture.team_a_score}`;
@@ -102,9 +103,11 @@ async function populateFixtures(gameweek = 0) {
 
       fixturesContainer.insertAdjacentHTML('beforeend', `
         <div class="fpl-fixture">
-          <div class="fixture-team fixture-team--home">${homeTeam}</div>
+          <div class="fixture-team fixture-team--home">${homeTeam.name}</div>
+          <span class="team-badge ${homeTeam.short_name}"></span>
           <div class="${informationClass}">${informationContent}</div>
-          <div class="fixture-team fixture-team--away">${awayTeam}</div>
+          <span class="team-badge ${awayTeam.short_name}"></span>
+          <div class="fixture-team fixture-team--away">${awayTeam.name}</div>
         </div>
       `);
     });
