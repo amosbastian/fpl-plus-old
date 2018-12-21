@@ -31,9 +31,17 @@ function refreshData() {
   toggleMenu();
 }
 
+function toFixtures() {
+  showPage('fixtures-overview');
+  toggleMenuStyle();
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   const menuIcon = document.getElementById('fpl-menu');
   menuIcon.addEventListener('click', toggleMenu);
+
+  const fixtures = document.getElementById('fixtures');
+  fixtures.addEventListener('click', toFixtures);
 
   const logoutButton = document.getElementById('logout');
   logoutButton.addEventListener('click', logout);
