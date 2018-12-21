@@ -642,6 +642,10 @@ html {
     cursor: pointer;
     color: $fpl-deep-purple;
   }
+
+  &.gameweek {
+    margin-left: 0rem;
+  }
 }
 
 .disabled {
@@ -714,6 +718,11 @@ html {
     background-color: #FFFFFF;
     padding: .5rem;
     outline: none;
+  }
+
+  &.pagination {
+    grid-template-columns: auto 1fr auto;
+    grid-gap: .5rem;
   }
 }
 
