@@ -10,6 +10,8 @@ const fixtureTimeOptions = {
 };
 
 const gameweeks = [...Array(38).keys()];
+const previousButton = document.getElementById('previous-gameweek');
+const nextButton = document.getElementById('next-gameweek');
 
 /**
  * Shows a table of all leagues a user is participating in.
@@ -60,7 +62,7 @@ function getActiveEventDay(fixtures) {
 async function populateFixtures(gameweek = 0) {
   const teams = await getLocalTeams();
   const currentGameweek = parseInt(gameweek, 10) || await getCurrentGameweek();
-  const fixtures = await getFixtures(currentGameweek + 1);
+  const fixtures = await getFixtures(currentGameweek);
   const activeEventDay = getActiveEventDay(fixtures);
 
   const eventDays = [...new Set(fixtures.map(fixture => fixture.event_day))];
@@ -92,7 +94,6 @@ async function populateFixtures(gameweek = 0) {
 
     eventFixtures.forEach((fixture) => {
       const homeTeam = teams.find(team => team.id === fixture.team_h);
-      console.log(homeTeam);
       const awayTeam = teams.find(team => team.id === fixture.team_a);
 
       const fixtureTime = kickoffTime.toLocaleTimeString('en-GB', fixtureTimeOptions);
@@ -119,11 +120,30 @@ async function populateFixtures(gameweek = 0) {
   fixtureTriangles.forEach((triangle) => {
     triangle.addEventListener('click', showFixtures);
   });
+
+  [previousButton, nextButton].forEach(button => button.classList.remove('disabled'));
+  if (currentGameweek === 38) {
+    nextButton.classList.add('disabled');
+  } else if (currentGameweek === 1) {
+    previousButton.classList.add('disabled');
+  }
 }
 
 async function updateGameweek() {
   const selectedGameweek = this.options[this.selectedIndex].value;
   populateFixtures(selectedGameweek);
+}
+
+function changeGameweek() {
+  if (this.classList.contains('disabled')) return;
+
+  const gameweekSelect = document.getElementById('gameweek-fixtures-select');
+  const selectedGameweek = gameweekSelect.selectedIndex + 1;
+  const change = this.id === 'previous-gameweek' ? -1 : 1;
+
+  populateFixtures(selectedGameweek + change);
+
+  gameweekSelect.selectedIndex += change;
 }
 
 /**
@@ -148,4 +168,5 @@ async function populateGameweekSelect() {
 document.addEventListener('DOMContentLoaded', () => {
   populateFixtures();
   populateGameweekSelect();
+  [previousButton, nextButton].forEach(button => button.addEventListener('click', changeGameweek));
 });
