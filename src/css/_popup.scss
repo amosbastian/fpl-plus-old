@@ -811,12 +811,6 @@ html {
   grid-row: 2 / -1;
 }
 
-.fpl-fixtures {
-  display: grid;
-  grid-template-rows: auto;
-  grid-gap: 1rem;
-}
-
 .fixture-date {
   display: flex;
   height: 4rem;
@@ -888,4 +882,6 @@ html {
 .fixtures-container {
   display: grid;
   grid-gap: .75rem;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
 }
