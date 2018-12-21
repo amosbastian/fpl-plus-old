@@ -666,7 +666,6 @@ html {
   }
 }
 
-#statistics,
 #feature-guide {
   cursor: not-allowed;
 
@@ -989,4 +988,59 @@ html {
   &.WOL {
     background-position: -350px -225px;
   }
+}
+
+.fpl-statistics-overview {
+  display: grid;
+  padding: 1.6rem;
+  grid-template-rows: 2.5rem auto 4.5rem;
+  grid-gap: 1.6rem;
+  grid-row: 2 / -1;
+}
+
+.fpl-player-table-row {
+  height: 3.3rem;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: $fpl-deep-purple;
+  font-family: 'Open Sans', sans-serif;
+  padding: 0 1.5rem 0 1.5rem;
+  display: grid;
+  align-items: center;
+  grid-template-columns: 4.6rem 9.6rem 5.9rem 7.8rem auto;
+  grid-gap: 1rem;
+  background-color: #F7F7F7;
+  border-top: 1px solid #EFEFEF;
+
+  &:nth-child(1) {
+    border-top: none;
+  }
+
+  &--header {
+    height: 3rem;
+    border-radius: .75rem .75rem 0 0;
+    background-color: $fpl-deep-purple;
+    color: #FFFFFF;
+  }
+}
+
+.fpl-player-selection {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 1.6rem;
+
+  & > select {
+    font-size: 1.4rem;
+    color: $fpl-deep-purple;
+    font-weight: 700;
+    border: 1px solid #F2F2F2;
+    border-radius: .5rem;
+    background-color: #FFFFFF;
+    padding: .5rem;
+    outline: none;
+  }
+}
+
+#player-table-pagination {
+  margin-bottom: 1rem;
 }
