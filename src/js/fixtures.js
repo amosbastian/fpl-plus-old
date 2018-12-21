@@ -40,8 +40,8 @@ function showFixtures() {
  */
 async function populateFixtures(gameweek = 0) {
   const teams = await getLocalTeams();
-  const currentGameweek = gameweek || await getCurrentGameweek();
-  const fixtures = await getFixtures(currentGameweek);
+  const currentGameweek = parseInt(gameweek, 10) || await getCurrentGameweek();
+  const fixtures = await getFixtures(currentGameweek + 1);
 
   const eventDays = [...new Set(fixtures.map(fixture => fixture.event_day))];
   const fixturesElement = document.getElementById('fpl-fixtures');
@@ -68,12 +68,17 @@ async function populateFixtures(gameweek = 0) {
     eventFixtures.forEach((fixture) => {
       const homeTeam = teams.find(team => team.id === fixture.team_h).name;
       const awayTeam = teams.find(team => team.id === fixture.team_a).name;
+
       const fixtureTime = kickoffTime.toLocaleTimeString('en-GB', fixtureTimeOptions);
+      const fixtureScore = `${fixture.team_h_score} - ${fixture.team_a_score}`;
+
+      const informationClass = `fixture-information fixture-information--${fixture.finished ? 'score' : 'time'}`;
+      const informationContent = `${fixture.finished ? fixtureScore : fixtureTime}`;
 
       fixturesContainer.insertAdjacentHTML('beforeend', `
         <div class="fpl-fixture">
           <div class="fixture-team fixture-team--home">${homeTeam}</div>
-          <div class="fixture-information fixture-information--time">${fixtureTime}</div>
+          <div class="${informationClass}">${informationContent}</div>
           <div class="fixture-team fixture-team--away">${awayTeam}</div>
         </div>
       `);
