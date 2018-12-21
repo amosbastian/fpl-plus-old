@@ -34,6 +34,25 @@ function showFixtures() {
 }
 
 /**
+ * Sorts fixtures by most recent kickoff time and returns the event day of the most recent fixture.
+ * @param {Array<Object>} fixtures
+ */
+function getActiveEventDay(fixtures) {
+  const today = new Date();
+  const fixturesCopy = fixtures.slice(0);
+
+  // Sort by most recent kickoff time.
+  fixturesCopy.sort((a, b) => {
+    const differenceA = Math.abs(today - new Date(a.kickoff_time));
+    const differenceB = Math.abs(today - new Date(b.kickoff_time));
+    return differenceA - differenceB;
+  });
+
+  const nearestFixture = fixturesCopy[0];
+  return nearestFixture.event_day;
+}
+
+/**
  * Populates the fixture page with a header showing the gameweek's event days, with each containing
  * a section beneath it with all the event's fixtures with their kickoff time / score.
  * @param {number} gameweek
@@ -42,6 +61,7 @@ async function populateFixtures(gameweek = 0) {
   const teams = await getLocalTeams();
   const currentGameweek = parseInt(gameweek, 10) || await getCurrentGameweek();
   const fixtures = await getFixtures(currentGameweek + 1);
+  const activeEventDay = getActiveEventDay(fixtures);
 
   const eventDays = [...new Set(fixtures.map(fixture => fixture.event_day))];
   const fixturesElement = document.getElementById('fpl-fixtures');
@@ -55,15 +75,20 @@ async function populateFixtures(gameweek = 0) {
     const eventFixtures = fixtures.filter(fixture => fixture.event_day === eventDay);
     const kickoffTime = new Date(eventFixtures[0].kickoff_time);
     const gameweekDay = kickoffTime.toLocaleDateString('en-GB', gameweekDayOptions);
+
+    // Set class if current `eventDay` is the active one.
+    const fixtureDateClass = `${eventFixtures[0].event_day === activeEventDay ? 'active' : ''}`;
+    const fixtureDisplayClass = `${eventFixtures[0].event_day !== activeEventDay ? 'hidden' : ''}`;
+
     fixturesElement.insertAdjacentHTML('beforeend', `
       <div class="fixture-date">
-        <span class="icon-triangle-right fixtures"></span>
+        <span class="icon-triangle-right fixtures ${fixtureDateClass}"></span>
         ${gameweekDay}
       </div>
     `);
 
     const fixturesContainer = document.createElement('div');
-    fixturesContainer.className = 'fixtures-container';
+    fixturesContainer.className = `fixtures-container ${fixtureDisplayClass}`;
 
     eventFixtures.forEach((fixture) => {
       const homeTeam = teams.find(team => team.id === fixture.team_h).name;
