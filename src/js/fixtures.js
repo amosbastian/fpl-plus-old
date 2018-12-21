@@ -46,6 +46,11 @@ async function populateFixtures(gameweek = 0) {
   const eventDays = [...new Set(fixtures.map(fixture => fixture.event_day))];
   const fixturesElement = document.getElementById('fpl-fixtures');
 
+  // Remove existing fixtures if applicable.
+  while (fixturesElement.firstChild) {
+    fixturesElement.removeChild(fixturesElement.firstChild);
+  }
+
   eventDays.forEach((eventDay) => {
     const eventFixtures = fixtures.filter(fixture => fixture.event_day === eventDay);
     const kickoffTime = new Date(eventFixtures[0].kickoff_time);
@@ -83,6 +88,11 @@ async function populateFixtures(gameweek = 0) {
   });
 }
 
+async function updateGameweek() {
+  const selectedGameweek = this.options[this.selectedIndex].value;
+  populateFixtures(selectedGameweek);
+}
+
 /**
  * Populates the gameweek select with all possible gameweeks and sets the selected gameweek as the
  * current gameweek.
@@ -99,6 +109,7 @@ async function populateGameweekSelect() {
 
   const currentGameweek = await getCurrentGameweek();
   gameweekSelect.selectedIndex = currentGameweek - 1;
+  gameweekSelect.addEventListener('click', updateGameweek);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
