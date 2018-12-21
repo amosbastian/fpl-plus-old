@@ -802,3 +802,90 @@ html {
 .current-manager {
   background-color: #E0E0E0 !important;
 }
+
+.fpl-fixtures-overview {
+  display: grid;
+  padding: 1.6rem;
+  grid-template-rows: 2.5rem 1fr;
+  grid-gap: 1.6rem;
+  grid-row: 2 / -1;
+}
+
+.fpl-fixtures {
+  display: grid;
+  grid-template-rows: auto;
+  grid-gap: 1rem;
+}
+
+.fixture-date {
+  display: flex;
+  height: 4rem;
+  align-items: center;
+
+  color: $fpl-deep-purple;
+  font-size: 1.6rem;
+  font-weight: 700;
+  font-family: 'Open Sans', sans-serif;
+
+  border-top: 1px solid #EFEFEF;
+
+  &:first-child {
+    border-top: none;
+  }
+
+  & > span {
+    cursor: pointer;
+    font-size: 2.5rem;
+    margin-right: 2rem;
+    transition: transform .2s;
+
+    &.active {
+      -moz-transform: rotate(90deg);
+      -webkit-transform: rotate(90deg);
+      transform: rotate(90deg);
+    }
+  }
+}
+
+.fpl-fixture {
+  display: grid;
+  grid-template-columns: 1fr 5rem 1fr;
+  height: 3.5rem;
+  grid-gap: 2rem;
+}
+
+.fixture-team {
+  display: grid;
+  align-items: center;
+
+  color: $fpl-deep-purple;
+  font-size: 1.4rem;
+  font-weight: 700;
+  font-family: 'Open Sans', sans-serif;
+
+  &--home {
+    text-align: right;
+  }
+  &--away {
+    text-align: left;
+  }
+}
+
+.fixture-information {
+  display: grid;
+  justify-content: center;
+  align-items: center;
+
+  color: $fpl-deep-purple;
+  font-size: 1.4rem;
+  font-weight: 700;
+  font-family: 'Open Sans', sans-serif;
+
+  background-color: #00FF87;
+  border-radius: .25rem;
+}
+
+.fixtures-container {
+  display: grid;
+  grid-gap: .75rem;
+}
