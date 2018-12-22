@@ -1,6 +1,6 @@
 import '../css/main.scss';
 import {
-  getPlayers, getTeamToFixtures, getTeams, getLocalUser, showPage,
+  getPlayers, getTeamToFixtures, getTeams, getLocalUser,
 } from './fpl';
 
 let allPlayers = [];

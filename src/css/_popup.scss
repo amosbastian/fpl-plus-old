@@ -993,13 +993,13 @@ html {
 .fpl-statistics-overview {
   display: grid;
   padding: 1.6rem;
-  grid-template-rows: 2.5rem auto 4.5rem;
+  grid-template-rows: 2.5rem auto 5rem;
   grid-gap: 1.6rem;
   grid-row: 2 / -1;
 }
 
 .fpl-player-table-row {
-  height: 3.3rem;
+  height: 4.1rem;
   font-size: 1.3rem;
   font-weight: 700;
   color: $fpl-deep-purple;
@@ -1007,7 +1007,7 @@ html {
   padding: 0 1.5rem 0 1.5rem;
   display: grid;
   align-items: center;
-  grid-template-columns: 4.6rem 9.6rem 5.9rem 7.8rem auto;
+  grid-template-columns: 3rem 13.8rem 3rem 7.8rem auto;
   grid-gap: 1rem;
   background-color: #F7F7F7;
   border-top: 1px solid #EFEFEF;
@@ -1039,8 +1039,4 @@ html {
     padding: .5rem;
     outline: none;
   }
-}
-
-#player-table-pagination {
-  margin-bottom: 1rem;
 }
