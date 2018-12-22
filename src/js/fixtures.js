@@ -75,7 +75,7 @@ async function populateFixtures(gameweek = 0) {
 
   eventDays.forEach((eventDay) => {
     const eventFixtures = fixtures.filter(fixture => fixture.event_day === eventDay);
-    const kickoffTime = new Date(eventFixtures[0].kickoff_time);
+    let kickoffTime = new Date(eventFixtures[0].kickoff_time);
     const gameweekDay = kickoffTime.toLocaleDateString('en-GB', gameweekDayOptions);
 
     // Set class if current `eventDay` is the active one.
@@ -95,7 +95,7 @@ async function populateFixtures(gameweek = 0) {
     eventFixtures.forEach((fixture) => {
       const homeTeam = teams.find(team => team.id === fixture.team_h);
       const awayTeam = teams.find(team => team.id === fixture.team_a);
-
+      kickoffTime = new Date(fixture.kickoff_time);
       const fixtureTime = kickoffTime.toLocaleTimeString('en-GB', fixtureTimeOptions);
       const fixtureScore = `${fixture.team_h_score} - ${fixture.team_a_score}`;
 
