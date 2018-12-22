@@ -34,6 +34,8 @@ const playerType = {
 const paginationElement = document.getElementById('player-table-pagination');
 const previousButton = document.getElementById('player-table-previous');
 const nextButton = document.getElementById('player-table-next');
+const filterSelect = document.getElementById('fpl-player-filter');
+const sortSelect = document.getElementById('fpl-player-sort');
 
 /**
  * Returns the FDR element showing each player's FDR over the next 5 games.
@@ -128,17 +130,30 @@ function updatePlayerTable(currentPage) {
   updatePagination(currentPage, pageList);
 }
 
-/**
- * Populates the player table with all players.
- */
-async function populatePlayerTable() {
+async function getFilteredPlayers(playerPosition = 'all', playerTeam = 'all', playerAttribute = 'all') {
   if (allPlayers.length === 0) {
     allPlayers = await getPlayers();
   }
-  const playerTable = document.getElementById('player-table');
-  const players = allPlayers.sort(
-    (a, b) => (a.total_points === b.total_points ? 0 : +(a.total_points > b.total_points) || -1),
+  const attribute = (playerAttribute === 'all') ? 'total_points' : playerAttribute;
+  const sortedPlayers = allPlayers.sort(
+    (a, b) => (a[attribute] === b[attribute] ? 0 : +(a[attribute] > b[attribute]) || -1),
   );
+
+  const positions = (playerPosition === 'all') ? [1, 2, 3, 4] : [playerPosition];
+  const teams = (playerTeam === 'all') ? Array(20).fill().map((x, i) => i + 1) : [playerTeam];
+  const filteredPlayers = sortedPlayers
+    .filter(player => positions.includes(player.element_type) && teams.includes(player.team));
+
+  return filteredPlayers;
+}
+
+/**
+ * Populates the player table with all players.
+ */
+async function populatePlayerTable(playerPosition = 'all', playerTeam = 'all', playerAttribute = 'all') {
+  const players = await getFilteredPlayers(playerPosition, playerTeam, playerAttribute);
+  const playerTable = document.getElementById('player-table');
+  const attribute = (playerAttribute === 'all') ? 'total_points' : playerAttribute;
 
   // Remove previously loaded player table.
   while (playerTable.firstChild) {
@@ -156,15 +171,15 @@ async function populatePlayerTable() {
         <div>${playerType[player.element_type]}</div>
         ${FDRElement}
         <div class="fpl-team-table-points">
-          ${player.total_points}
+          ${player[attribute]}
         </div>
       </div>
     `);
   });
 }
 
-async function updateStatistics() {
-  await populatePlayerTable();
+async function updateStatistics(playerPosition = 'all', playerTeam = 'all', playerAttribute = 'all') {
+  await populatePlayerTable(playerPosition, playerTeam, playerAttribute);
   updatePlayerTable(1);
 }
 
@@ -184,6 +199,28 @@ function paginationClickHandler(event) {
   updatePlayerTable(parseInt(event.srcElement.textContent, 10));
 }
 
+function filterPlayers() {
+  const filterValue = filterSelect[filterSelect.selectedIndex].value;
+  const positions = filterValue.includes('position') ? parseInt(filterValue.split('-')[1], 10) : 'all';
+  const teams = filterValue.includes('team') ? parseInt(filterValue.split('-')[1], 10) : 'all';
+  const sortValue = sortSelect[sortSelect.selectedIndex].value;
+  updateStatistics(positions, teams, sortValue);
+}
+
+async function populatefilterSelect() {
+  if (allTeams.length === 0) {
+    allTeams = await getTeams();
+  }
+  const byTeamGroup = filterSelect.lastElementChild;
+  allTeams.forEach((team) => {
+    byTeamGroup.insertAdjacentHTML('beforeend', `
+      <option value="team-${team.id}">${team.name}</option>
+    `);
+  });
+
+  filterSelect.parentElement.addEventListener('change', filterPlayers);
+}
+
 /**
  * Observe changes of the statistics overview element's style (display: none -> grid).
  */
@@ -201,6 +238,7 @@ observer.observe(document.getElementById('statistics-overview'), {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
+  populatefilterSelect();
   paginationElement.addEventListener('click', event => paginationClickHandler(event));
   [previousButton, nextButton].forEach(button => button.addEventListener('click', changePage));
 });
