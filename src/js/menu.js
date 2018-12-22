@@ -31,12 +31,16 @@ function refreshData() {
   toggleMenu();
 }
 
-function toFixtures() {
+async function toFixtures() {
+  const currentPage = await getCurrentPage();
+  chrome.storage.local.set({ previousPage: currentPage });
   showPage('fixtures-overview');
   toggleMenuStyle();
 }
 
-function toStatistics() {
+async function toStatistics() {
+  const currentPage = await getCurrentPage();
+  chrome.storage.local.set({ previousPage: currentPage });
   showPage('statistics-overview');
   toggleMenuStyle();
 }

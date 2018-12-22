@@ -227,6 +227,10 @@ export const getCurrentPage = () => new Promise((resolve) => {
   chrome.storage.local.get('currentPage', data => resolve(data.currentPage));
 });
 
+export const getPreviousPage = () => new Promise((resolve) => {
+  chrome.storage.local.get('previousPage', data => resolve(data.previousPage));
+});
+
 export const getCurrentLeague = () => new Promise((resolve) => {
   chrome.storage.local.get('currentLeague', data => resolve(data.currentLeague));
 });

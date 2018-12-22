@@ -1,12 +1,13 @@
 import '../css/main.scss';
-import { showPage, getCurrentPage } from './fpl';
+import { showPage, getCurrentPage, getPreviousPage } from './fpl';
 
 function back() {
   showPage('main-overview');
 }
 
-function backToLeaguesOverview() {
-  showPage('leagues-overview');
+async function backToPrevious() {
+  const previousPage = await getPreviousPage();
+  showPage(previousPage);
 }
 
 /**
@@ -28,8 +29,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const backButton = document.querySelectorAll('.back-button');
   backButton.forEach(button => button.addEventListener('click', back));
 
-  const leagueBackButton = document.querySelector('.back-button-league');
-  leagueBackButton.addEventListener('click', backToLeaguesOverview);
+  const previousButtons = document.querySelectorAll('.back-button-previous');
+  previousButtons.forEach(button => button.addEventListener('click', backToPrevious));
 });
 
 window.onload = async () => {

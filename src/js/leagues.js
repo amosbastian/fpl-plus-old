@@ -267,6 +267,7 @@ async function setLeague() {
   }
 
   chrome.storage.local.set({ currentLeague: league });
+  chrome.storage.local.set({ previousPage: 'leagues-overview' });
   showPage('league-overview');
 }
 
