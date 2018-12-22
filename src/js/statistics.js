@@ -131,7 +131,10 @@ function updatePlayerTable(currentPage) {
 /**
  * Populates the player table with all players.
  */
-function populatePlayerTable() {
+async function populatePlayerTable() {
+  if (allPlayers.length === 0) {
+    allPlayers = await getPlayers();
+  }
   const playerTable = document.getElementById('player-table');
   const players = allPlayers.sort(
     (a, b) => (a.total_points === b.total_points ? 0 : +(a.total_points > b.total_points) || -1),
@@ -161,7 +164,7 @@ function populatePlayerTable() {
 }
 
 async function updateStatistics() {
-  populatePlayerTable();
+  await populatePlayerTable();
   updatePlayerTable(1);
 }
 
