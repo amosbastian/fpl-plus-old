@@ -4,14 +4,17 @@ import {
 } from './fpl';
 
 function toTeam() {
+  chrome.storage.local.set({ previousPage: 'main-overview' });
   showPage('team-overview');
 }
 
 function toPoints() {
+  chrome.storage.local.set({ previousPage: 'main-overview' });
   showPage('points-overview');
 }
 
 function toLeagues() {
+  chrome.storage.local.set({ previousPage: 'main-overview' });
   showPage('leagues-overview');
 }
 

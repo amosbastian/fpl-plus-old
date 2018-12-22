@@ -17,6 +17,8 @@ module.exports = {
     leagues: path.resolve(__dirname, 'src/js/leagues.js'),
     league: path.resolve(__dirname, 'src/js/league.js'),
     menu: path.resolve(__dirname, 'src/js/menu.js'),
+    fixtures: path.resolve(__dirname, 'src/js/fixtures.js'),
+    statistics: path.resolve(__dirname, 'src/js/statistics.js'),
   },
   output: {
     path: path.resolve(__dirname, 'build'),

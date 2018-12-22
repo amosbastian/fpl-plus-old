@@ -239,7 +239,7 @@
       <!-- LEAGUE OVERVIEW -->
       <div id="league-overview" class="fpl-index-content">
         <div class="fpl-navigation">
-          <span class="icon-arrow-left back-button-league"></span>
+          <span class="icon-arrow-left back-button-previous"></span>
           <span>Leagues / Text</span>
         </div>
         <div class="fpl-league-overview">
@@ -273,6 +273,118 @@
           </div>
         </div>
       </div>
+
+      <!-- FIXTURES OVERVIEW -->
+      <div id="fixtures-overview" class="fpl-index-content">
+        <div class="fpl-navigation">
+          <span class="icon-arrow-left back-button-previous"></span>
+          Fixtures
+        </div>
+        <div class="fpl-fixtures-overview">
+          <div class="fpl-gameweek-selection pagination">
+            <div id="previous-gameweek" class="fpl-pagination-button gameweek">
+              <span class="icon-triangle-left"></span>
+            </div>
+            <select id="gameweek-fixtures-select" name="phase">
+            </select>
+            <div id="next-gameweek" class="fpl-pagination-button gameweek">
+              <span class="icon-triangle-right"></span>
+            </div>
+          </div>
+          <div id="fpl-fixtures" class="fpl-fixtures">
+          </div>
+        </div>
+      </div>
+
+      <!-- STATISTICS OVERVIEW -->
+      <div id="statistics-overview" class="fpl-index-content">
+        <div class="fpl-navigation">
+          <span class="icon-arrow-left back-button-previous"></span>
+          Statistics
+        </div>
+        <div class="fpl-statistics-overview">
+          <div class="fpl-player-selection">
+            <select id="fpl-player-filter" name="player-type">
+              <optgroup label="Global">
+                <option value>All players</option>
+              </optgroup>
+              <optgroup label="By position">
+                <option value="position-1">Goalkeepers</option>
+                <option value="position-2">Defenders</option>
+                <option value="position-3">Midfielders</option>
+                <option value="position-4">Forwards</option>
+              </optgroup>
+              <optgroup label="By team">
+              </optgroup>
+            </select>
+            <select id="fpl-player-sort" name="player-attribute">
+              <option value="total_points">Total points</option>
+              <option value="event_points">Gameweek points</option>
+              <option value="points_per_game">Points per game</option>
+              <option value="ep_this">Expected points (this)</option>
+              <option value="ep_next">Expected points (next)</option>
+              <option value="now_cost">Price</option>
+              <option value="selected_by_percent">Teams selected by %</option>
+              <option value="minutes">Minutes played</option>
+              <option value="goals_scored">Goals scored</option>
+              <option value="assists">Assists</option>
+              <option value="clean_sheets">Clean sheets</option>
+              <option value="goals_conceded">Goals conceded</option>
+              <option value="own_goals">Own goals</option>
+              <option value="penalties_saved">Penalties saved</option>
+              <option value="penalties_missed">Penalties missed</option>
+              <option value="yellow_cards">Yellow cards</option>
+              <option value="red_cards">Red cards</option>
+              <option value="saves">Saves</option>
+              <option value="bonus">Bonus</option>
+              <option value="bps">Bonus Points System</option>
+              <option value="influence">Influence</option>
+              <option value="creativity">Creativity</option>
+              <option value="threat">Threat</option>
+              <option value="ict_index">ICT Index</option>
+              <option value="form">Form</option>
+              <option value="dreamteam_count">Times in Dream Team</option>
+              <option value="value_form">Value (form)</option>
+              <option value="value_season">Value (season)</option>
+              <option value="points_per_game">Points per match</option>
+              <option value="transfers_in">Transfers in</option>
+              <option value="transfers_out">Transfers out</option>
+              <option value="transfers_in_event">Transfers in (round)</option>
+              <option value="transfers_out_event">Transfers out (round)</option>
+              <option value="cost_change_start">Price rise</option>
+              <option value="cost_change_start_fall">Price fall</option>
+              <option value="cost_change_event">Price rise (round)</option>
+              <option value="cost_change_event_fall">Price fall (round)</option>
+            </select>
+          </div>
+          <div class="fpl-player-table">
+            <div class="fpl-player-table-row fpl-player-table-row--header">
+              <div>
+              </div>
+              <div>
+                Name
+              </div>
+              <div>
+                POS
+              </div>
+              <div>
+                FDR
+              </div>
+              <div class="fpl-team-table-points">
+                V
+              </div>
+            </div>
+            <div id="player-table" class="fpl-player-table-body">
+            </div>
+          </div>
+          <div class="pagination-wrapper">
+            <div id="player-table-pagination" class="fpl-leagues-table-pagination">
+              <div id="player-table-previous" class="fpl-pagination-button previous-page"><span class="icon-triangle-left"></span></div>
+              <div id="player-table-next" class="fpl-pagination-button next-page"><span class="icon-triangle-right"></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     <script src="menu.bundle.js"></script>
     <script src="features.bundle.js"></script>
@@ -281,5 +393,7 @@
     <script src="team.bundle.js"></script>
     <script src="leagues.bundle.js"></script>
     <script src="league.bundle.js"></script>
+    <script src="fixtures.bundle.js"></script>
+    <script src="statistics.bundle.js"></script>
   </body>
 </html>

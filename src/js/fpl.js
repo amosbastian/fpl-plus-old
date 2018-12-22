@@ -163,8 +163,9 @@ export const getTeams = async () => retry(async () => {
 /**
  * Returns an array of the fixtures in the Premier League.
  */
-export const getFixtures = async () => retry(async () => {
-  const response = await fetch('https://fantasy.premierleague.com/drf/fixtures/');
+export const getFixtures = async (gameweek = 0) => retry(async () => {
+  const endpoint = `https://fantasy.premierleague.com/drf/fixtures/${gameweek ? `?event=${gameweek}` : ''}`;
+  const response = await fetch(endpoint);
   if (response.status === 200) {
     const json = await response.json();
     return json;
@@ -224,6 +225,10 @@ export const showPage = (pageId) => {
 
 export const getCurrentPage = () => new Promise((resolve) => {
   chrome.storage.local.get('currentPage', data => resolve(data.currentPage));
+});
+
+export const getPreviousPage = () => new Promise((resolve) => {
+  chrome.storage.local.get('previousPage', data => resolve(data.previousPage));
 });
 
 export const getCurrentLeague = () => new Promise((resolve) => {

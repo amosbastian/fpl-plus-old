@@ -1,12 +1,19 @@
 import '../css/main.scss';
-import { showPage, getCurrentPage } from './fpl';
+import { showPage, getCurrentPage, getPreviousPage } from './fpl';
 
+// Default back
 function back() {
   showPage('main-overview');
 }
 
-function backToLeaguesOverview() {
-  showPage('leagues-overview');
+// For pages accessible from anywhere
+async function backToPrevious() {
+  let previousPage = await getPreviousPage();
+  const currentPage = await getCurrentPage();
+  if (previousPage === currentPage) {
+    previousPage = 'main-overview';
+  }
+  showPage(previousPage);
 }
 
 /**
@@ -28,8 +35,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const backButton = document.querySelectorAll('.back-button');
   backButton.forEach(button => button.addEventListener('click', back));
 
-  const leagueBackButton = document.querySelector('.back-button-league');
-  leagueBackButton.addEventListener('click', backToLeaguesOverview);
+  const previousButtons = document.querySelectorAll('.back-button-previous');
+  previousButtons.forEach(button => button.addEventListener('click', backToPrevious));
 });
 
 window.onload = async () => {

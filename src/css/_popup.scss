@@ -642,6 +642,10 @@ html {
     cursor: pointer;
     color: $fpl-deep-purple;
   }
+
+  &.gameweek {
+    margin-left: 0rem;
+  }
 }
 
 .disabled {
@@ -662,8 +666,6 @@ html {
   }
 }
 
-#fixtures,
-#statistics,
 #feature-guide {
   cursor: not-allowed;
 
@@ -715,6 +717,11 @@ html {
     background-color: #FFFFFF;
     padding: .5rem;
     outline: none;
+  }
+
+  &.pagination {
+    grid-template-columns: auto 1fr auto;
+    grid-gap: .5rem;
   }
 }
 
@@ -802,4 +809,234 @@ html {
 
 .current-manager {
   background-color: #E0E0E0 !important;
+}
+
+.fpl-fixtures-overview {
+  display: grid;
+  padding: 1.6rem;
+  grid-template-rows: 2.5rem 1fr;
+  grid-gap: 1.6rem;
+  grid-row: 2 / -1;
+}
+
+.fixture-date {
+  display: flex;
+  height: 4rem;
+  align-items: center;
+
+  color: $fpl-deep-purple;
+  font-size: 1.6rem;
+  font-weight: 700;
+  font-family: 'Open Sans', sans-serif;
+
+  border-top: 1px solid #EFEFEF;
+
+  &:first-child {
+    border-top: none;
+  }
+
+  & > span {
+    cursor: pointer;
+    font-size: 2.5rem;
+    margin-right: 2rem;
+    transition: transform .2s;
+
+    &.active {
+      -moz-transform: rotate(90deg);
+      -webkit-transform: rotate(90deg);
+      transform: rotate(90deg);
+    }
+  }
+}
+
+.fpl-fixture {
+  display: grid;
+  align-items: center;
+  grid-template-columns: 1fr 2.5rem 5rem 2.5rem 1fr;
+  height: 3rem;
+  grid-gap: 2rem;
+}
+
+.fixture-team {
+  display: grid;
+  align-items: center;
+
+  color: $fpl-deep-purple;
+  font-size: 1.3rem;
+  font-weight: 700;
+  font-family: 'Open Sans', sans-serif;
+
+  &--home {
+    text-align: right;
+  }
+  &--away {
+    text-align: left;
+  }
+}
+
+.fixture-information {
+  display: grid;
+  justify-content: center;
+  align-items: center;
+
+  color: $fpl-deep-purple;
+  font-size: 1.4rem;
+  font-weight: 700;
+  font-family: 'Open Sans', sans-serif;
+
+  border-radius: .25rem;
+
+  &--score {
+    background-color: #00FF87;
+  }
+
+  &--time {
+    background-color: #F4F4F4;
+  }
+}
+
+.fixtures-container {
+  display: grid;
+  grid-gap: .75rem;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+}
+
+.team-badge {
+  background-image: url(../images/team-badge-sprite.png);
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 2.5rem;
+  height: 2.5rem;
+
+  &.ARS {
+    background-position: 0 -50px;
+  }
+
+  &.BHA {
+    background-position: -100px -100px;
+  }
+
+  &.BOU {
+    background-position: -50px -125px;
+  }
+
+  &.BUR {
+    background-position: -25px -150px;
+  }
+
+  &.CAR {
+    background-position: -75px -150px;
+  }
+
+  &.CHE {
+    background-position: -150px -150px;
+  }
+
+  &.CRY {
+    background-position: -50px -175px;
+  }
+
+  &.EVE {
+    background-position: 0 -200px;
+  }
+
+  &.FUL {
+    background-position: -225px -100px;
+  }
+
+  &.HUD {
+    background-position: -75px -225px;
+  }
+
+  &.LEI {
+    background-position: -250px -125px;
+  }
+
+  &.LIV {
+    background-position: -250px -225px;
+  }
+
+  &.MCI {
+    background-position: -250px -250px;
+  }
+
+  &.MUN {
+    background-position: -275px -200px;
+  }
+
+  &.NEW {
+    background-position: -275px -250px;
+  }
+
+  &.SOU {
+    background-position: -325px -250px;
+  }
+
+  &.TOT {
+    background-position: -275px -325px;
+  }
+
+  &.WAT {
+    background-position: -350px -50px;
+  }
+
+  &.WHU {
+    background-position: -350px -100px;
+  }
+
+  &.WOL {
+    background-position: -350px -225px;
+  }
+}
+
+.fpl-statistics-overview {
+  display: grid;
+  padding: 1.6rem;
+  grid-template-rows: 2.5rem auto 5rem;
+  grid-gap: 1.6rem;
+  grid-row: 2 / -1;
+}
+
+.fpl-player-table-row {
+  height: 4.1rem;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: $fpl-deep-purple;
+  font-family: 'Open Sans', sans-serif;
+  padding: 0 1.5rem 0 1.5rem;
+  display: grid;
+  align-items: center;
+  grid-template-columns: 3rem 12.7rem 3rem 7.8rem auto;
+  grid-gap: 1rem;
+  background-color: #F7F7F7;
+  border-top: 1px solid #EFEFEF;
+
+  &:nth-child(1) {
+    border-top: none;
+  }
+
+  &--header {
+    height: 3rem;
+    border-radius: .75rem .75rem 0 0;
+    background-color: $fpl-deep-purple;
+    color: #FFFFFF;
+  }
+}
+
+.fpl-player-selection {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 1.6rem;
+
+  & > select {
+    font-size: 1.4rem;
+    color: $fpl-deep-purple;
+    font-weight: 700;
+    border: 1px solid #F2F2F2;
+    border-radius: .5rem;
+    background-color: #FFFFFF;
+    padding: .5rem;
+    outline: none;
+  }
 }
