@@ -1,3 +1,8 @@
+### v0.8.0
+
+- Add fixtures page to popup
+- Add statistics page with filtering and sorting to popup
+
 ### v0.7.0
 
 - Add individual league tables to popup (shows top 50)
