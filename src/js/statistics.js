@@ -130,17 +130,23 @@ function updatePlayerTable(currentPage) {
   updatePagination(currentPage, pageList);
 }
 
-async function getFilteredPlayers(playerPosition = 'all', playerTeam = 'all', playerAttribute = 'all') {
+/**
+ * Returns all players filtered by the given position, team and attribute.
+ * @param {number} playerPosition
+ * @param {number} playerTeam
+ * @param {string} playerAttribute
+ */
+async function getFilteredPlayers(playerPosition, playerTeam, attribute) {
   if (allPlayers.length === 0) {
     allPlayers = await getPlayers();
   }
-  const attribute = (playerAttribute === 'all') ? 'total_points' : playerAttribute;
+
   const sortedPlayers = allPlayers.sort(
     (a, b) => (a[attribute] === b[attribute] ? 0 : +(a[attribute] > b[attribute]) || -1),
   );
 
-  const positions = (playerPosition === 'all') ? [1, 2, 3, 4] : [playerPosition];
-  const teams = (playerTeam === 'all') ? Array(20).fill().map((x, i) => i + 1) : [playerTeam];
+  const positions = (playerPosition === 0) ? [1, 2, 3, 4] : [playerPosition];
+  const teams = (playerTeam === 0) ? Array(20).fill().map((x, i) => i + 1) : [playerTeam];
   const filteredPlayers = sortedPlayers
     .filter(player => positions.includes(player.element_type) && teams.includes(player.team));
 
@@ -149,11 +155,13 @@ async function getFilteredPlayers(playerPosition = 'all', playerTeam = 'all', pl
 
 /**
  * Populates the player table with all players.
+ * @param {number} position
+ * @param {number} playerTeam
+ * @param {string} attribute
  */
-async function populatePlayerTable(playerPosition = 'all', playerTeam = 'all', playerAttribute = 'all') {
-  const players = await getFilteredPlayers(playerPosition, playerTeam, playerAttribute);
+async function populatePlayerTable(position, playerTeam, attribute) {
+  const players = await getFilteredPlayers(position, playerTeam, attribute);
   const playerTable = document.getElementById('player-table');
-  const attribute = (playerAttribute === 'all') ? 'total_points' : playerAttribute;
 
   // Remove previously loaded player table.
   while (playerTable.firstChild) {
@@ -178,8 +186,8 @@ async function populatePlayerTable(playerPosition = 'all', playerTeam = 'all', p
   });
 }
 
-async function updateStatistics(playerPosition = 'all', playerTeam = 'all', playerAttribute = 'all') {
-  await populatePlayerTable(playerPosition, playerTeam, playerAttribute);
+async function updateStatistics(position = 0, team = 0, attribute = 'total_points') {
+  await populatePlayerTable(position, team, attribute);
   updatePlayerTable(1);
 }
 
@@ -199,12 +207,16 @@ function paginationClickHandler(event) {
   updatePlayerTable(parseInt(event.srcElement.textContent, 10));
 }
 
+/**
+ * Filters players using the values selected in the two dropdowns.
+ */
 function filterPlayers() {
   const filterValue = filterSelect[filterSelect.selectedIndex].value;
-  const positions = filterValue.includes('position') ? parseInt(filterValue.split('-')[1], 10) : 'all';
-  const teams = filterValue.includes('team') ? parseInt(filterValue.split('-')[1], 10) : 'all';
-  const sortValue = sortSelect[sortSelect.selectedIndex].value;
-  updateStatistics(positions, teams, sortValue);
+  const position = filterValue.includes('position') ? parseInt(filterValue.split('-')[1], 10) : 0;
+  const team = filterValue.includes('team') ? parseInt(filterValue.split('-')[1], 10) : 0;
+  const attribute = sortSelect[sortSelect.selectedIndex].value;
+
+  updateStatistics(position, team, attribute);
 }
 
 async function populatefilterSelect() {

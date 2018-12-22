@@ -1,12 +1,18 @@
 import '../css/main.scss';
 import { showPage, getCurrentPage, getPreviousPage } from './fpl';
 
+// Default back
 function back() {
   showPage('main-overview');
 }
 
+// For pages accessible from anywhere
 async function backToPrevious() {
-  const previousPage = await getPreviousPage();
+  let previousPage = await getPreviousPage();
+  const currentPage = await getCurrentPage();
+  if (previousPage === currentPage) {
+    previousPage = 'main-overview';
+  }
   showPage(previousPage);
 }
 

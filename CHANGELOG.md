@@ -2,6 +2,7 @@
 
 - Add fixtures page to popup
 - Add statistics page with filtering and sorting to popup
+- Improve back button popup
 
 ### v0.7.0
 
